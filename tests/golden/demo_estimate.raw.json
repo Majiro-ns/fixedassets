@@ -40,11 +40,11 @@
       "unit_price": 99000.0,
       "useful_life": {
         "adjustments": [],
-        "basis": "unknown_category",
-        "code": null,
-        "notes": null,
-        "tax_years": null,
-        "years": null
+        "basis": "excel_table+bias",
+        "code": "PC",
+        "notes": "情報機器(汎用)",
+        "tax_years": 4,
+        "years": 4
       }
     },
     {
@@ -319,11 +319,11 @@
         "unit_price": 99000.0,
         "useful_life": {
           "adjustments": [],
-          "basis": "unknown_category",
-          "code": null,
-          "notes": null,
-          "tax_years": null,
-          "years": null
+          "basis": "excel_table+bias",
+          "code": "PC",
+          "notes": "情報機器(汎用)",
+          "tax_years": 4,
+          "years": 4
         }
       },
       {

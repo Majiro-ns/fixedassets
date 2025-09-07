@@ -6,8 +6,8 @@
       "decision": "OPEX",
       "desc": "SEMES (/i+y=»5 Let's Note)",
       "final_node_id": "c_opex_sme_special",
-      "useful_life_code": null,
-      "useful_life_years": null
+      "useful_life_code": "PC",
+      "useful_life_years": 4
     },
     {
       "amount": 150000.0,

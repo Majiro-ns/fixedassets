@@ -44,26 +44,50 @@ class AssetAdvisoryAgent:
     @staticmethod
     def _infer_category_from_desc(item: Dict[str, Any]) -> str | None:
         """
-        説明文や既存フィールドから簡易カテゴリを推定。
-        Excel 側のカテゴリと揃う代表値のみを返す（なければ None）
-        例: "PC" / "Server" / "Building附属設備" / "Software"
+        説明文からカテゴリを推定。
+        life_table 側の代表カテゴリ名に正規化して返す: "PC" / "Server" / "Building附属設備" / "Software"
         """
-        # 既にカテゴリが付いていれば最優先
+        # 既存カテゴリがあれば最優先
         cat = item.get("category")
         if cat:
             return str(cat)
 
-        desc_l = (item.get("description") or "").lower()
+        desc = (item.get("description") or "")
+        desc_l = desc.lower()
 
-        # シンプルなヒューリスティクス（必要に応じて増やしてください）
-        if "server" in desc_l or "サーバ" in desc_l:
-            return "Server"
-        if "pc" in desc_l or "ノートpc" in desc_l or "パソコン" in desc_l:
+        # ノイズを軽く正規化（全角→半角、記号落とし など、必要最低限）
+        import re
+        z2h = str.maketrans({'’':"'", '“':'"', '”':'"', '−':"-", '–':"-"})
+        desc_l = desc_l.translate(z2h)
+
+        PC_TOKENS = [
+            "pc","note pc","notepc","ノートpc","ノート","パソコン","laptop","desktop","デスクトップ",
+            "let's note","lets note","letsnote","thinkpad","dynabook","lavie","vaio",
+            "macbook","surface","latitude","inspiron","elitebook","probook","ideapad","legion","spectre","envy"
+        ]
+        SERVER_TOKENS = [
+            "server","サーバ","proliant","poweredge","thinksystem","primergy","rx","rack","タワーサーバ"
+        ]
+        BLD_TOKENS = ["工事","設置","据付","取付","配線","内装","改修","取付工賃","据え付け","搬入"]
+        SW_TOKENS = ["software","ソフト","ライセンス","license","subscription","サブスク","年間契約","保守更新"]
+
+        if any(t in desc_l for t in PC_TOKENS):
             return "PC"
-        if ("工事" in desc_l) or ("配線" in desc_l) or ("内装" in desc_l) or ("設備" in desc_l):
+        if any(t in desc_l for t in SERVER_TOKENS):
+            return "Server"
+        if any(t in desc_l for t in BLD_TOKENS):
             return "Building附属設備"
-        if ("software" in desc_l) or ("ソフト" in desc_l) or ("ライセンス" in desc_l) or ("saas" in desc_l) or ("サブスク" in desc_l):
+        if any(t in desc_l for t in SW_TOKENS):
             return "Software"
+
+        # 金額帯ヒューリスティクス（最後の砦）：CAPEXで10万～30万円帯は PC っぽい
+        try:
+            amt = float(item.get("amount") or 0)
+        except Exception:
+            amt = 0
+        decision = ((item.get("classification") or {}).get("decision") or "").lower()
+        if decision in ("capex", "asset") and 100000 <= amt <= 300000:
+            return "PC"
 
         return None
 

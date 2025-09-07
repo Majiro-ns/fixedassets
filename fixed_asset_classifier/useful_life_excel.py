@@ -13,8 +13,12 @@ class UsefulLifeResolver:
         self.xlsx_path = xlsx_path or os.getenv("USEFUL_LIFE_XLSX", "useful_life.xlsx")
         if not os.path.exists(self.xlsx_path):
             raise FileNotFoundError(f"useful life workbook not found: {self.xlsx_path}")
-        self.life_df = pd.read_excel(self.xlsx_path, sheet_name="life_table")
-        self.bias_df = pd.read_excel(self.xlsx_path, sheet_name="bias_rules")
+        ENGINE = "openpyxl"
+        self.life_df = pd.read_excel(self.xlsx_path, sheet_name="life_table", engine=ENGINE)
+        try:
+            self.bias_df = pd.read_excel(self.xlsx_path, sheet_name="bias_rules", engine=ENGINE)
+        except Exception:
+            self.bias_df = pd.DataFrame(columns=["rule_name","kw_include","kw_exclude","delta_years","book_min","book_max"])
         # 正規化
         for col in ["category","notes"]:
             if col in self.life_df.columns:

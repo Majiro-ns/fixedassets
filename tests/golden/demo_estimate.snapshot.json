@@ -1,0 +1,54 @@
+{
+  "item_count": 6,
+  "items": [
+    {
+      "amount": 99000.0,
+      "decision": "OPEX",
+      "desc": "SEMES (/i+y=»5 Let's Note)",
+      "final_node_id": "c_opex_sme_special",
+      "useful_life_code": null,
+      "useful_life_years": null
+    },
+    {
+      "amount": 150000.0,
+      "decision": "OPEX",
+      "desc": "",
+      "final_node_id": "c_opex_sme_special",
+      "useful_life_code": null,
+      "useful_life_years": null
+    },
+    {
+      "amount": 1200000.0,
+      "decision": "CAPEX",
+      "desc": "XYZ-A1",
+      "final_node_id": "c_capex_default",
+      "useful_life_code": null,
+      "useful_life_years": null
+    },
+    {
+      "amount": 50000.0,
+      "decision": "OPEX",
+      "desc": "XYZ-A00###",
+      "final_node_id": "c_opex_sme_special",
+      "useful_life_code": null,
+      "useful_life_years": null
+    },
+    {
+      "amount": 250000.0,
+      "decision": "OPEX",
+      "desc": "",
+      "final_node_id": "c_opex_sme_special",
+      "useful_life_code": null,
+      "useful_life_years": null
+    },
+    {
+      "amount": 750000.0,
+      "decision": "CAPEX",
+      "desc": "AVHD1751tyz (3)",
+      "final_node_id": "c_capex_default",
+      "useful_life_code": null,
+      "useful_life_years": null
+    }
+  ],
+  "total_amount": 2499000.0
+}

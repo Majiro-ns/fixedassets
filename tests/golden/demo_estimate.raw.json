@@ -1,0 +1,471 @@
+{
+  "debug_quality": {
+    "desc_quality": 0.0
+  },
+  "invoice_date": null,
+  "line_items": [
+    {
+      "_bundle_score": 0.0,
+      "amount": 99000.0,
+      "bundle_id": null,
+      "classification": {
+        "conclusion": "結論: 費用として処理可能です（中小企業者等の少額減価償却資産の特例）。",
+        "decision": "OPEX",
+        "final_context": {
+          "amount_basis": "excl",
+          "bundle_role": "solo",
+          "description": "SEMES (/i+y=»5 Let's Note)",
+          "expenditure_amount": 99000.0,
+          "is_sme": true,
+          "prior_acquisition_cost": null,
+          "sme_ytd_applied": 0.0
+        },
+        "final_node_id": "c_opex_sme_special",
+        "history": [
+          "q_amount_basis",
+          "eval_auto_incidental",
+          "q_eval_bundle_role",
+          "eval_expenditure_amount",
+          "c_opex_sme_special"
+        ],
+        "reason": "30万円未満かつ年間合計300万円まで。"
+      },
+      "description": "SEMES (/i+y=»5 Let's Note)",
+      "line_uid": "temp_uid_0",
+      "localized_description_text": "SEMES (/i+y=»5 Let's Note)",
+      "page": 1,
+      "quantity": 1.0,
+      "role": "solo",
+      "row_index": 0,
+      "unit_price": 99000.0
+    },
+    {
+      "_bundle_score": 0.0,
+      "amount": 150000.0,
+      "bundle_id": null,
+      "classification": {
+        "conclusion": "結論: 費用として処理可能です（中小企業者等の少額減価償却資産の特例）。",
+        "decision": "OPEX",
+        "final_context": {
+          "amount_basis": "excl",
+          "bundle_role": "solo",
+          "description": "",
+          "expenditure_amount": 150000.0,
+          "is_sme": true,
+          "prior_acquisition_cost": null,
+          "sme_ytd_applied": 0.0
+        },
+        "final_node_id": "c_opex_sme_special",
+        "history": [
+          "q_amount_basis",
+          "eval_auto_incidental",
+          "q_eval_bundle_role",
+          "eval_expenditure_amount",
+          "c_opex_sme_special"
+        ],
+        "reason": "30万円未満かつ年間合計300万円まで。"
+      },
+      "description": "",
+      "line_uid": "temp_uid_1",
+      "page": 1,
+      "quantity": 1.0,
+      "role": "solo",
+      "row_index": 1,
+      "unit_price": 150000.0
+    },
+    {
+      "_bundle_score": 1.0,
+      "_bundle_trace": {
+        "kw_parent": 0.0
+      },
+      "amount": 1200000.0,
+      "bundle_id": 1,
+      "classification": {
+        "conclusion": "結論: 資産として計上します。",
+        "decision": "CAPEX",
+        "final_context": {
+          "amount_basis": "excl",
+          "bundle_role": "parent",
+          "description": "XYZ-A1",
+          "expenditure_amount": 1200000.0,
+          "is_sme": true,
+          "prior_acquisition_cost": null,
+          "sme_ytd_applied": 0.0
+        },
+        "final_node_id": "c_capex_default",
+        "history": [
+          "q_amount_basis",
+          "eval_auto_incidental",
+          "q_eval_bundle_role",
+          "eval_expenditure_amount",
+          "q_is_software",
+          "q_is_repair",
+          "c_capex_default"
+        ],
+        "reason": "金額基準を超え、他の費用項目に該当しないため。"
+      },
+      "description": "XYZ-A1",
+      "line_uid": "temp_uid_2",
+      "localized_description_text": "XYZ-A1",
+      "page": 1,
+      "quantity": 1.0,
+      "role": "parent",
+      "row_index": 2,
+      "unit_price": 1200000.0
+    },
+    {
+      "_bundle_score": 0.0,
+      "amount": 50000.0,
+      "bundle_id": null,
+      "classification": {
+        "conclusion": "結論: 費用として処理可能です（中小企業者等の少額減価償却資産の特例）。",
+        "decision": "OPEX",
+        "final_context": {
+          "amount_basis": "excl",
+          "bundle_role": "solo",
+          "description": "XYZ-A00###",
+          "expenditure_amount": 50000.0,
+          "is_sme": true,
+          "prior_acquisition_cost": null,
+          "sme_ytd_applied": 0.0
+        },
+        "final_node_id": "c_opex_sme_special",
+        "history": [
+          "q_amount_basis",
+          "eval_auto_incidental",
+          "q_eval_bundle_role",
+          "eval_expenditure_amount",
+          "c_opex_sme_special"
+        ],
+        "reason": "30万円未満かつ年間合計300万円まで。"
+      },
+      "description": "XYZ-A00###",
+      "line_uid": "temp_uid_3",
+      "localized_description_text": "XYZ-A00###",
+      "page": 1,
+      "quantity": 1.0,
+      "role": "solo",
+      "row_index": 3,
+      "unit_price": 50000.0
+    },
+    {
+      "_bundle_score": 0.0,
+      "amount": 250000.0,
+      "bundle_id": null,
+      "classification": {
+        "conclusion": "結論: 費用として処理可能です（中小企業者等の少額減価償却資産の特例）。",
+        "decision": "OPEX",
+        "final_context": {
+          "amount_basis": "excl",
+          "bundle_role": "solo",
+          "description": "",
+          "expenditure_amount": 250000.0,
+          "is_sme": true,
+          "prior_acquisition_cost": null,
+          "sme_ytd_applied": 0.0
+        },
+        "final_node_id": "c_opex_sme_special",
+        "history": [
+          "q_amount_basis",
+          "eval_auto_incidental",
+          "q_eval_bundle_role",
+          "eval_expenditure_amount",
+          "c_opex_sme_special"
+        ],
+        "reason": "30万円未満かつ年間合計300万円まで。"
+      },
+      "description": "",
+      "line_uid": "temp_uid_4",
+      "page": 1,
+      "quantity": null,
+      "role": "solo",
+      "row_index": 4,
+      "unit_price": 250000.0
+    },
+    {
+      "_bundle_score": 1.0,
+      "_bundle_trace": {
+        "kw_parent": 0.0
+      },
+      "amount": 750000.0,
+      "bundle_id": 2,
+      "classification": {
+        "conclusion": "結論: 資産として計上します。",
+        "decision": "CAPEX",
+        "final_context": {
+          "amount_basis": "excl",
+          "bundle_role": "parent",
+          "description": "AVHD1751tyz (3)",
+          "expenditure_amount": 750000.0,
+          "is_sme": true,
+          "prior_acquisition_cost": null,
+          "sme_ytd_applied": 0.0
+        },
+        "final_node_id": "c_capex_default",
+        "history": [
+          "q_amount_basis",
+          "eval_auto_incidental",
+          "q_eval_bundle_role",
+          "eval_expenditure_amount",
+          "q_is_software",
+          "q_is_repair",
+          "c_capex_default"
+        ],
+        "reason": "金額基準を超え、他の費用項目に該当しないため。"
+      },
+      "description": "AVHD1751tyz (3)",
+      "line_uid": "temp_uid_5",
+      "localized_description_text": "AVHD1751tyz (3)",
+      "page": 1,
+      "quantity": 1.0,
+      "role": "parent",
+      "row_index": 5,
+      "unit_price": 750000.0
+    }
+  ],
+  "metrics": {
+    "avg_confidence": 1.0,
+    "ja_char_ratio": 0.0,
+    "ja_char_ratio_ocr": 0.625,
+    "numeric_token_count": 41,
+    "page_count": 1,
+    "text_length": 255
+  },
+  "postprocess": {
+    "inferred_tax": 124950,
+    "inferred_tax_rate": 0.05,
+    "items": [
+      {
+        "_bundle_score": 0.0,
+        "amount": 99000.0,
+        "bundle_id": null,
+        "classification": {
+          "conclusion": "結論: 費用として処理可能です（中小企業者等の少額減価償却資産の特例）。",
+          "decision": "OPEX",
+          "final_context": {
+            "amount_basis": "excl",
+            "bundle_role": "solo",
+            "description": "SEMES (/i+y=»5 Let's Note)",
+            "expenditure_amount": 99000.0,
+            "is_sme": true,
+            "prior_acquisition_cost": null,
+            "sme_ytd_applied": 0.0
+          },
+          "final_node_id": "c_opex_sme_special",
+          "history": [
+            "q_amount_basis",
+            "eval_auto_incidental",
+            "q_eval_bundle_role",
+            "eval_expenditure_amount",
+            "c_opex_sme_special"
+          ],
+          "reason": "30万円未満かつ年間合計300万円まで。"
+        },
+        "description": "SEMES (/i+y=»5 Let's Note)",
+        "line_uid": "temp_uid_0",
+        "localized_description_text": "SEMES (/i+y=»5 Let's Note)",
+        "page": 1,
+        "quantity": 1.0,
+        "role": "solo",
+        "row_index": 0,
+        "unit_price": 99000.0
+      },
+      {
+        "_bundle_score": 0.0,
+        "amount": 150000.0,
+        "bundle_id": null,
+        "classification": {
+          "conclusion": "結論: 費用として処理可能です（中小企業者等の少額減価償却資産の特例）。",
+          "decision": "OPEX",
+          "final_context": {
+            "amount_basis": "excl",
+            "bundle_role": "solo",
+            "description": "",
+            "expenditure_amount": 150000.0,
+            "is_sme": true,
+            "prior_acquisition_cost": null,
+            "sme_ytd_applied": 0.0
+          },
+          "final_node_id": "c_opex_sme_special",
+          "history": [
+            "q_amount_basis",
+            "eval_auto_incidental",
+            "q_eval_bundle_role",
+            "eval_expenditure_amount",
+            "c_opex_sme_special"
+          ],
+          "reason": "30万円未満かつ年間合計300万円まで。"
+        },
+        "description": "",
+        "line_uid": "temp_uid_1",
+        "page": 1,
+        "quantity": 1.0,
+        "role": "solo",
+        "row_index": 1,
+        "unit_price": 150000.0
+      },
+      {
+        "_bundle_score": 1.0,
+        "_bundle_trace": {
+          "kw_parent": 0.0
+        },
+        "amount": 1200000.0,
+        "bundle_id": 1,
+        "classification": {
+          "conclusion": "結論: 資産として計上します。",
+          "decision": "CAPEX",
+          "final_context": {
+            "amount_basis": "excl",
+            "bundle_role": "parent",
+            "description": "XYZ-A1",
+            "expenditure_amount": 1200000.0,
+            "is_sme": true,
+            "prior_acquisition_cost": null,
+            "sme_ytd_applied": 0.0
+          },
+          "final_node_id": "c_capex_default",
+          "history": [
+            "q_amount_basis",
+            "eval_auto_incidental",
+            "q_eval_bundle_role",
+            "eval_expenditure_amount",
+            "q_is_software",
+            "q_is_repair",
+            "c_capex_default"
+          ],
+          "reason": "金額基準を超え、他の費用項目に該当しないため。"
+        },
+        "description": "XYZ-A1",
+        "line_uid": "temp_uid_2",
+        "localized_description_text": "XYZ-A1",
+        "page": 1,
+        "quantity": 1.0,
+        "role": "parent",
+        "row_index": 2,
+        "unit_price": 1200000.0
+      },
+      {
+        "_bundle_score": 0.0,
+        "amount": 50000.0,
+        "bundle_id": null,
+        "classification": {
+          "conclusion": "結論: 費用として処理可能です（中小企業者等の少額減価償却資産の特例）。",
+          "decision": "OPEX",
+          "final_context": {
+            "amount_basis": "excl",
+            "bundle_role": "solo",
+            "description": "XYZ-A00###",
+            "expenditure_amount": 50000.0,
+            "is_sme": true,
+            "prior_acquisition_cost": null,
+            "sme_ytd_applied": 0.0
+          },
+          "final_node_id": "c_opex_sme_special",
+          "history": [
+            "q_amount_basis",
+            "eval_auto_incidental",
+            "q_eval_bundle_role",
+            "eval_expenditure_amount",
+            "c_opex_sme_special"
+          ],
+          "reason": "30万円未満かつ年間合計300万円まで。"
+        },
+        "description": "XYZ-A00###",
+        "line_uid": "temp_uid_3",
+        "localized_description_text": "XYZ-A00###",
+        "page": 1,
+        "quantity": 1.0,
+        "role": "solo",
+        "row_index": 3,
+        "unit_price": 50000.0
+      },
+      {
+        "_bundle_score": 0.0,
+        "amount": 250000.0,
+        "bundle_id": null,
+        "classification": {
+          "conclusion": "結論: 費用として処理可能です（中小企業者等の少額減価償却資産の特例）。",
+          "decision": "OPEX",
+          "final_context": {
+            "amount_basis": "excl",
+            "bundle_role": "solo",
+            "description": "",
+            "expenditure_amount": 250000.0,
+            "is_sme": true,
+            "prior_acquisition_cost": null,
+            "sme_ytd_applied": 0.0
+          },
+          "final_node_id": "c_opex_sme_special",
+          "history": [
+            "q_amount_basis",
+            "eval_auto_incidental",
+            "q_eval_bundle_role",
+            "eval_expenditure_amount",
+            "c_opex_sme_special"
+          ],
+          "reason": "30万円未満かつ年間合計300万円まで。"
+        },
+        "description": "",
+        "line_uid": "temp_uid_4",
+        "page": 1,
+        "quantity": null,
+        "role": "solo",
+        "row_index": 4,
+        "unit_price": 250000.0
+      },
+      {
+        "_bundle_score": 1.0,
+        "_bundle_trace": {
+          "kw_parent": 0.0
+        },
+        "amount": 750000.0,
+        "bundle_id": 2,
+        "classification": {
+          "conclusion": "結論: 資産として計上します。",
+          "decision": "CAPEX",
+          "final_context": {
+            "amount_basis": "excl",
+            "bundle_role": "parent",
+            "description": "AVHD1751tyz (3)",
+            "expenditure_amount": 750000.0,
+            "is_sme": true,
+            "prior_acquisition_cost": null,
+            "sme_ytd_applied": 0.0
+          },
+          "final_node_id": "c_capex_default",
+          "history": [
+            "q_amount_basis",
+            "eval_auto_incidental",
+            "q_eval_bundle_role",
+            "eval_expenditure_amount",
+            "q_is_software",
+            "q_is_repair",
+            "c_capex_default"
+          ],
+          "reason": "金額基準を超え、他の費用項目に該当しないため。"
+        },
+        "description": "AVHD1751tyz (3)",
+        "line_uid": "temp_uid_5",
+        "localized_description_text": "AVHD1751tyz (3)",
+        "page": 1,
+        "quantity": 1.0,
+        "role": "parent",
+        "row_index": 5,
+        "unit_price": 750000.0
+      }
+    ],
+    "recomputed_total": 2623950,
+    "subtotal": 2499000,
+    "total_matches": false
+  },
+  "raw_text": "+\n1:2025818\n**Â>TIL#751P-\n123-45671-2-3\nF.\nNo\naz\n#3\n()\n1\nSEMES (/i+y=»5 Let's Note)\n1\n99,000\n99,000\n2-E ()\n1\n150,000\n150,000\n3\nXYZ-A1\n1\n1,200,000\n1,200,000\nXYZ-A00###\n1\n50,000\n50,000\n5\n77\n1\n250,000\n250,000\n6\nAVHD1751tyz (3)\n1\n750,000\n750,000\nAt\n2,499,000\n",
+  "raw_text_length": 255,
+  "route_trace": {
+    "best_route": "invoice_pdf",
+    "tried_routes": [
+      "invoice_pdf",
+      "ocr_tiff"
+    ]
+  },
+  "total_amount": 2499000.0
+}

@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+.env
+.env.*
+.pytest_cache/
+coverage.xml
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Project artifacts
+artifacts/
+logs/
+*.log
+*.tmp
+temp_input.csv
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Media / Large files
+*.mp4
+*.mov
+*.avi
+*.mkv
+input_pdfs/
+docs/useful_life.xlsx

@@ -38,3 +38,20 @@ docs/useful_life.xlsx
 # Local identity files
 username.txt
 email.txt
+
+# local logs / backups / temp
+*.log
+*.bak
+*.bak_*
+*.tmp
+*.bat
+*.ps1
+*.csv~
+/fixed_asset_classifier/*.bak*
+/fixed_asset_classifier/*.py.bak*
+/wall_thinker_log_*.txt
+# local scripts used for debugging
+/create_workbook.py
+/verify_workbook.py
+/test_excel_read.py
+/test_if*.bat

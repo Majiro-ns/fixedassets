@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FAC reject record (v1)",
+  "type": "object",
+  "required": ["schema", "created_at", "source", "reason", "output"],
+  "additionalProperties": true,
+  "properties": {
+    "schema": { "const": "fac.reject.v1" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "source": {
+      "type": "object",
+      "required": ["bucket", "name", "content_type", "size"],
+      "properties": {
+        "bucket": { "type": "string" },
+        "name": { "type": "string" },
+        "content_type": { "type": "string" },
+        "size": { "oneOf": [{ "type": "integer" }, { "type": "string" }] }
+      }
+    },
+    "reason": { "type": "string" },
+    "extra": { "type": "object", "additionalProperties": true },
+    "output": {
+      "type": "object",
+      "required": ["bucket", "key"],
+      "properties": {
+        "bucket": { "type": "string" },
+        "key": { "type": "string" }
+      }
+    }
+  }
+}

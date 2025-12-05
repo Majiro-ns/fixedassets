@@ -191,6 +191,9 @@ def main(argv=None):
         
         # For config-based, we need to construct a resolved_recipe for consistency
         # This is a simplified resolved_recipe based on the config structure
+        # For config-based execution, we construct a simplified resolved_recipe from the config.
+        # This allows the rest of the pipeline (prompt building, validation, generation)
+        # to operate on a consistent resolved_recipe structure, regardless of input method.
         resolved_recipe = {
             "character": {"name": "Config Character", "description": "Generated from config"},
             "scene": {

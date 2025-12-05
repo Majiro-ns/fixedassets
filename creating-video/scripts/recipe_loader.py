@@ -77,6 +77,8 @@ def load_and_resolve_recipe(recipe_path: Path) -> Dict[str, Any]:
                 # Use deep_merge to apply nested overrides correctly
                 resolved_config[component_name] = _deep_merge(overrides, resolved_config[component_name])
             else:
+                # This case indicates an override was specified for a component that wasn't in the base recipe.
+                # This might be an error in the recipe or an intentional override of a non-existent component.
                 logger.warning(f"Override for unknown component '{component_name}' in recipe '{recipe_path.name}'. Ignoring.")
 
     # 3. Add top-level resolution from scene, as expected by prompt_builder and validators

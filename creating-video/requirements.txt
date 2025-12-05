@@ -1,5 +1,0 @@
-pyyaml
-numpy
-imageio
-imageio[ffmpeg]
-pytest

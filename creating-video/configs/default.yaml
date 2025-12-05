@@ -1,0 +1,33 @@
+backend:
+  type: dummy # Options: dummy, diffusers
+  diffusers:
+    model_name: "runwayml/stable-diffusion-v1-5" # Example model
+    device: "cuda" # Options: cuda, cpu
+    fp16: true # Use float16 for faster inference on compatible GPUs
+    # Add other relevant settings here for Diffusers
+    # scheduler: "DPMSolverMultistepScheduler"
+    # vae: "stabilityai/sd-vae-ft-mse"
+
+motion:
+  duration_sec: 4.0
+  fps: 24
+
+appearance:
+  hair_style: "twin-tailed two-side-up"
+  hair_color: "pure black"
+  lighting: "bright warm soft light"
+  camera: "front"
+
+resolution:
+  width: 512
+  height: 512
+
+paths:
+  before_image: "inputs/before.png"
+  after_image: "inputs/after_pose.png"
+  output_dir: "outputs/videos"
+  log_dir: "outputs/logs"
+
+seed:
+  value: 1234
+  enable_deterministic: true

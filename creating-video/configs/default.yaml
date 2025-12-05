@@ -1,0 +1,33 @@
+# Default configuration for video generation
+# This file defines the default settings for the video generation process.
+
+# Motion parameters
+motion:
+  duration_sec: 5.0 # Total duration of the video in seconds
+  fps: 24           # Frames per second
+  # phases: # Optional: Can define specific motion phases here or in a separate motion YAML
+
+# Resolution of the output video
+resolution:
+  width: 512
+  height: 512
+
+# Paths for output files
+paths:
+  output_dir: "outputs/videos" # Directory to save generated videos
+  log_dir: "outputs/logs"     # Directory to save generation logs
+
+# Random seed for reproducibility
+seed:
+  value: 42 # Use a fixed seed for consistent results
+
+# Backend configuration for video generation
+backend:
+  type: dummy # Options: dummy, diffusers
+  diffusers:
+    model_name: "runwayml/stable-diffusion-v1-5" # Example model
+    device: "cuda" # Options: cuda, cpu
+    fp16: true # Use float16 for faster inference on compatible GPUs
+    # Add other relevant settings here for Diffusers
+    # scheduler: "DPMSolverMultistepScheduler"
+    # vae: "stabilityai/sd-vae-ft-mse"

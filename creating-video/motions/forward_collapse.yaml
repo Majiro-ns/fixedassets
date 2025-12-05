@@ -1,0 +1,31 @@
+name: "Forward Collapse Motion"
+description: "A template motion describing a character sitting upright and then collapsing forward over their thighs."
+
+# Total duration of the motion clip in seconds.
+duration_sec: 4.0
+
+# Frames per second for the final video.
+fps: 24
+
+# Timeline of poses and transitions.
+# The generation engine will use these phases to construct the video.
+phases:
+  - name: "Phase 1: Sitting Upright (Hold)"
+    start_time: 0.0
+    end_time: 1.5
+    # A static pose held for the duration of this phase.
+    pose: "sitting upright in a chair, hands resting on lap, facing forward, neutral expression"
+
+  - name: "Phase 2: Collapsing Forward (Transition)"
+    start_time: 1.5
+    end_time: 3.0
+    # A transition between two poses.
+    pose_from: "sitting upright in a chair, hands resting on lap, facing forward, neutral expression"
+    pose_to: "collapsed forward, chest resting on thighs, head down towards knees, arms hanging limp at sides"
+    interpolation: "ease-in-out" # Hint for the motion model.
+
+  - name: "Phase 3: Collapsed Pose (Hold)"
+    start_time: 3.0
+    end_time: 4.0
+    # A static pose held until the end of the clip.
+    pose: "collapsed forward, chest resting on thighs, head down towards knees, arms hanging limp at sides"

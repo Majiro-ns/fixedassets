@@ -1,0 +1,32 @@
+name: "Idol Forward Collapse Recipe"
+description: "A complete recipe that combines a character, a scene, and a motion to generate a specific video."
+
+# --- Component Imports ---
+# The generation engine will load these component files to build the full prompt.
+# Paths are relative to the project root or can be resolved by the engine.
+character: "characters/default_idol.yaml"
+scene: "scenes/bright_front.yaml"
+motion: "motions/forward_collapse.yaml"
+
+# --- Overrides & Additions ---
+# Any values here will override the values from the imported component files for this specific recipe.
+# This allows for quick variations without creating new component files.
+overrides:
+  scene:
+    resolution:
+      width: 1024
+      height: 1024
+    background:
+      description: "nighttime city street with neon lights, bokeh"
+  
+  motion:
+    duration_sec: 5.0 # Make the motion slightly longer
+
+  character:
+    appearance:
+      hair_color: "vibrant dark blue"
+      clothing: "black leather jacket over a white t-shirt"
+
+# --- Global Seed ---
+# A seed for deterministic generation.
+seed: 1337

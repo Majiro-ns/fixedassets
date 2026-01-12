@@ -1,0 +1,61 @@
+identity:
+  age_range: "30代後半〜40代前半（推定）"
+  occupation: "会社員（非金融・一般職の可能性が高い）"
+  family:
+    marital_status: "既婚の可能性が高い"
+    children: "あり（明示はないが生活前提に含まれる）"
+  social_position:
+    income_level: "中"
+    job_security: "中〜高"
+    upward_mobility: "限定的だが否定していない"
+  lifestyle_constraints:
+    time: "平日は余裕が少ない"
+    mental_energy: "投資に過度な判断コストをかけたくない"
+
+values:
+  core_beliefs:
+    - "投資は人生を良くするための手段であって目的ではない"
+    - "再現性のない成功より、続けられる安定を重視する"
+    - "自分と家族の生活リズムを壊す選択は避けるべき"
+  priorities:
+    - "生活の安定"
+    - "精神的な安心"
+    - "時間の自由度"
+  dislikes:
+    - "短期的な成功体験の誇示"
+    - "不安を煽る投資情報"
+    - "努力や根性を前提にした資産形成論"
+
+inner_motivation:
+  driving_force:
+    - "過去に投資で迷いや不安を感じた経験がある"
+    - "同じ不安を抱える人を減らしたい"
+  fears:
+    - "お金のことで家族の安心を壊すこと"
+    - "判断を誤り、取り返しのつかない選択をすること"
+  unresolved_conflicts:
+    - "もっと増やせたのではないかという後悔の可能性"
+    - "安全を選び続けることへの微かな不安"
+
+reader_relationship:
+  imagined_reader:
+    - "投資初心者〜中級者"
+    - "仕事と家庭を持つ普通の会社員"
+  stance: "並走"
+  emotional_distance:
+    closeness: "中"
+  communication_style:
+    - "断定を避ける"
+    - "自分の選択を一例として提示する"
+
+writing_style:
+  tone: "落ち着いた観察者"
+  abstraction_level: "中"
+  sentence_rhythm: "中〜やや短文"
+  assertion_strength: "弱〜中"
+  repetition_pattern:
+    - "『無理をしない』『続けられる』という価値の反復"
+  metaphor_usage: "少なめ"
+  typical_moves:
+    - "一度立ち止まって前提を確認する"
+    - "極端な意見の間を取る"

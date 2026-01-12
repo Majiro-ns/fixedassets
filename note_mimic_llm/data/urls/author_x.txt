@@ -1,0 +1,5 @@
+# サンプル: 1行1URL。# でコメント、空行は無視されます。
+# 本番では3本以上を推奨
+https://note.com/yusuke_motoyama/n/neb0756f2770f
+https://note.com/yusuke_motoyama/n/n40a63005fc19
+https://note.com/yusuke_motoyama/n/ndd28f5320c27

@@ -1,0 +1,47 @@
+{
+  "mimic_score": 70,
+  "diagnosis": {
+    "matches": [
+      "Consistent use of formal language",
+      "Use of occasional rhetorical questions"
+    ],
+    "mismatches": [
+      "Overuse of direct assertiveness (e.g., '乱暴な仕事の押しつけ')",
+      "Lack of conversational tone and idioms"
+    ]
+  },
+  "fix_instructions": [
+    "最優先で修正: 改行頻度",
+    "Reduce direct assertiveness and use more subtle language",
+    "Add more conversational tone and idioms to make the text feel more natural",
+    "Use transitional phrases to connect ideas between paragraphs"
+  ],
+  "checklist": [
+    {
+      "item": "語尾（ですます/である）",
+      "pass": true,
+      "note": "..."
+    },
+    {
+      "item": "改行頻度",
+      "pass": false,
+      "note": "..."
+    },
+    {
+      "item": "断定の強さ",
+      "pass": true,
+      "note": "..."
+    },
+    {
+      "item": "比喩の頻度",
+      "pass": true,
+      "note": "..."
+    },
+    {
+      "item": "見出し/構造",
+      "pass": true,
+      "note": "..."
+    }
+  ],
+  "rewrite_strategy": "Rewrite the text to make it more conversational and subtle, while maintaining its formal tone"
+}

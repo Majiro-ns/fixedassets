@@ -1,0 +1,50 @@
+{
+  "mimic_score": 65,
+  "diagnosis": {
+    "matches": [
+      "Use of formal language",
+      "Occasional use of rhetorical questions",
+      "Proper use of commas and periods"
+    ],
+    "mismatches": [
+      "Overuse of simple sentences",
+      "Lack of variety in sentence structure",
+      "Too many repeated ideas"
+    ]
+  },
+  "fix_instructions": [
+    "最優先で修正: 改行頻度",
+    "最優先で修正: 見出し/構造",
+    "Use more complex sentence structures to convey your ideas.",
+    "Vary the length and structure of your sentences.",
+    "Avoid repetitive ideas and focus on one main point per paragraph."
+  ],
+  "checklist": [
+    {
+      "item": "語尾（ですます/である）",
+      "pass": true,
+      "note": "..."
+    },
+    {
+      "item": "改行頻度",
+      "pass": false,
+      "note": "The draft has frequent line breaks, but it would be better to have a more consistent rhythm."
+    },
+    {
+      "item": "断定の強さ",
+      "pass": true,
+      "note": "..."
+    },
+    {
+      "item": "比喩の頻度",
+      "pass": true,
+      "note": "..."
+    },
+    {
+      "item": "見出し/構造",
+      "pass": false,
+      "note": "The draft lacks clear headings and a well-structured outline."
+    }
+  ],
+  "rewrite_strategy": "Rewrite the draft to improve sentence structure, variety, and overall flow while maintaining its formal tone."
+}

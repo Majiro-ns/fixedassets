@@ -188,6 +188,68 @@ describe('PDFReviewSection — PDF report (F-12)', () => {
     });
   });
 
+  it('エラー時にアラートUIが表示される (CR W-3対応: cmd_152k_sub3)', async () => {
+    // CHECK-9根拠: PDF出力失敗時、ユーザーへのフィードバックがないと問題を認識できない（CR W-3）
+    // fetch が失敗レスポンスを返した場合、エラーアラートが画面に表示されること
+    _mockFetch.mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+    } as unknown as Response);
+
+    render(
+      <PDFReviewSection items={[capitalItem]} onAction={vi.fn()} onApproveAll={vi.fn()} />
+    );
+
+    // エラー前はアラート非表示
+    expect(screen.queryByTestId('pdf-error-alert')).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId('btn-pdf-report'));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('pdf-error-alert')).toBeInTheDocument();
+    });
+    expect(screen.getByTestId('pdf-error-alert')).toHaveTextContent('PDF生成失敗: 500');
+  });
+
+  it('エラーメッセージが一般的な例外でも表示される', async () => {
+    // CHECK-9根拠: fetchがネットワークエラー等Errorオブジェクトをthrowした場合のUI確認
+    _mockFetch.mockRejectedValueOnce(new Error('ネットワークエラー'));
+
+    render(
+      <PDFReviewSection items={[capitalItem]} onAction={vi.fn()} onApproveAll={vi.fn()} />
+    );
+
+    fireEvent.click(screen.getByTestId('btn-pdf-report'));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('pdf-error-alert')).toBeInTheDocument();
+    });
+    expect(screen.getByTestId('pdf-error-alert')).toHaveTextContent('ネットワークエラー');
+  });
+
+  it('再試行時に前回エラーがクリアされる', async () => {
+    // CHECK-9根拠: 1回目失敗→エラー表示。2回目成功→エラーが消えること
+    _mockFetch
+      .mockResolvedValueOnce({ ok: false, status: 503 } as unknown as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        blob: () => Promise.resolve(new Blob(['%PDF'], { type: 'application/pdf' })),
+      } as unknown as Response);
+    vi.stubGlobal('URL', { createObjectURL: vi.fn(() => 'blob:url'), revokeObjectURL: vi.fn() });
+
+    render(
+      <PDFReviewSection items={[capitalItem]} onAction={vi.fn()} onApproveAll={vi.fn()} />
+    );
+
+    // 1回目クリック → エラー表示
+    fireEvent.click(screen.getByTestId('btn-pdf-report'));
+    await waitFor(() => expect(screen.getByTestId('pdf-error-alert')).toBeInTheDocument());
+
+    // 2回目クリック → エラー消去
+    fireEvent.click(screen.getByTestId('btn-pdf-report'));
+    await waitFor(() => expect(screen.queryByTestId('pdf-error-alert')).not.toBeInTheDocument());
+  });
+
   it('fetch payload contains items and summary', async () => {
     const mockBlob = new Blob(['%PDF'], { type: 'application/pdf' });
     _mockFetch.mockResolvedValueOnce({

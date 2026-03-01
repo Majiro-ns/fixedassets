@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { Building2, CheckCircle2, HelpCircle, Download, CheckCheck, FileText } from 'lucide-react';
+import { Building2, CheckCircle2, HelpCircle, Download, CheckCheck, FileText, AlertTriangle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { LineItemReviewCard } from '@/components/LineItemReviewCard';
 import type { Decision } from '@/types/classify';
 import type { LineItemWithAction, UserAction, CsvRow } from '@/types/pdf_review';
@@ -137,6 +138,7 @@ async function exportReportPdf(
 
 export function PDFReviewSection({ items, onAction, onApproveAll }: PDFReviewSectionProps) {
   const [pdfLoading, setPdfLoading] = useState(false);
+  const [pdfError, setPdfError] = useState<string | null>(null);
 
   if (items.length === 0) return null;
 
@@ -204,10 +206,13 @@ export function PDFReviewSection({ items, onAction, onApproveAll }: PDFReviewSec
               disabled={pdfLoading}
               onClick={async () => {
                 setPdfLoading(true);
+                setPdfError(null);
                 try {
                   await exportReportPdf(items, { capitalTotal, expenseTotal, pendingCount });
                 } catch (err) {
                   console.error('PDF出力エラー:', err);
+                  const msg = err instanceof Error ? err.message : 'PDF出力中にエラーが発生しました';
+                  setPdfError(msg);
                 } finally {
                   setPdfLoading(false);
                 }
@@ -218,6 +223,14 @@ export function PDFReviewSection({ items, onAction, onApproveAll }: PDFReviewSec
               {pdfLoading ? 'PDF生成中…' : '証跡レポートPDF'}
             </Button>
           </div>
+
+          {/* PDF出力エラー通知（CR W-3対応: cmd_152k_sub3） */}
+          {pdfError && (
+            <Alert variant="destructive" className="mt-3" data-testid="pdf-error-alert">
+              <AlertTriangle className="size-4" />
+              <AlertDescription>{pdfError}</AlertDescription>
+            </Alert>
+          )}
         </CardContent>
       </Card>
 

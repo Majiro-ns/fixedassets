@@ -137,6 +137,23 @@ ${REPORT}" \
         fi
         ;;
 
+    daily_refit_keirin)
+        # 毎日 07:30 日次 hit_model refit（案C / cmd_126k）
+        # Stage1（07:00）完了後・Stage2（手動）前に実行
+        # 月次(毎月1日)・週次(日曜)と同日の場合は daily_refit.py 内でSKIP
+        MRT_ROOT="/mnt/c/Users/owner/Documents/Obsidian Vault/10_Projects/keirin_prediction"
+        cd "$MRT_ROOT" || exit 1
+        # features.csv を最新 DB から再生成（Stage1 完了後なので当日分が含まれる）
+        echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] features.csv 更新中..." >> "$LOG_FILE"
+        if ! "$PYTHON" src/ml/build_features.py >> "$LOG_FILE" 2>&1; then
+            echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] build_features.py 失敗。daily_refit をスキップ" >> "$LOG_FILE"
+            EXIT_CODE=1
+        else
+            "$PYTHON" src/pipeline/daily_refit.py >> "$LOG_FILE" 2>&1
+            EXIT_CODE=$?
+        fi
+        ;;
+
     weekly_retrain_keirin)
         # 毎週日曜 0:00 hit_model 週次ミニ再訓練（E5 / cmd_119k）
         # 月次と同週の場合は weekly_retrain.py 内でスキップ

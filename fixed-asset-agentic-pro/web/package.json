@@ -10,8 +10,8 @@
     "lint:fix": "eslint src --ext .ts,.tsx --fix",
     "format": "prettier --write src/**/*.{ts,tsx}",
     "format:check": "prettier --check src/**/*.{ts,tsx}",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "test": "./node_modules/.bin/vitest run",
+    "test:watch": "./node_modules/.bin/vitest"
   },
   "dependencies": {
     "@eslint/eslintrc": "^3.3.4",

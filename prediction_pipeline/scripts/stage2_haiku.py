@@ -87,7 +87,12 @@ def _parse_axis_partners(prediction_text: str) -> tuple[int | None, list[int]]:
 
 
 def get_pending_requests(limit: int = 0) -> list:
-    """未処理（results/に対応ファイルなし）のリクエストYAMLを返す。"""
+    """未処理（results/に対応ファイルなし）のリクエストYAMLを返す。
+
+    F10フィルター適用（#T002対策案1 cmd_132k_sub3 2026-03-01）:
+    f10_passed=False のリクエストはスキップする（confidence_score < min_confidence_score）。
+    f10_passed キーが存在しない（旧フォーマット）場合は後方互換で処理対象に含める。
+    """
     if not REQ_DIR.exists():
         return []
     result = []
@@ -96,6 +101,10 @@ def get_pending_requests(limit: int = 0) -> list:
         res_file = RES_DIR / f"{task_id}.yaml"
         if not res_file.exists():
             req = yaml.safe_load(req_file.read_text(encoding="utf-8"))
+            # F10除外: confidence_score < min_confidence_score のレースをスキップ
+            if not req.get("f10_passed", True):
+                print(f"  [F10除外] {task_id}: conf={req.get('confidence_score', '?')} < min_confidence_score")
+                continue
             result.append((task_id, req, req_file))
         if limit > 0 and len(result) >= limit:
             break

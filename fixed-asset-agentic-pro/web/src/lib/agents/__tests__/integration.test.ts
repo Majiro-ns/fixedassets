@@ -27,7 +27,7 @@ import { describe, it, expect } from 'vitest';
 import { runTaxAgent } from '../taxAgent';
 import { runPracticeAgent } from '../practiceAgent';
 import { aggregate } from '../aggregator';
-import { transformAggregatedToV2 } from '@/app/api/v2/classify_pdf/route';
+import { transformAggregatedToV2 } from '@/app/api/v2/classify_pdf/route.helpers';
 import type { TaxAgentResult, PracticeAgentResult, AgentVerdict } from '@/types/multi_agent';
 import type { ExtractedLineItem } from '@/types/classify_pdf_v2';
 
@@ -108,7 +108,7 @@ describe('A: Phase 2 E2E フロー — dry-run（ANTHROPIC_API_KEY 未設定）'
     expect(v2.request_id).toBe('req-a4-test');
     expect(v2.status).toBe('success');
     expect(v2.line_results).toHaveLength(2);
-    expect(v2.extracted.items).toHaveLength(2);
+    expect(v2.extracted?.items).toHaveLength(2);
     expect(v2.audit_trail_id).toBeNull();
 
     // 全明細 GUIDANCE → capital=0, expense=0, guidance=300,000

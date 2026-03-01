@@ -15,7 +15,7 @@ import {
   getFeatureFlags,
   transformAggregatedToV2,
   extractLineItemsFromClassify,
-} from './route';
+} from './route.helpers';
 import type { ClassifyResponse } from '@/types/classify';
 import type { ExtractedLineItem } from '@/types/classify_pdf_v2';
 import type { AggregatedResult } from '@/types/multi_agent';

@@ -142,8 +142,15 @@ ${REPORT}" \
         # 月次と同週の場合は weekly_retrain.py 内でスキップ
         MRT_ROOT="/mnt/c/Users/owner/Documents/Obsidian Vault/10_Projects/keirin_prediction"
         cd "$MRT_ROOT" || exit 1
-        "$PYTHON" src/pipeline/weekly_retrain.py >> "$LOG_FILE" 2>&1
-        EXIT_CODE=$?
+        # features.csv を最新 DB から再生成（cmd_125k: バックフィル後の鮮度保証）
+        echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] features.csv 更新中..." >> "$LOG_FILE"
+        if ! "$PYTHON" src/ml/build_features.py >> "$LOG_FILE" 2>&1; then
+            echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] build_features.py 失敗。weekly_retrain をスキップ" >> "$LOG_FILE"
+            EXIT_CODE=1
+        else
+            "$PYTHON" src/pipeline/weekly_retrain.py >> "$LOG_FILE" 2>&1
+            EXIT_CODE=$?
+        fi
         ;;
 
     monthly_retrain)

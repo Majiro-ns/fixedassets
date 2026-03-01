@@ -13,6 +13,8 @@ import {
   HelpCircle,
   Loader2,
   Upload,
+  FileText,
+  PenLine,
 } from 'lucide-react';
 
 import { MainLayout } from '@/components/layout/MainLayout';
@@ -25,10 +27,12 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { classifyAsset } from '@/lib/api';
 import type { ClassifyRequest, ClassifyResponse, Decision, HistoryEntry } from '@/types/classify';
+import type { LineItemWithAction, UserAction } from '@/types/pdf_review';
 import { GuidanceWizard } from '@/components/GuidanceWizard';
 import { HistoryPanel } from '@/components/HistoryPanel';
 import { LineItemsTable } from '@/components/LineItemsTable';
 import { PDFUploadCard } from '@/components/PDFUploadCard';
+import { PDFReviewSection } from '@/components/PDFReviewSection';
 import { TaxBoundaryCard } from '@/components/TaxBoundaryCard';
 import { SummaryCard } from '@/components/SummaryCard';
 import { NextActionCard } from '@/components/NextActionCard';
@@ -195,13 +199,54 @@ function ResultCard({ result }: { result: ClassifyResponse }) {
   );
 }
 
+// ─── LineItemWithAction への変換ユーティリティ ─────────────────────────
+let _idCounter = 0;
+function toLineItemWithAction(result: ClassifyResponse): LineItemWithAction[] {
+  if (result.line_items.length > 0) {
+    return result.line_items.map((item) => ({
+      id: `li-${++_idCounter}`,
+      description: item.description,
+      amount: item.amount,
+      verdict: item.classification,
+      confidence: result.confidence,
+      rationale: result.reasons[0],
+      userAction: 'pending',
+      finalVerdict: item.classification,
+    }));
+  }
+  // line_items が空の場合は単件として扱う
+  return [
+    {
+      id: `li-${++_idCounter}`,
+      description: 'PDF判定結果',
+      amount: undefined,
+      verdict: result.decision,
+      confidence: result.confidence,
+      rationale: result.reasons[0],
+      userAction: 'pending',
+      finalVerdict: result.decision,
+    },
+  ];
+}
+
+// ─── タブ型 ───────────────────────────────────────────────────────────
+type ActiveTab = 'pdf' | 'manual';
+
 // ─── メインページ ─────────────────────────────────────────────────────
 export default function HomePage() {
+  const [activeTab, setActiveTab] = useState<ActiveTab>('pdf');
+
+  // PDF判定用状態
+  const [pdfLineItems, setPdfLineItems] = useState<LineItemWithAction[]>([]);
+
+  // 手入力判定用状態
   const [result, setResult] = useState<ClassifyResponse | null>(null);
   const [originalRequest, setOriginalRequest] = useState<ClassifyRequest | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
+
+  // リース・減価償却用
   const [leaseResult, setLeaseResult] = useState<LeaseClassifyResponse | null>(null);
   const [isLeaseLoading, setIsLeaseLoading] = useState(false);
   const [leaseError, setLeaseError] = useState<string | null>(null);
@@ -209,7 +254,6 @@ export default function HomePage() {
   const [isDepreciationLoading, setIsDepreciationLoading] = useState(false);
   const [depreciationError, setDepreciationError] = useState<string | null>(null);
 
-  // 教師データ（Few-shot 用）
   const trainingRecords = useTrainingDataStore((s) => s.records);
 
   const {
@@ -223,6 +267,32 @@ export default function HomePage() {
   const watchAmount = watch('amount');
   const watchDescription = watch('description');
 
+  // ─── PDF 判定結果ハンドラ ───────────────────────────────────────────
+  const handlePdfResult = (res: ClassifyResponse) => {
+    setPdfLineItems(toLineItemWithAction(res));
+  };
+
+  // ─── PDF 明細アクション ────────────────────────────────────────────
+  const handleLineItemAction = (id: string, action: UserAction, finalVerdict: Decision) => {
+    setPdfLineItems((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, userAction: action, finalVerdict } : item
+      )
+    );
+  };
+
+  // ─── 全承認 ───────────────────────────────────────────────────────
+  const handleApproveAll = () => {
+    setPdfLineItems((prev) =>
+      prev.map((item) =>
+        item.userAction === 'pending' && item.confidence >= 0.8
+          ? { ...item, userAction: 'approved', finalVerdict: item.verdict }
+          : item
+      )
+    );
+  };
+
+  // ─── 手入力判定 ────────────────────────────────────────────────────
   const onSubmit = async (values: FormValues) => {
     setIsLoading(true);
     setApiError(null);
@@ -234,7 +304,6 @@ export default function HomePage() {
       account: values.account || undefined,
     };
     try {
-      // 教師データが登録されていれば Few-shot プロンプト付きで呼び出す
       const res = await classifyAsset(req, trainingRecords);
       setOriginalRequest(req);
       setResult(res);
@@ -278,18 +347,18 @@ export default function HomePage() {
     <MainLayout>
       <div className="max-w-3xl mx-auto space-y-8">
 
-        {/* ── Section 1: ヒーロー ────────────────────────────────────── */}
+        {/* ── ヒーローセクション ──────────────────────────────────── */}
         <div className="text-center space-y-4 py-6">
           <div className="flex items-center justify-center gap-2">
             <Building2 className="size-8 text-primary" />
             <h1 className="text-3xl font-bold tracking-tight">固定資産AI仕分けアドバイザー</h1>
           </div>
           <p className="text-muted-foreground max-w-xl mx-auto">
-            購入した物品・工事・ソフトウェアが<strong>固定資産</strong>か<strong>費用</strong>かを
-            AIが自動判定します。仕訳情報や資産の説明を入力してください。
+            請求書・領収書のPDFをアップロードするだけで、AIが<strong>固定資産</strong>か<strong>費用</strong>かを
+            自動判定します。
           </p>
           <div className="flex flex-wrap items-center justify-center gap-2">
-            <Badge variant="secondary">Phase 1 基盤</Badge>
+            <Badge variant="secondary">PDF-First</Badge>
             <Badge variant="outline">固定資産 / 費用 判定</Badge>
             <Badge variant="outline">信頼度・根拠 可視化</Badge>
           </div>
@@ -308,154 +377,199 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* ── Section 1.5: PDF 判定 ──────────────────────────────────── */}
-        <PDFUploadCard
-          onResult={(res) => {
-            setResult(res);
-            setOriginalRequest({ description: 'PDF判定', amount: undefined });
-          }}
-        />
+        {/* ── タブ切り替え ──────────────────────────────────────── */}
+        <div className="flex rounded-lg border overflow-hidden" role="tablist">
+          <button
+            role="tab"
+            aria-selected={activeTab === 'pdf'}
+            onClick={() => setActiveTab('pdf')}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors
+              ${activeTab === 'pdf'
+                ? 'bg-primary text-primary-foreground'
+                : 'bg-muted/50 text-muted-foreground hover:bg-muted'
+              }`}
+            data-testid="tab-pdf"
+          >
+            <FileText className="size-4" />
+            📄 PDFアップロード
+          </button>
+          <button
+            role="tab"
+            aria-selected={activeTab === 'manual'}
+            onClick={() => setActiveTab('manual')}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors
+              ${activeTab === 'manual'
+                ? 'bg-primary text-primary-foreground'
+                : 'bg-muted/50 text-muted-foreground hover:bg-muted'
+              }`}
+            data-testid="tab-manual"
+          >
+            <PenLine className="size-4" />
+            ✏️ 手入力
+          </button>
+        </div>
 
-        {/* ── Section 2: 入力フォーム ────────────────────────────────── */}
-        <Card>
-          <CardHeader>
-            <CardTitle>資産情報の入力</CardTitle>
-            <CardDescription>
-              購入した物品や工事の内容を入力してください。金額・勘定科目は任意です。
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {/* デモデータボタン */}
-            <div className="flex flex-wrap items-center gap-2 mb-4">
-              <span className="text-xs text-muted-foreground">💡 デモデータで試す:</span>
-              {DEMO_DATA.map((d) => (
-                <Button
-                  key={d.label}
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => {
-                    setValue('description', d.description);
-                    setValue('amount', String(d.amount));
-                    setValue('account', d.account);
-                  }}
-                >
-                  {d.label}
-                </Button>
-              ))}
-            </div>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-              {/* 説明（必須） */}
-              <div className="space-y-2">
-                <Label htmlFor="description">
-                  説明・仕訳内容 <span className="text-destructive">*</span>
-                </Label>
-                <Textarea
-                  id="description"
-                  placeholder={
-                    '例: サーバーラック購入費用 150万円。耐用年数5年予定。\n例: 事務所の壁紙張り替え工事 50万円。原状回復目的。'
-                  }
-                  rows={5}
-                  {...register('description')}
-                  aria-invalid={!!errors.description}
-                />
-                {errors.description && (
-                  <p className="text-xs text-destructive">{errors.description.message}</p>
-                )}
-              </div>
+        {/* ── PDF タブ ─────────────────────────────────────────── */}
+        {activeTab === 'pdf' && (
+          <div className="space-y-6" role="tabpanel" aria-label="PDFアップロード">
+            <PDFUploadCard
+              onResult={handlePdfResult}
+              onManualInput={() => setActiveTab('manual')}
+            />
+            {pdfLineItems.length > 0 && (
+              <PDFReviewSection
+                items={pdfLineItems}
+                onAction={handleLineItemAction}
+                onApproveAll={handleApproveAll}
+              />
+            )}
+          </div>
+        )}
 
-              {/* 類似事例パネル（教師データがあれば description 入力に連動して表示） */}
-              <SimilarCasesPanel query={watchDescription ?? ''} />
+        {/* ── 手入力タブ ───────────────────────────────────────── */}
+        {activeTab === 'manual' && (
+          <div className="space-y-6" role="tabpanel" aria-label="手入力">
 
-              {/* 金額・勘定科目（任意） */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="amount">金額（円・任意）</Label>
-                  <Input
-                    id="amount"
-                    type="text"
-                    inputMode="numeric"
-                    placeholder="1500000"
-                    {...register('amount')}
-                    aria-invalid={!!errors.amount}
-                  />
-                  {errors.amount && (
-                    <p className="text-xs text-destructive">{errors.amount.message}</p>
-                  )}
+            {/* 入力フォーム */}
+            <Card>
+              <CardHeader>
+                <CardTitle>資産情報の入力</CardTitle>
+                <CardDescription>
+                  購入した物品や工事の内容を入力してください。金額・勘定科目は任意です。
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {/* デモデータボタン */}
+                <div className="flex flex-wrap items-center gap-2 mb-4">
+                  <span className="text-xs text-muted-foreground">💡 デモデータで試す:</span>
+                  {DEMO_DATA.map((d) => (
+                    <Button
+                      key={d.label}
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setValue('description', d.description);
+                        setValue('amount', String(d.amount));
+                        setValue('account', d.account);
+                      }}
+                    >
+                      {d.label}
+                    </Button>
+                  ))}
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="account">勘定科目（任意）</Label>
-                  <Input
-                    id="account"
-                    type="text"
-                    placeholder="例: 備品、建物附属設備"
-                    {...register('account')}
-                    aria-invalid={!!errors.account}
-                  />
-                  {errors.account && (
-                    <p className="text-xs text-destructive">{errors.account.message}</p>
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                  {/* 説明（必須） */}
+                  <div className="space-y-2">
+                    <Label htmlFor="description">
+                      説明・仕訳内容 <span className="text-destructive">*</span>
+                    </Label>
+                    <Textarea
+                      id="description"
+                      placeholder={
+                        '例: サーバーラック購入費用 150万円。耐用年数5年予定。\n例: 事務所の壁紙張り替え工事 50万円。原状回復目的。'
+                      }
+                      rows={5}
+                      {...register('description')}
+                      aria-invalid={!!errors.description}
+                    />
+                    {errors.description && (
+                      <p className="text-xs text-destructive">{errors.description.message}</p>
+                    )}
+                  </div>
+
+                  {/* 類似事例パネル */}
+                  <SimilarCasesPanel query={watchDescription ?? ''} />
+
+                  {/* 金額・勘定科目 */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="amount">金額（円・任意）</Label>
+                      <Input
+                        id="amount"
+                        type="text"
+                        inputMode="numeric"
+                        placeholder="1500000"
+                        {...register('amount')}
+                        aria-invalid={!!errors.amount}
+                      />
+                      {errors.amount && (
+                        <p className="text-xs text-destructive">{errors.amount.message}</p>
+                      )}
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="account">勘定科目（任意）</Label>
+                      <Input
+                        id="account"
+                        type="text"
+                        placeholder="例: 備品、建物附属設備"
+                        {...register('account')}
+                        aria-invalid={!!errors.account}
+                      />
+                      {errors.account && (
+                        <p className="text-xs text-destructive">{errors.account.message}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* エラー */}
+                  {apiError && (
+                    <Alert variant="destructive">
+                      <AlertTriangle className="size-4" />
+                      <AlertTitle>エラー</AlertTitle>
+                      <AlertDescription>{apiError}</AlertDescription>
+                    </Alert>
                   )}
-                </div>
-              </div>
 
-              {/* エラー */}
-              {apiError && (
-                <Alert variant="destructive">
-                  <AlertTriangle className="size-4" />
-                  <AlertTitle>エラー</AlertTitle>
-                  <AlertDescription>{apiError}</AlertDescription>
-                </Alert>
-              )}
+                  <Button type="submit" disabled={isLoading} size="lg" className="w-full">
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="size-4 animate-spin" />
+                        判定中...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="size-4" />
+                        AIで判定する
+                      </>
+                    )}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
 
-              <Button type="submit" disabled={isLoading} size="lg" className="w-full">
-                {isLoading ? (
-                  <>
-                    <Loader2 className="size-4 animate-spin" />
-                    判定中...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="size-4" />
-                    AIで判定する
-                  </>
-                )}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+            {/* 金額ベース税務ルール */}
+            <TaxBoundaryCard amount={watchAmount ? Number(watchAmount) : undefined} />
 
-        {/* ── Section 2.5: 金額ベース税務ルール（常時表示） ───────────── */}
-        <TaxBoundaryCard amount={watchAmount ? Number(watchAmount) : undefined} />
+            {/* 結果カード */}
+            {result && <ResultCard result={result} />}
 
-        {/* ── Section 3: 結果カード ──────────────────────────────────── */}
-        {result && <ResultCard result={result} />}
+            {/* 明細内訳 */}
+            {result && <LineItemsTable items={result.line_items} />}
 
-        {/* ── Section 3.5: 明細内訳 ──────────────────────────────────── */}
-        {result && <LineItemsTable items={result.line_items} />}
+            {/* 集計サマリ */}
+            {result?.line_items && result.line_items.length > 0 && (
+              <SummaryCard items={result.line_items} />
+            )}
 
-        {/* ── Section 3.6: 集計サマリ ────────────────────────────────── */}
-        {result?.line_items && result.line_items.length > 0 && (
-          <SummaryCard items={result.line_items} />
+            {/* 次のアクション */}
+            {result && <NextActionCard decision={result.decision} />}
+
+            {/* GUIDANCE 2段階ウィザード */}
+            {result?.decision === 'GUIDANCE' && originalRequest && (
+              <GuidanceWizard
+                stage0Result={result}
+                originalRequest={originalRequest}
+                onResolved={(resolved) => setResult(resolved)}
+              />
+            )}
+          </div>
         )}
 
-        {/* ── Section 3.7: 次のアクション ─────────────────────────────── */}
-        {result && (
-          <NextActionCard decision={result.decision} />
-        )}
-
-        {/* ── Section 4: GUIDANCE 2段階ウィザード ─────────────────────── */}
-        {result?.decision === 'GUIDANCE' && originalRequest && (
-          <GuidanceWizard
-            stage0Result={result}
-            originalRequest={originalRequest}
-            onResolved={(resolved) => setResult(resolved)}
-          />
-        )}
-
-        {/* ── Section 5: 判定履歴 ────────────────────────────────────── */}
+        {/* ── 判定履歴（共通） ──────────────────────────────────── */}
         {history.length > 0 && <HistoryPanel history={history} />}
 
-        {/* ── Section 6: IFRS 16 リース会計判定 ──────────────────────── */}
+        {/* ── IFRS 16 リース会計判定 ───────────────────────────── */}
         <div className="border-t pt-8 mt-4">
           <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <Building2 className="size-5 text-blue-600" />
@@ -472,7 +586,7 @@ export default function HomePage() {
           {leaseResult && <LeaseResultCard result={leaseResult} />}
         </div>
 
-        {/* ── Section 7: 減価償却計算 ─────────────────────────────────── */}
+        {/* ── 減価償却計算 ─────────────────────────────────────── */}
         <div className="border-t pt-8 mt-4">
           <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <Building2 className="size-5 text-green-600" />
@@ -489,7 +603,7 @@ export default function HomePage() {
           {depreciationResult && <DepreciationResultCard result={depreciationResult} />}
         </div>
 
-        {/* ── Section 8: 教師データ CSVインポート + 管理 ───────────────── */}
+        {/* ── 教師データ CSV インポート + 管理 ─────────────────── */}
         <div className="border-t pt-8 mt-4">
           <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <Upload className="size-5 text-purple-600" />
@@ -497,9 +611,7 @@ export default function HomePage() {
           </h2>
           <div className="space-y-4">
             <TrainingDataImportCard />
-            {/* F-T02: PDF教師データインポート（NEXT_PUBLIC_PDF_TRAINING_ENABLED=1 で表示） */}
             <PdfTrainingImportCard />
-            {/* 登録済みデータの管理（F-T05）: データがあれば表示 */}
             <TrainingDataManagerCard />
           </div>
         </div>

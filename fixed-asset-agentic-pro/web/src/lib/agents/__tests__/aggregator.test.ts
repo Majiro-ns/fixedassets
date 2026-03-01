@@ -423,6 +423,68 @@ describe('aggregate: disagreement_reason（分裂時のみ設定）', () => {
   });
 });
 
+// ─── 勘定科目一致ボーナス +0.05（W-1修正: Section 3.5）──────────────────────
+
+describe('aggregate: 勘定科目一致ボーナス +0.05（根拠: Section 3.5 勘定科目一致時の信頼度加算）', () => {
+  // CHECK-7b 手計算: P1(CAPITAL+CAPITAL)=0.95 + 一致0.05 = 1.0（上限クランプ）
+  it('P1 + 勘定科目一致 → confidence=1.0（0.95+0.05、上限クランプ）', () => {
+    const result = aggregate(
+      [makeTax('L1', 'CAPITAL', { account_category: '器具備品' })],
+      [makePractice('L1', 'CAPITAL', { suggested_account: '器具備品' })],
+    );
+    expect(result[0].final_verdict).toBe('CAPITAL_LIKE');
+    expect(result[0].confidence).toBe(1.0);
+  });
+
+  // CHECK-7b 手計算: P3(CAPITAL+UNCERTAIN)=0.80 + 一致0.05 = 0.85
+  it('P3 + 勘定科目一致 → confidence=0.85（0.80+0.05）', () => {
+    const result = aggregate(
+      [makeTax('L1', 'CAPITAL', { account_category: '建物附属設備' })],
+      [makePractice('L1', 'UNCERTAIN', { suggested_account: '建物附属設備' })],
+    );
+    expect(result[0].final_verdict).toBe('CAPITAL_LIKE');
+    expect(result[0].confidence).toBe(0.85);
+  });
+
+  // 勘定科目不一致 → 加算なし
+  it('勘定科目不一致 → confidence変化なし（P1: 0.95のまま）', () => {
+    const result = aggregate(
+      [makeTax('L1', 'CAPITAL', { account_category: '建物附属設備' })],
+      [makePractice('L1', 'CAPITAL', { suggested_account: '器具備品' })],
+    );
+    expect(result[0].confidence).toBe(0.95);
+  });
+
+  // 片方 null → 加算なし
+  it('Tax account_category が null → 加算なし（P1: 0.95のまま）', () => {
+    const result = aggregate(
+      [makeTax('L1', 'CAPITAL', { account_category: null })],
+      [makePractice('L1', 'CAPITAL', { suggested_account: '器具備品' })],
+    );
+    expect(result[0].confidence).toBe(0.95);
+  });
+
+  it('Practice suggested_account が null → 加算なし（P1: 0.95のまま）', () => {
+    const result = aggregate(
+      [makeTax('L1', 'CAPITAL', { account_category: '器具備品' })],
+      [makePractice('L1', 'CAPITAL', { suggested_account: null })],
+    );
+    expect(result[0].confidence).toBe(0.95);
+  });
+
+  // 上限 1.0 クランプ（P2でも確認）
+  // CHECK-7b 手計算: P2(EXPENSE+EXPENSE)=0.95 + 0.05 = 1.0（1.0以下に収まる）
+  it('P2 + 勘定科目一致 → confidence=1.0（0.95+0.05、1.0以下に収まる）', () => {
+    const result = aggregate(
+      [makeTax('L1', 'EXPENSE', { account_category: '消耗品費' })],
+      [makePractice('L1', 'EXPENSE', { suggested_account: '消耗品費' })],
+    );
+    expect(result[0].final_verdict).toBe('EXPENSE_LIKE');
+    expect(result[0].confidence).toBe(1.0);
+    expect(result[0].confidence).toBeLessThanOrEqual(1.0);
+  });
+});
+
 // ─── 元の Agent 結果の保持確認 ────────────────────────────────────────────
 
 describe('aggregate: 元の Agent 結果の保持', () => {

@@ -120,6 +120,19 @@ export function aggregate(
     // 耐用年数: Tax Agent の値を正とする（根拠: Section 3.5）
     const useful_life = tax?.useful_life ?? null;
 
+    // 勘定科目一致ボーナス: +0.05（根拠: Section 3.5 勘定科目一致時の信頼度加算）
+    // 手計算検算（CHECK-7b）:
+    //   P1(CAPITAL+CAPITAL, 勘定科目一致) → 0.95 + 0.05 = 1.0（上限クランプ）
+    //   P3(CAPITAL+UNCERTAIN, 勘定科目一致) → 0.80 + 0.05 = 0.85
+    //   片方 null の場合は比較不可のため加算なし
+    const accountCategoryMatch =
+      tax?.account_category != null &&
+      practice?.suggested_account != null &&
+      tax.account_category === practice.suggested_account;
+    const confidence = accountCategoryMatch
+      ? Math.round(Math.min(rule.confidence + 0.05, 1.0) * 100) / 100
+      : rule.confidence;
+
     // 分裂時の理由（両者が明確に対立している場合のみ設定）
     let disagreement_reason: string | undefined;
     if (
@@ -134,7 +147,7 @@ export function aggregate(
     return {
       line_item_id,
       final_verdict: rule.final_verdict,
-      confidence: rule.confidence,
+      confidence,
       account_category,
       useful_life,
       tax_result: tax,

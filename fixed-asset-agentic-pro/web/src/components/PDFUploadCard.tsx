@@ -7,14 +7,16 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { classifyFromPDF } from '@/lib/api';
+import { classifyFromPDFv2, getUseMultiAgent } from '@/lib/classify_pdf_v2';
 import type { ClassifyResponse } from '@/types/classify';
+import type { ClassifyPDFV2Response } from '@/types/classify_pdf_v2';
 
 const MAX_FILES = 10;
 
 // ─── Props ────────────────────────────────────────────────────────────
 
 interface PDFUploadCardProps {
-  onResult: (result: ClassifyResponse) => void;
+  onResult: (result: ClassifyResponse | ClassifyPDFV2Response) => void;
   onManualInput?: () => void;
 }
 
@@ -81,7 +83,8 @@ export function PDFUploadCard({ onResult, onManualInput }: PDFUploadCardProps) {
     setProcessedCount(0);
     setExtractionFailed(false);
 
-    let lastResult: ClassifyResponse | null = null;
+    const useV2 = getUseMultiAgent();
+    let lastResult: ClassifyResponse | ClassifyPDFV2Response | null = null;
     let anyFailed = false;
 
     for (let i = 0; i < files.length; i++) {
@@ -89,11 +92,28 @@ export function PDFUploadCard({ onResult, onManualInput }: PDFUploadCardProps) {
         prev.map((f, idx) => (idx === i ? { ...f, status: 'processing' } : f))
       );
       try {
-        const result = await classifyFromPDF(files[i].file, true);
-        lastResult = result;
-        setFiles((prev) =>
-          prev.map((f, idx) => (idx === i ? { ...f, status: 'done' } : f))
-        );
+        if (useV2) {
+          const v2Result = await classifyFromPDFv2(files[i].file, {});
+          if (v2Result.status === 'extraction_failed') {
+            anyFailed = true;
+            setFiles((prev) =>
+              prev.map((f, idx) =>
+                idx === i ? { ...f, status: 'error', error: 'PDFの抽出に失敗しました' } : f
+              )
+            );
+          } else {
+            lastResult = v2Result;
+            setFiles((prev) =>
+              prev.map((f, idx) => (idx === i ? { ...f, status: 'done' } : f))
+            );
+          }
+        } else {
+          const result = await classifyFromPDF(files[i].file, true);
+          lastResult = result;
+          setFiles((prev) =>
+            prev.map((f, idx) => (idx === i ? { ...f, status: 'done' } : f))
+          );
+        }
       } catch (err) {
         anyFailed = true;
         const msg = err instanceof Error ? err.message : 'PDF判定中にエラーが発生しました';
@@ -221,6 +241,7 @@ export function PDFUploadCard({ onResult, onManualInput }: PDFUploadCardProps) {
                   size="sm"
                   onClick={onManualInput}
                   className="flex items-center gap-1.5"
+                  data-testid="manual-input-from-alert"
                 >
                   <PenLine className="size-4" />
                   手入力モードへ

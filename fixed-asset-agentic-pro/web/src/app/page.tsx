@@ -26,7 +26,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { classifyAsset } from '@/lib/api';
+import { convertV2ToLineItems } from '@/lib/classify_pdf_v2';
 import type { ClassifyRequest, ClassifyResponse, Decision, HistoryEntry } from '@/types/classify';
+import type { ClassifyPDFV2Response, V2Summary } from '@/types/classify_pdf_v2';
 import type { LineItemWithAction, UserAction } from '@/types/pdf_review';
 import { GuidanceWizard } from '@/components/GuidanceWizard';
 import { HistoryPanel } from '@/components/HistoryPanel';
@@ -238,6 +240,7 @@ export default function HomePage() {
 
   // PDF判定用状態
   const [pdfLineItems, setPdfLineItems] = useState<LineItemWithAction[]>([]);
+  const [pdfV2Summary, setPdfV2Summary] = useState<V2Summary | null>(null);
 
   // 手入力判定用状態
   const [result, setResult] = useState<ClassifyResponse | null>(null);
@@ -268,8 +271,17 @@ export default function HomePage() {
   const watchDescription = watch('description');
 
   // ─── PDF 判定結果ハンドラ ───────────────────────────────────────────
-  const handlePdfResult = (res: ClassifyResponse) => {
-    setPdfLineItems(toLineItemWithAction(res));
+  const handlePdfResult = (res: ClassifyResponse | ClassifyPDFV2Response) => {
+    if ('request_id' in res) {
+      // v2 レスポンス
+      const v2Res = res as ClassifyPDFV2Response;
+      setPdfLineItems(convertV2ToLineItems(v2Res));
+      setPdfV2Summary(v2Res.summary);
+    } else {
+      // v1 レスポンス
+      setPdfLineItems(toLineItemWithAction(res as ClassifyResponse));
+      setPdfV2Summary(null);
+    }
   };
 
   // ─── PDF 明細アクション ────────────────────────────────────────────
@@ -416,6 +428,27 @@ export default function HomePage() {
               onResult={handlePdfResult}
               onManualInput={() => setActiveTab('manual')}
             />
+            {/* v2 合議サマリー */}
+            {pdfV2Summary && (
+              <Card data-testid="v2-summary">
+                <CardContent className="pt-4">
+                  <div className="grid grid-cols-3 gap-4 text-center">
+                    <div>
+                      <p className="text-xs text-muted-foreground">固定資産合計</p>
+                      <p className="font-bold text-blue-700">{pdfV2Summary.capital_total.toLocaleString()}円</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">費用合計</p>
+                      <p className="font-bold text-green-700">{pdfV2Summary.expense_total.toLocaleString()}円</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">要確認合計</p>
+                      <p className="font-bold text-yellow-700">{pdfV2Summary.guidance_total.toLocaleString()}円</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
             {pdfLineItems.length > 0 && (
               <PDFReviewSection
                 items={pdfLineItems}

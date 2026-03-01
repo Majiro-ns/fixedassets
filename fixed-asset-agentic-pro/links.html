@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fixed-asset-agentic-pro 起動リンク</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 24px; max-width: 600px; }
+        h1 { font-size: 1.2em; color: #333; }
+        .link { display: block; margin: 12px 0; padding: 12px 16px; background: #f0f7ff; border-left: 4px solid #0066cc; text-decoration: none; color: #0066cc; border-radius: 4px; }
+        .link:hover { background: #e0efff; }
+        .link small { display: block; margin-top: 4px; color: #666; font-size: 0.9em; }
+        .bat { margin: 16px 0; padding: 8px; background: #f5f5f5; border-radius: 4px; font-size: 0.9em; }
+        .bat strong { color: #333; }
+    </style>
+</head>
+<body>
+    <h1>fixed-asset-agentic-pro 起動リンク</h1>
+
+    <h2>Web アプリ</h2>
+    <a class="link" href="http://localhost:3000" target="_blank">
+        Next.js フロントエンド
+        <small>http://localhost:3000 — メインUI</small>
+    </a>
+    <a class="link" href="http://localhost:8000" target="_blank">
+        FastAPI バックエンド
+        <small>http://localhost:8000 — API・ヘルスチェック</small>
+    </a>
+    <a class="link" href="http://localhost:8000/docs" target="_blank">
+        API ドキュメント (Swagger)
+        <small>http://localhost:8000/docs</small>
+    </a>
+    <a class="link" href="http://localhost:8501" target="_blank">
+        Streamlit UI（オプション）
+        <small>http://localhost:8501 — 代替UI</small>
+    </a>
+
+    <h2>起動バッチ</h2>
+    <p class="bat"><strong>1_start_backend.bat</strong> — バックエンド起動</p>
+    <p class="bat"><strong>2_start_frontend.bat</strong> — フロントエンド起動</p>
+    <p class="bat"><strong>3_start_streamlit.bat</strong> — Streamlit UI 起動</p>
+
+    <p style="margin-top: 24px; color: #666; font-size: 0.85em;">
+        起動手順: 1 → 2 の順で実行。3 はオプション。
+    </p>
+</body>
+</html>

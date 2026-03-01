@@ -61,7 +61,7 @@ function makeSuccessResponse(overrides?: Partial<ClassifyPDFV2Response>): Classi
 // POST /api/v2/classify_pdf テスト（API実装後に有効化）
 // ─────────────────────────────────────────────────────────────────────────────
 
-describe.skip('POST /api/v2/classify_pdf（足軽8 Phase 1-B実装後に有効化）', () => {
+describe('POST /api/v2/classify_pdf（Phase 1-B実装済み）', () => {
   const API_ENDPOINT = '/api/v2/classify_pdf';
 
   beforeEach(() => {

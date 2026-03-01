@@ -67,6 +67,12 @@ exclude_race_number:
 expected_payout_min: 20000
 expected_payout_max: 50000
 
+# ─── score_spread フィルター（#T002対策案2 cmd_132k_sub2 2026-03-01） ─
+# 競走得点 max-min < 閾値なら拮抗レース → SKIP。0=無効化
+# 根拠: 2月低パフォーマンス期 score_spread=10.12（1月比-36%低下）
+# 低ROI会場（取手ROI24.1%・小田原58.6%）が拮抗レース集中と相関
+min_score_spread: 12
+
 # ─── F10: 信頼度スコア閾値（apply_ml_filters / ashigaru_predict.py） ──
 # 2026-02-28 cmd_098: Type A/B有効化。confidence_score >= 1 のみ処理
 # confidence_score の意味: 0=低品質, 1=S級×対象stage, 2=+逆指標なし, 3=+良場

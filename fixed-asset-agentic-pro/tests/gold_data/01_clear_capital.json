@@ -1,0 +1,50 @@
+[
+  {
+    "test_id": "gold_001",
+    "category": "明確な固定資産",
+    "input": {
+      "description": "ノートPC Dell Latitude 5540",
+      "amount": 250000,
+      "quantity": 1
+    },
+    "expected": {
+      "verdict": "CAPITAL",
+      "account_category": "器具備品",
+      "useful_life": 4,
+      "rationale_keywords": ["電子計算機", "別表一", "器具及び備品"]
+    },
+    "basis": "Section 3.3: PC→器具備品(電子計算機)4年。取得価額25万≥10万→通常固定資産"
+  },
+  {
+    "test_id": "gold_002",
+    "category": "明確な固定資産",
+    "input": {
+      "description": "社用車 トヨタ アルファード",
+      "amount": 3000000,
+      "quantity": 1
+    },
+    "expected": {
+      "verdict": "CAPITAL",
+      "account_category": "車両運搬具",
+      "useful_life": 6,
+      "rationale_keywords": ["車両", "運搬具", "別表一"]
+    },
+    "basis": "Section 3.3: 社用車→車両運搬具6年。取得価額300万→通常固定資産"
+  },
+  {
+    "test_id": "gold_003",
+    "category": "明確な固定資産",
+    "input": {
+      "description": "ファイルサーバー HPE ProLiant ML350",
+      "amount": 600000,
+      "quantity": 1
+    },
+    "expected": {
+      "verdict": "CAPITAL",
+      "account_category": "器具備品",
+      "useful_life": 5,
+      "rationale_keywords": ["電子計算機", "サーバー", "器具及び備品"]
+    },
+    "basis": "Section 3.3: サーバー→器具備品(電子計算機)5年。取得価額60万→通常固定資産"
+  }
+]

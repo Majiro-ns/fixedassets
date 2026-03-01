@@ -1,0 +1,50 @@
+[
+  {
+    "test_id": "gold_011",
+    "category": "修繕vs資本的支出",
+    "input": {
+      "description": "エアコン修理費 室外機コンプレッサー交換",
+      "amount": 450000,
+      "quantity": 1
+    },
+    "expected": {
+      "verdict": "EXPENSE",
+      "account_category": "修繕費",
+      "useful_life": null,
+      "rationale_keywords": ["修繕費", "60万円未満", "形式基準", "基通7-8-4"]
+    },
+    "basis": "Section 3.3 形式基準: 取得価額45万 < 60万円 → 基通7-8-4(1)により修繕費。原状回復目的"
+  },
+  {
+    "test_id": "gold_012",
+    "category": "修繕vs資本的支出",
+    "input": {
+      "description": "外壁塗装工事（既存壁面の再塗装）",
+      "amount": 180000,
+      "quantity": 1
+    },
+    "expected": {
+      "verdict": "EXPENSE",
+      "account_category": "修繕費",
+      "useful_life": null,
+      "rationale_keywords": ["修繕費", "20万円未満", "形式基準", "基通7-8-3"]
+    },
+    "basis": "Section 3.3 形式基準: 取得価額18万 < 20万円 → 基通7-8-3(1)により修繕費（周期的な費用）"
+  },
+  {
+    "test_id": "gold_013",
+    "category": "修繕vs資本的支出",
+    "input": {
+      "description": "屋上防水工事（全面貼り替え・新素材採用）",
+      "amount": 2000000,
+      "quantity": 1
+    },
+    "expected": {
+      "verdict": "CAPITAL",
+      "account_category": "建物",
+      "useful_life": 38,
+      "rationale_keywords": ["資本的支出", "価値増加", "耐用年数延長", "基通7-8-1"]
+    },
+    "basis": "Section 3.3: 取得価額200万 ≥ 60万円 かつ 全面貼り替えで耐用年数延長・価値増加 → 基通7-8-1により資本的支出"
+  }
+]

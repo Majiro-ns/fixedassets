@@ -1,0 +1,34 @@
+[
+  {
+    "test_id": "gold_007",
+    "category": "少額固定資産",
+    "input": {
+      "description": "液晶モニター BenQ 24インチ",
+      "amount": 80000,
+      "quantity": 1
+    },
+    "expected": {
+      "verdict": "EXPENSE",
+      "account_category": "消耗品費",
+      "useful_life": null,
+      "rationale_keywords": ["10万円未満", "少額", "消耗品費", "即時費用"]
+    },
+    "basis": "Section 3.3: 取得価額8万円 < 10万円 → 少額の減価償却資産として全額損金(法令133条)"
+  },
+  {
+    "test_id": "gold_008",
+    "category": "少額固定資産",
+    "input": {
+      "description": "iPad Air 第5世代 Wi-Fiモデル",
+      "amount": 95000,
+      "quantity": 1
+    },
+    "expected": {
+      "verdict": "EXPENSE",
+      "account_category": "消耗品費",
+      "useful_life": null,
+      "rationale_keywords": ["10万円未満", "少額", "消耗品費", "即時費用"]
+    },
+    "basis": "Section 3.3: 取得価額9.5万円 < 10万円 → 少額の減価償却資産として全額損金(法令133条)"
+  }
+]

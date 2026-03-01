@@ -1,0 +1,34 @@
+[
+  {
+    "test_id": "gold_009",
+    "category": "一括償却資産",
+    "input": {
+      "description": "オフィスチェア エルゴノミクス ハーマンミラー",
+      "amount": 150000,
+      "quantity": 1
+    },
+    "expected": {
+      "verdict": "CAPITAL",
+      "account_category": "一括償却資産",
+      "useful_life": 3,
+      "rationale_keywords": ["10万円以上", "20万円未満", "一括償却", "3年均等"]
+    },
+    "basis": "Section 3.3: 取得価額15万円 → 10万以上20万未満 → 一括償却資産(法令133条の2)として3年均等償却"
+  },
+  {
+    "test_id": "gold_010",
+    "category": "一括償却資産",
+    "input": {
+      "description": "スタンディングデスク FlexiSpot E7",
+      "amount": 220000,
+      "quantity": 1
+    },
+    "expected": {
+      "verdict": "CAPITAL",
+      "account_category": "一括償却資産",
+      "useful_life": 3,
+      "rationale_keywords": ["20万円未満", "一括償却", "3年均等"]
+    },
+    "basis": "Section 3.3: 取得価額22万円 → 20万円未満 → 一括償却資産として3年均等償却。※中小企業は少額減価償却資産(30万未満)も選択可"
+  }
+]

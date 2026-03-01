@@ -1,0 +1,50 @@
+[
+  {
+    "test_id": "gold_004",
+    "category": "明確な費用",
+    "input": {
+      "description": "プリンタートナー Canon 純正",
+      "amount": 5000,
+      "quantity": 1
+    },
+    "expected": {
+      "verdict": "EXPENSE",
+      "account_category": "消耗品費",
+      "useful_life": null,
+      "rationale_keywords": ["消耗品", "10万円未満", "即時費用"]
+    },
+    "basis": "Section 3.3: 取得価額5千円 < 10万円 → 消耗品費として即時費用化"
+  },
+  {
+    "test_id": "gold_005",
+    "category": "明確な費用",
+    "input": {
+      "description": "コピー用紙 A4 500枚×5冊",
+      "amount": 3000,
+      "quantity": 1
+    },
+    "expected": {
+      "verdict": "EXPENSE",
+      "account_category": "消耗品費",
+      "useful_life": null,
+      "rationale_keywords": ["消耗品", "10万円未満", "即時費用"]
+    },
+    "basis": "Section 3.3: 取得価額3千円 < 10万円 → 消耗品費として即時費用化"
+  },
+  {
+    "test_id": "gold_006",
+    "category": "明確な費用",
+    "input": {
+      "description": "国内出張 宅配便費用",
+      "amount": 1500,
+      "quantity": 1
+    },
+    "expected": {
+      "verdict": "EXPENSE",
+      "account_category": "荷造運賃",
+      "useful_life": null,
+      "rationale_keywords": ["運賃", "役務", "費用"]
+    },
+    "basis": "Section 3.3: 役務提供の対価（宅配便）→ 荷造運賃として即時費用化"
+  }
+]

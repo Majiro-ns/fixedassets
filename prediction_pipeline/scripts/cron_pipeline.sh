@@ -171,14 +171,29 @@ ${REPORT}" \
         ;;
 
     monthly_retrain)
-        # 毎月1日 03:00 月次フィルター最適化（再訓練相当）
-        cd "$PROJECT_ROOT" || exit 1
-        LAST_MONTH=$(date -d "$(date +%Y-%m-01) -1 day" +%Y-%m 2>/dev/null || date -v-1m +%Y-%m)
-        "$PYTHON" scripts/monthly_optimize.py \
-            --sport keirin \
-            --month "$LAST_MONTH" \
-            --apply >> "$LOG_FILE" 2>&1
-        EXIT_CODE=$?
+        # 毎月1日 03:00 月次再訓練（features.csv更新 → 4モデル再訓練 → フィルター最適化）
+        # cmd_126k_sub6: build_features.py 先行実行を追加（weekly_retrain_keirin と同パターン）
+        MRT_ROOT="/mnt/c/Users/owner/Documents/Obsidian Vault/10_Projects/keirin_prediction"
+        cd "$MRT_ROOT" || exit 1
+        # Step 1: features.csv を最新 DB から再生成
+        echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] features.csv 更新中..." >> "$LOG_FILE"
+        if ! "$PYTHON" src/ml/build_features.py >> "$LOG_FILE" 2>&1; then
+            echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] build_features.py 失敗。monthly_retrain をスキップ" >> "$LOG_FILE"
+            EXIT_CODE=1
+        else
+            # Step 2: 月次モデル再訓練（4モデル: axis/partner/hit/amount）
+            "$PYTHON" src/pipeline/retrain.py >> "$LOG_FILE" 2>&1
+            EXIT_CODE=$?
+            # Step 3: retrain成功後にフィルター最適化も実行（非致命的 / || true）
+            if [ "$EXIT_CODE" -eq 0 ]; then
+                cd "$PROJECT_ROOT" || true
+                LAST_MONTH=$(date -d "$(date +%Y-%m-01) -1 day" +%Y-%m 2>/dev/null || date -v-1m +%Y-%m)
+                "$PYTHON" scripts/monthly_optimize.py \
+                    --sport keirin \
+                    --month "$LAST_MONTH" \
+                    --apply >> "$LOG_FILE" 2>&1 || true
+            fi
+        fi
         ;;
 
     # ─── 旧パイプライン（後方互換）─────────────────────────────────────

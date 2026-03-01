@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { PDFReviewSection } from '../PDFReviewSection';
 import type { LineItemWithAction } from '@/types/pdf_review';
 
@@ -44,6 +44,15 @@ const pendingLowConf: LineItemWithAction = {
   userAction: 'pending',
   finalVerdict: 'GUIDANCE',
 };
+
+// ─── fetch モック ─────────────────────────────────────────────────────────
+
+const _mockFetch = vi.fn();
+
+beforeEach(() => {
+  vi.stubGlobal('fetch', _mockFetch);
+  _mockFetch.mockReset();
+});
 
 describe('PDFReviewSection', () => {
   it('renders nothing when items array is empty', () => {
@@ -121,5 +130,96 @@ describe('PDFReviewSection', () => {
     );
     expect(screen.getByTestId('capital-total')).toHaveTextContent('¥0');
     expect(screen.getByTestId('expense-total')).toHaveTextContent('¥0');
+  });
+});
+
+// ─── F-12: 証跡レポートPDF ───────────────────────────────────────────────
+
+describe('PDFReviewSection — PDF report (F-12)', () => {
+  it('renders 証跡レポートPDF button', () => {
+    render(
+      <PDFReviewSection items={[capitalItem]} onAction={vi.fn()} onApproveAll={vi.fn()} />
+    );
+    expect(screen.getByTestId('btn-pdf-report')).toBeInTheDocument();
+  });
+
+  it('PDF button shows "証跡レポートPDF" label by default', () => {
+    render(
+      <PDFReviewSection items={[capitalItem]} onAction={vi.fn()} onApproveAll={vi.fn()} />
+    );
+    expect(screen.getByTestId('btn-pdf-report')).toHaveTextContent('証跡レポートPDF');
+  });
+
+  it('PDF button is enabled when items exist', () => {
+    render(
+      <PDFReviewSection items={[capitalItem]} onAction={vi.fn()} onApproveAll={vi.fn()} />
+    );
+    expect(screen.getByTestId('btn-pdf-report')).not.toBeDisabled();
+  });
+
+  it('calls /api/v2/report_pdf on click (fetch mock)', async () => {
+    // fetch が PDF blob を返すようモック
+    const mockBlob = new Blob(['%PDF-1.4 mock'], { type: 'application/pdf' });
+    _mockFetch.mockResolvedValueOnce({
+      ok: true,
+      blob: () => Promise.resolve(mockBlob),
+    } as unknown as Response);
+
+    // URL.createObjectURL / revokeObjectURL をモック
+    const mockCreateObjectURL = vi.fn(() => 'blob:mock-url');
+    const mockRevokeObjectURL = vi.fn();
+    vi.stubGlobal('URL', { createObjectURL: mockCreateObjectURL, revokeObjectURL: mockRevokeObjectURL });
+
+    render(
+      <PDFReviewSection
+        items={[capitalItem, expenseItem]}
+        onAction={vi.fn()}
+        onApproveAll={vi.fn()}
+      />
+    );
+
+    fireEvent.click(screen.getByTestId('btn-pdf-report'));
+
+    await waitFor(() => {
+      expect(_mockFetch).toHaveBeenCalledWith(
+        '/api/v2/report_pdf',
+        expect.objectContaining({ method: 'POST' }),
+      );
+    });
+  });
+
+  it('fetch payload contains items and summary', async () => {
+    const mockBlob = new Blob(['%PDF'], { type: 'application/pdf' });
+    _mockFetch.mockResolvedValueOnce({
+      ok: true,
+      blob: () => Promise.resolve(mockBlob),
+    } as unknown as Response);
+    vi.stubGlobal('URL', {
+      createObjectURL: vi.fn(() => 'blob:url'),
+      revokeObjectURL: vi.fn(),
+    });
+
+    render(
+      <PDFReviewSection
+        items={[capitalItem]}
+        onAction={vi.fn()}
+        onApproveAll={vi.fn()}
+      />
+    );
+
+    fireEvent.click(screen.getByTestId('btn-pdf-report'));
+
+    await waitFor(() => {
+      expect(_mockFetch).toHaveBeenCalled();
+    });
+
+    const [, options] = _mockFetch.mock.calls[0] as [string, RequestInit];
+    const body = JSON.parse(options.body as string) as {
+      items: unknown[];
+      summary: { capital_total: number };
+    };
+    expect(body.items).toHaveLength(1);
+    expect(body.items[0]).toMatchObject({ description: 'サーバーラック' });
+    expect(body.summary.capital_total).toBe(2_000_000);
   });
 });

@@ -1,6 +1,7 @@
 'use client';
 
-import { Building2, CheckCircle2, HelpCircle, Download, CheckCheck } from 'lucide-react';
+import { useState } from 'react';
+import { Building2, CheckCircle2, HelpCircle, Download, CheckCheck, FileText } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { LineItemReviewCard } from '@/components/LineItemReviewCard';
@@ -87,9 +88,56 @@ function exportCsv(items: LineItemWithAction[]) {
   URL.revokeObjectURL(url);
 }
 
+// ─── PDF レポート出力 ──────────────────────────────────────────────────
+
+async function exportReportPdf(
+  items: LineItemWithAction[],
+  summary: { capitalTotal: number; expenseTotal: number; pendingCount: number },
+  sourceFilename?: string,
+): Promise<void> {
+  const payload = {
+    items: items.map((item) => ({
+      description:   item.description,
+      amount:        item.amount ?? null,
+      verdict:       item.verdict,
+      final_verdict: item.finalVerdict,
+      confidence:    item.confidence,
+      user_action:   item.userAction,
+      reasons:       item.rationale ? [item.rationale] : [],
+    })),
+    summary: {
+      capital_total: summary.capitalTotal,
+      expense_total: summary.expenseTotal,
+      pending_count: summary.pendingCount,
+    },
+    source_filename: sourceFilename ?? null,
+    audit_trail_id:  null,
+  };
+
+  const res = await fetch('/api/v2/report_pdf', {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    throw new Error(`PDF生成失敗: ${res.status}`);
+  }
+
+  const blob = await res.blob();
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = `fixed_asset_report_${new Date().toISOString().slice(0, 10)}.pdf`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 // ─── PDFReviewSection ─────────────────────────────────────────────────
 
 export function PDFReviewSection({ items, onAction, onApproveAll }: PDFReviewSectionProps) {
+  const [pdfLoading, setPdfLoading] = useState(false);
+
   if (items.length === 0) return null;
 
   const { capitalTotal, expenseTotal, pendingCount } = calcSummary(items);
@@ -149,6 +197,25 @@ export function PDFReviewSection({ items, onAction, onApproveAll }: PDFReviewSec
             >
               <Download className="size-4 mr-1.5" />
               CSVエクスポート
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={pdfLoading}
+              onClick={async () => {
+                setPdfLoading(true);
+                try {
+                  await exportReportPdf(items, { capitalTotal, expenseTotal, pendingCount });
+                } catch (err) {
+                  console.error('PDF出力エラー:', err);
+                } finally {
+                  setPdfLoading(false);
+                }
+              }}
+              data-testid="btn-pdf-report"
+            >
+              <FileText className="size-4 mr-1.5" />
+              {pdfLoading ? 'PDF生成中…' : '証跡レポートPDF'}
             </Button>
           </div>
         </CardContent>

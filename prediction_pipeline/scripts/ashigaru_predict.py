@@ -163,6 +163,9 @@ def stage1_fetch_and_filter(date: str, sport: str, config_path: str, max_races: 
         else:
             filter_type = "none"
             conf_score = 0
+            # フィルター非通過レースはrequests/に書き出さない（cmd_136k_sub1）
+            logger.info("[SKIP] %s %sR: フィルター非通過 → requests/書き出しをスキップ", venue, race_no)
+            continue
 
         # F10チェック: 除外せず記録のみ
         f10_passed = True

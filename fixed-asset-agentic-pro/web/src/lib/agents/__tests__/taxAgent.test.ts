@@ -77,18 +77,25 @@ describe('runTaxAgent: ドライランモード（根拠: Section 6 エラーハ
     expect(mockMessagesCreate).not.toHaveBeenCalled();
   });
 
-  it('APIキー未設定 + 複数明細 → 全件 UNCERTAIN', async () => {
+  it('APIキー未設定 + 複数明細 → 前処理済み明細はEXPENSE、LLM必要明細はUNCERTAIN', async () => {
+    // NOTE: preScreenLineItems() 導入(cmd_144k_sub1)により振る舞い変更。
+    //   前処理対象（10万未満等）はAPIキー不要でEXPENSE確定。
+    //   LLM必要な明細のみ UNCERTAIN(DRY-RUN)。
     const items = [
-      makeItem('L1', 'PC', 500000),
-      makeItem('L2', '消耗品', 50000),
+      makeItem('L1', 'PC', 500000),       // LLM必要 → UNCERTAIN
+      makeItem('L2', '消耗品', 50000),    // rule_a: 5万 < 10万 → EXPENSE
     ];
     const results = await runTaxAgent(items);
 
     expect(results).toHaveLength(2);
-    results.forEach((r) => {
-      expect(r.verdict).toBe('UNCERTAIN');
-      expect(r.rationale).toContain('DRY-RUN');
-    });
+
+    const l1 = results.find((r) => r.line_item_id === 'L1')!;
+    expect(l1.verdict).toBe('UNCERTAIN');
+    expect(l1.rationale).toContain('DRY-RUN');
+
+    const l2 = results.find((r) => r.line_item_id === 'L2')!;
+    expect(l2.verdict).toBe('EXPENSE');
+    expect(l2.article_ref).toContain('133条');
   });
 });
 
@@ -379,19 +386,32 @@ describe('runTaxAgent: エラー処理（根拠: Section 6 エラーハンドリ
     expect(results[0].line_item_id).toBe('L1');
   });
 
-  it('API呼び出し失敗（複数明細）→ 全件 UNCERTAIN で line_item_id を保持', async () => {
+  it('API呼び出し失敗（複数明細）→ 前処理済みはEXPENSE保持、LLM必要分はUNCERTAIN', async () => {
+    // NOTE: preScreenLineItems() 導入(cmd_144k_sub1)により振る舞い変更。
+    //   前処理対象（rule_a: 3万/rule_d: 修繕20万）はAPI失敗時もEXPENSEを保持。
+    //   LLM必要な明細のみ UNCERTAIN(APIエラー)。
     mockMessagesCreate.mockRejectedValue(new Error('タイムアウト'));
 
     const items = [
-      makeItem('L1', 'PC', 500000),
-      makeItem('L2', '消耗品', 30000),
-      makeItem('L3', '修繕', 200000),
+      makeItem('L1', 'PC', 500000),       // LLM必要 → API失敗 → UNCERTAIN
+      makeItem('L2', '消耗品', 30000),    // rule_a: 3万 < 10万 → EXPENSE
+      makeItem('L3', '修繕', 200000),     // rule_d: 修繕 < 60万 → EXPENSE
     ];
     const results = await runTaxAgent(items);
 
     expect(results).toHaveLength(3);
     expect(results.map((r) => r.line_item_id)).toEqual(['L1', 'L2', 'L3']);
-    results.forEach((r) => expect(r.verdict).toBe('UNCERTAIN'));
+
+    const l1 = results.find((r) => r.line_item_id === 'L1')!;
+    expect(l1.verdict).toBe('UNCERTAIN');
+    expect(l1.rationale).toContain('APIエラー');
+
+    const l2 = results.find((r) => r.line_item_id === 'L2')!;
+    expect(l2.verdict).toBe('EXPENSE');  // rule_a: 3万は前処理確定
+
+    const l3 = results.find((r) => r.line_item_id === 'L3')!;
+    expect(l3.verdict).toBe('EXPENSE');  // rule_d: 修繕20万は前処理確定
+    expect(l3.article_ref).toBe('基通7-8-4(1)');
   });
 });
 

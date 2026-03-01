@@ -60,17 +60,24 @@ function makePractice(
 // ─── A. Phase 2 E2E フロー（dry-run）─────────────────────────────────────────
 
 describe('A: Phase 2 E2E フロー — dry-run（ANTHROPIC_API_KEY 未設定）', () => {
-  it('A1: runTaxAgent → dry-run UNCERTAIN 全件 (根拠: Section 6 APIキー未設定フォールバック)', async () => {
+  it('A1: runTaxAgent → dry-run: 前処理済みEXPENSE + LLM必要UNCERTAIN (根拠: Section 6 + cmd_144k_sub1 prescreen)', async () => {
+    // NOTE: preScreenLineItems() 導入(cmd_144k_sub1)により振る舞い変更。
+    //   li_repair_001 (修繕費 外壁補修, 50,000円) → rule_a (10万未満) → EXPENSE確定。
+    //   li_notebook_001 (ノートPC, 250,000円) → needsLlm → dry-run → UNCERTAIN。
     const taxResults = await runTaxAgent(TEST_LINE_ITEMS);
 
     expect(taxResults).toHaveLength(2);
-    expect(taxResults.every((r) => r.verdict === 'UNCERTAIN')).toBe(true);
-    // dry-run フラグ文字列が含まれることを確認
-    expect(taxResults[0].rationale).toContain('[DRY-RUN]');
-    expect(taxResults[1].rationale).toContain('[DRY-RUN]');
-    // line_item_id が入力と対応
+    // line_item_id が入力と対応（順序保持）
     expect(taxResults[0].line_item_id).toBe('li_notebook_001');
     expect(taxResults[1].line_item_id).toBe('li_repair_001');
+
+    // ノートPC: LLM必要 → dry-run → UNCERTAIN
+    expect(taxResults[0].verdict).toBe('UNCERTAIN');
+    expect(taxResults[0].rationale).toContain('[DRY-RUN]');
+
+    // 修繕費 50,000円: rule_a (10万未満) → EXPENSE確定（dry-runでも確定）
+    expect(taxResults[1].verdict).toBe('EXPENSE');
+    expect(taxResults[1].article_ref).toContain('133条');
   });
 
   it('A2: runPracticeAgent → dry-run UNCERTAIN 全件 (根拠: Section 6 APIキー未設定フォールバック)', async () => {
@@ -82,22 +89,31 @@ describe('A: Phase 2 E2E フロー — dry-run（ANTHROPIC_API_KEY 未設定）'
     expect(practiceResults[0].line_item_id).toBe('li_notebook_001');
   });
 
-  it('A3: dry-run E2E全通し — UNCERTAIN+UNCERTAIN → GUIDANCE, confidence=0.30 (手計算: パターン8)', async () => {
-    // 手計算 (CHECK-7b): UNCERTAIN+UNCERTAIN → Section 3.5 パターン8 → GUIDANCE, 0.30
+  it('A3: dry-run E2E全通し — prescreen EXPENSE + UNCERTAIN → 合議結果確認 (手計算: cmd_144k_sub1)', async () => {
+    // NOTE: preScreenLineItems() 導入(cmd_144k_sub1)により振る舞い変更。
+    //   li_notebook_001: Tax=UNCERTAIN(dry-run) + Practice=UNCERTAIN(dry-run) → GUIDANCE, 0.30
+    //   li_repair_001: Tax=EXPENSE(prescreen) + Practice=UNCERTAIN(dry-run) → EXPENSE_LIKE, 0.80
+    // CHECK-7b 手計算: Section 3.5 パターン5(EXPENSE+UNCERTAIN) → EXPENSE_LIKE, 0.80
     const taxResults = await runTaxAgent(TEST_LINE_ITEMS);
     const practiceResults = await runPracticeAgent(TEST_LINE_ITEMS, []);
     const aggregated = aggregate(taxResults, practiceResults);
 
     expect(aggregated).toHaveLength(2);
-    aggregated.forEach((r) => {
-      expect(r.final_verdict).toBe('GUIDANCE');
-      expect(r.confidence).toBe(0.30);
-    });
+
+    const notebook = aggregated.find((r) => r.line_item_id === 'li_notebook_001')!;
+    expect(notebook.final_verdict).toBe('GUIDANCE');
+    expect(notebook.confidence).toBe(0.30);
+
+    const repair = aggregated.find((r) => r.line_item_id === 'li_repair_001')!;
+    expect(repair.final_verdict).toBe('EXPENSE_LIKE');
+    expect(repair.confidence).toBe(0.80);
   });
 
   it('A4: dry-run E2E全通し → transformAggregatedToV2 → V2レスポンス構造確認 (Section 5.2)', async () => {
-    // dry-run: 全明細GUIDANCE → guidance_total=300,000 / capital=0 / expense=0
-    // 手計算 (CHECK-7b): 250,000 + 50,000 = 300,000
+    // NOTE: preScreenLineItems() 導入(cmd_144k_sub1)により振る舞い変更。
+    //   li_notebook_001: GUIDANCE → guidance_total += 250,000
+    //   li_repair_001: EXPENSE_LIKE (prescreen) → expense_total += 50,000
+    // 手計算 (CHECK-7b): guidance_total=250,000 / expense_total=50,000 / capital_total=0
     const taxResults = await runTaxAgent(TEST_LINE_ITEMS);
     const practiceResults = await runPracticeAgent(TEST_LINE_ITEMS, []);
     const aggregated = aggregate(taxResults, practiceResults);
@@ -111,17 +127,22 @@ describe('A: Phase 2 E2E フロー — dry-run（ANTHROPIC_API_KEY 未設定）'
     expect(v2.extracted?.items).toHaveLength(2);
     expect(v2.audit_trail_id).toBeNull();
 
-    // 全明細 GUIDANCE → capital=0, expense=0, guidance=300,000
+    // prescreen後の合計
+    // li_notebook_001 (250,000): GUIDANCE
+    // li_repair_001 (50,000): EXPENSE_LIKE (prescreen rule_a)
     expect(v2.summary.capital_total).toBe(0);
-    expect(v2.summary.expense_total).toBe(0);
-    expect(v2.summary.guidance_total).toBe(300000);
-    expect(v2.summary.by_account).toHaveLength(0);
+    expect(v2.summary.expense_total).toBe(50000);
+    expect(v2.summary.guidance_total).toBe(250000);
 
-    // 各行の verdict
-    v2.line_results.forEach((lr) => {
-      expect(lr.verdict).toBe('GUIDANCE');
-      expect(lr.confidence).toBe(0.30);
-    });
+    // ノートPCはGUIDANCE
+    const notebookResult = v2.line_results.find((lr) => lr.line_item_id === 'li_notebook_001')!;
+    expect(notebookResult.verdict).toBe('GUIDANCE');
+    expect(notebookResult.confidence).toBe(0.30);
+
+    // 修繕費はEXPENSE_LIKE（prescreen）
+    const repairResult = v2.line_results.find((lr) => lr.line_item_id === 'li_repair_001')!;
+    expect(repairResult.verdict).toBe('EXPENSE_LIKE');
+    expect(repairResult.confidence).toBe(0.80);
   });
 });
 

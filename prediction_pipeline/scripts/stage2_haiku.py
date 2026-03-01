@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-Stage 2 自動化スクリプト — Claude Haiku API による予測テキスト自動生成
+Stage 2 自動化スクリプト — CRE統合 predictor.py による予測テキスト生成
 =======================================================================
 
-ANTHROPIC_API_KEY が .env に設定されている場合、
-queue/predictions/requests/ の未処理リクエストYAMLを読み込み、
-Claude Haiku API で予測テキストを自動生成して
-queue/predictions/results/ に結果YAMLを書き込む。
+predictor.py の generate_prediction() を活用して CRE プロファイルを注入した
+予想テキストを自動生成する。
 
-ANTHROPIC_API_KEY がない場合は code_agent IPC モード（手動）にフォールバック。
+queue/predictions/requests/ の未処理リクエストYAMLを読み込み、
+generate_prediction() で予測テキストを生成して
+queue/predictions/results/ に結果YAMLを書き込む。
 
 使い方:
     python scripts/stage2_haiku.py               # 全pending処理
@@ -29,6 +29,10 @@ ROOT = Path(__file__).resolve().parent.parent
 REQ_DIR = ROOT / "queue" / "predictions" / "requests"
 RES_DIR = ROOT / "queue" / "predictions" / "results"
 
+# src/ を import パスに追加
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 # .env から環境変数をロード（cronはホーム環境変数を読まないため）
 ENV_FILE = ROOT / ".env"
 if ENV_FILE.exists():
@@ -44,7 +48,7 @@ if ENV_FILE.exists():
                 if key and value and key not in os.environ:
                     os.environ[key] = value
 
-MODEL = "claude-haiku-4-5-20251001"
+from src.predictor import generate_prediction  # noqa: E402
 
 
 def _parse_axis_partners(prediction_text: str) -> tuple[int | None, list[int]]:
@@ -98,44 +102,28 @@ def get_pending_requests(limit: int = 0) -> list:
     return result
 
 
-def generate_prediction_haiku(system_prompt: str, user_prompt: str, api_key: str) -> str:
-    """Claude Haiku API で予測テキストを生成する。"""
-    try:
-        import anthropic
-    except ImportError:
-        raise RuntimeError(
-            "anthropic パッケージが見つかりません。"
-            "pip install anthropic でインストールしてください。"
-        )
-
-    client = anthropic.Anthropic(api_key=api_key)
-    message = client.messages.create(
-        model=MODEL,
-        max_tokens=512,
-        system=system_prompt,
-        messages=[
-            {"role": "user", "content": user_prompt},
-        ],
-    )
-    return message.content[0].text.strip()
-
-
-def process_request(task_id: str, req: dict, dry_run: bool, api_key: str) -> bool:
+def process_request(task_id: str, req: dict, config: dict, dry_run: bool = False) -> bool:
     """1件のリクエストを処理して結果YAMLを書き出す。"""
-    system_prompt = req.get("system_prompt", "")
-    user_prompt = req.get("user_prompt", "")
+    filter_type = req.get("filter_type", "A")
+    sport = req.get("sport", "keirin")
 
     print(f"\n  処理中: {task_id}")
-    print(f"  開催: {req.get('venue')} {req.get('race_no')}R  [{req.get('filter_type', '?')}型]")
+    print(f"  開催: {req.get('venue')} {req.get('race_no')}R  [{filter_type}型]")
 
     if dry_run:
         print(f"  [DRY RUN] API呼び出しをスキップします。")
         return True
 
     try:
-        prediction_text = generate_prediction_haiku(system_prompt, user_prompt, api_key)
+        prediction_text = generate_prediction(
+            race_data=req,
+            predictor_profile={},
+            config=config,
+            filter_type=filter_type if filter_type in ("A", "B", "C") else "A",
+            sport=sport,
+        )
     except Exception as e:
-        print(f"  [ERROR] Haiku API エラー: {e}")
+        print(f"  [ERROR] 予測生成エラー: {e}")
         return False
 
     preview = prediction_text[:100].replace("\n", " ")
@@ -150,11 +138,11 @@ def process_request(task_id: str, req: dict, dry_run: bool, api_key: str) -> boo
         "task_id": task_id,
         "status": "done",
         "timestamp": datetime.now().isoformat(),
-        "model_used": MODEL,
-        "sport": req.get("sport", "keirin"),
+        "model_used": config.get("llm", {}).get("model", "unknown"),
+        "sport": sport,
         "venue": req.get("venue", ""),
         "race_no": req.get("race_no", ""),
-        "filter_type": req.get("filter_type", "A"),
+        "filter_type": filter_type,
         "prediction_text": prediction_text,
         "axis": axis,
         "partners": partners,
@@ -167,23 +155,40 @@ def process_request(task_id: str, req: dict, dry_run: bool, api_key: str) -> boo
     return True
 
 
+def _load_config() -> dict:
+    """config/settings.yaml を読み込み、パスを ROOT 基準で絶対化して返す。"""
+    settings_path = ROOT / "config" / "settings.yaml"
+    config: dict = {}
+    if settings_path.exists():
+        config = yaml.safe_load(settings_path.read_text(encoding="utf-8")) or {}
+
+    # 相対パスを ROOT 基準で絶対化
+    pipeline = config.setdefault("pipeline", {})
+    for key in ("cre_profile_path", "config_dir"):
+        val = pipeline.get(key, "")
+        if val and not Path(val).is_absolute():
+            pipeline[key] = str(ROOT / val)
+
+    return config
+
+
 def main():
     parser = argparse.ArgumentParser(
-        description="Stage 2 自動化 — Claude Haiku API で予測テキスト生成"
+        description="Stage 2 自動化 — CRE統合 predictor.py で予測テキスト生成"
     )
     parser.add_argument("--dry-run", action="store_true", help="API呼び出しをスキップ（動作確認のみ）")
     parser.add_argument("--limit", type=int, default=0, help="処理件数上限（0=無制限）")
     args = parser.parse_args()
 
+    config = _load_config()
+
+    if args.dry_run:
+        config["dry_run"] = True
+
     api_key = os.environ.get("ANTHROPIC_API_KEY", "")
     if not api_key and not args.dry_run:
-        print("エラー: ANTHROPIC_API_KEY が設定されていません。")
-        print("  .env ファイルに以下を追加してください:")
-        print("  ANTHROPIC_API_KEY=sk-ant-...")
-        print("")
-        print("代替: Stage 2 を手動で実行する場合:")
-        print("  python scripts/stage2_process.py --list")
-        sys.exit(1)
+        print("警告: ANTHROPIC_API_KEY が設定されていません。")
+        print("  code_agent IPC モード（足軽手動）にフォールバックします。")
 
     pending = get_pending_requests(limit=args.limit)
 
@@ -194,16 +199,16 @@ def main():
         return
 
     print(f"{'='*60}")
-    print(f"  Stage 2 Haiku 自動実行 ({len(pending)}件)")
+    print(f"  Stage 2 CRE統合 自動実行 ({len(pending)}件)")
     if args.dry_run:
         print(f"  [DRY RUN モード — API呼び出しなし]")
     else:
-        print(f"  モデル: {MODEL}")
+        print(f"  モデル: {config.get('llm', {}).get('model', '?')}")
     print(f"{'='*60}")
 
     success = 0
     for task_id, req, req_file in pending:
-        if process_request(task_id, req, args.dry_run, api_key):
+        if process_request(task_id, req, config, dry_run=args.dry_run):
             success += 1
 
     print(f"\n{'='*60}")

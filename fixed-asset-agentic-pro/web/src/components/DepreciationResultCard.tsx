@@ -107,7 +107,7 @@ export function DepreciationResultCard({ result }: DepreciationResultCardProps) 
   );
 
   return (
-    <Card className="border-l-4 border-blue-400">
+    <Card className="border-l-4 border-blue-400" role="article" aria-label="償却スケジュール結果">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between gap-2 flex-wrap">
           <CardTitle className="text-base font-semibold">📊 償却スケジュール</CardTitle>

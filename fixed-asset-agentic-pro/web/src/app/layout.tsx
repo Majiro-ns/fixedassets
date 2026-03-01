@@ -9,7 +9,16 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ja">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        {/* skip-link: WCAG 2.1 SC 2.4.1 — キーボードユーザーがナビをスキップして本文へ飛べる */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:shadow-lg"
+        >
+          メインコンテンツへスキップ
+        </a>
+        {children}
+      </body>
     </html>
   );
 }

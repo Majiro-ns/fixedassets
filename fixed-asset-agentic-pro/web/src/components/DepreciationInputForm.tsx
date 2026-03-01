@@ -115,9 +115,10 @@ export function DepreciationInputForm({ onSubmit, isLoading = false }: Depreciat
               placeholder="1000000"
               {...register('acquisition_cost')}
               aria-invalid={!!errors.acquisition_cost}
+              aria-describedby={errors.acquisition_cost ? 'acquisition_cost_error' : undefined}
             />
             {errors.acquisition_cost && (
-              <p className="text-xs text-destructive">{errors.acquisition_cost.message}</p>
+              <p id="acquisition_cost_error" className="text-xs text-destructive">{errors.acquisition_cost.message}</p>
             )}
             <p className="text-xs text-muted-foreground">
               10万未満: 即時損金 / 10〜20万: 一括3年 / 中小青色30万未満: 特例全額
@@ -135,9 +136,10 @@ export function DepreciationInputForm({ onSubmit, isLoading = false }: Depreciat
                 type="date"
                 {...register('acquisition_date')}
                 aria-invalid={!!errors.acquisition_date}
+                aria-describedby={errors.acquisition_date ? 'acquisition_date_error' : undefined}
               />
               {errors.acquisition_date && (
-                <p className="text-xs text-destructive">{errors.acquisition_date.message}</p>
+                <p id="acquisition_date_error" className="text-xs text-destructive">{errors.acquisition_date.message}</p>
               )}
             </div>
             <div className="space-y-2">
@@ -152,9 +154,10 @@ export function DepreciationInputForm({ onSubmit, isLoading = false }: Depreciat
                 placeholder="5"
                 {...register('useful_life')}
                 aria-invalid={!!errors.useful_life}
+                aria-describedby={errors.useful_life ? 'useful_life_error' : undefined}
               />
               {errors.useful_life && (
-                <p className="text-xs text-destructive">{errors.useful_life.message}</p>
+                <p id="useful_life_error" className="text-xs text-destructive">{errors.useful_life.message}</p>
               )}
               <p className="text-xs text-muted-foreground">耐用年数省令 別表参照</p>
             </div>

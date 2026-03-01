@@ -100,7 +100,7 @@ export function LeaseResultCard({ result }: LeaseResultCardProps) {
     result.lease_type === 'QUALIFYING_LEASE' && result.decision === 'CAPITAL_LIKE';
 
   return (
-    <Card className={cfg.borderClass}>
+    <Card className={cfg.borderClass} role="article" aria-label="リース判定結果">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between gap-2 flex-wrap">
           <CardTitle className="text-base font-semibold">{cfg.heading}</CardTitle>

@@ -8,9 +8,10 @@
  *   法令根拠: USEFUL_LIFE_MASTER の basis フィールドに明記。
  *   A3 (cmd_144k_sub5) の拡張提案と一致することを確認。
  *
- * CHECK-7b 手動検証 (代表3品目):
+ * CHECK-7b 手動検証 (代表4品目):
  *   ガス設備: 別表第一 建物附属設備（ガス設備）→ 15年 ✓
  *   棚(金属製): 別表第一 器具及び備品 1（主として金属製のもの）→ 15年 ✓
+ *   棚（木製）: 別表第一 器具及び備品（その他のもの）→ 8年 ✓ (CR W-1対応)
  *   原付: 別表第一 車両及び運搬具（二輪自動車）125cc以下 → 3年 ✓
  */
 
@@ -25,8 +26,8 @@ describe('USEFUL_LIFE_MASTER: 基本構造', () => {
     expect(typeof USEFUL_LIFE_MASTER).toBe('object');
   });
 
-  it('14品目が含まれている', () => {
-    expect(Object.keys(USEFUL_LIFE_MASTER)).toHaveLength(14);
+  it('16品目が含まれている', () => {
+    expect(Object.keys(USEFUL_LIFE_MASTER)).toHaveLength(16);
   });
 });
 
@@ -97,6 +98,32 @@ describe('USEFUL_LIFE_MASTER: 器具及び備品 - 家具・棚系 (4品目)', (
     expect(entry.years).toBe(15);
     expect(entry.category).toBe('器具及び備品');
     expect(entry.note).toContain('木製は8年');
+  });
+
+  // CHECK-9 根拠: 別表第一 器具及び備品（その他のもの）— CR W-1対応 cmd_147k_sub1
+  it('棚（木製）: 8年 / 器具及び備品 (その他のもの)', () => {
+    const entry = USEFUL_LIFE_MASTER['棚（木製）'];
+    expect(entry).toBeDefined();
+    expect(entry.years).toBe(8);
+    expect(entry.category).toBe('器具及び備品');
+    expect(entry.note).toContain('木製棚は8年');
+  });
+
+  // CHECK-9 根拠: 別表第一 器具及び備品（その他のもの）— CR W-1対応 cmd_147k_sub1
+  it('会議テーブル（木製）: 8年 / 器具及び備品 (その他のもの)', () => {
+    const entry = USEFUL_LIFE_MASTER['会議テーブル（木製）'];
+    expect(entry).toBeDefined();
+    expect(entry.years).toBe(8);
+    expect(entry.category).toBe('器具及び備品');
+    expect(entry.note).toContain('木製は8年');
+  });
+
+  // CHECK-9 根拠: 材質違いでも金属製は従来通り15年を維持（回帰テスト）
+  it('棚（金属製）: 15年のまま変化なし（回帰）', () => {
+    const entry = USEFUL_LIFE_MASTER['棚'];
+    expect(entry).toBeDefined();
+    expect(entry.years).toBe(15);
+    expect(entry.note).toContain('木製棚は8年');
   });
 
   // CHECK-9 根拠: 別表第一 器具及び備品（その他のもの）実務上8年

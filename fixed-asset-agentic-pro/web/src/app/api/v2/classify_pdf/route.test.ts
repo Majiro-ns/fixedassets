@@ -9,8 +9,16 @@
  */
 
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { transformToV2, normalizeVerdict, getFeatureFlags } from './route';
+import {
+  transformToV2,
+  normalizeVerdict,
+  getFeatureFlags,
+  transformAggregatedToV2,
+  extractLineItemsFromClassify,
+} from './route';
 import type { ClassifyResponse } from '@/types/classify';
+import type { ExtractedLineItem } from '@/types/classify_pdf_v2';
+import type { AggregatedResult } from '@/types/multi_agent';
 
 // ─── テストデータ ───────────────────────────────────────────────────────────
 
@@ -197,6 +205,425 @@ describe('transformToV2: summary 計算（CHECK-7b 手計算検算）', () => {
     };
     const result = transformToV2(noAmountRes, 'req-001', null, 0);
     expect(result.summary.capital_total).toBe(0);
+  });
+});
+
+// ─── extractLineItemsFromClassify ───────────────────────────────────────────
+
+describe('extractLineItemsFromClassify', () => {
+  it('line_items が2件ある場合 2件の ExtractedLineItem を返すこと', () => {
+    const result = extractLineItemsFromClassify(mockClassifyResponse);
+    expect(result).toHaveLength(2);
+  });
+
+  it('各 ExtractedLineItem に一意な line_item_id が付くこと', () => {
+    const result = extractLineItemsFromClassify(mockClassifyResponse);
+    const ids = result.map((i) => i.line_item_id);
+    // line_item_id が 'li_' で始まること（根拠: route.ts extractLineItemsFromClassify）
+    for (const id of ids) {
+      expect(id).toMatch(/^li_/);
+    }
+    // 重複なし
+    expect(new Set(ids).size).toBe(2);
+  });
+
+  it('description と amount が正しくマッピングされること', () => {
+    const result = extractLineItemsFromClassify(mockClassifyResponse);
+    expect(result[0].description).toBe('ノートPC');
+    expect(result[0].amount).toBe(250000);
+    expect(result[1].description).toBe('消耗品');
+    expect(result[1].amount).toBe(5000);
+  });
+
+  it('line_items=[] の場合 decision 全体を1件として扱うこと', () => {
+    const empty: ClassifyResponse = { ...mockClassifyResponse, line_items: [] };
+    const result = extractLineItemsFromClassify(empty);
+    expect(result).toHaveLength(1);
+    expect(result[0].description).toBe('ドキュメント全体');
+    expect(result[0].amount).toBe(0);
+  });
+});
+
+// ─── transformAggregatedToV2 ─────────────────────────────────────────────────
+
+/** テスト用 ExtractedLineItem */
+const mockExtractedItems: ExtractedLineItem[] = [
+  { line_item_id: 'li_aaa', description: 'ノートPC', amount: 250000 },
+  { line_item_id: 'li_bbb', description: '修繕費', amount: 50000 },
+];
+
+/** テスト用 AggregatedResult: Tax/Practice 両方 CAPITAL（一致）→ CAPITAL_LIKE, confidence 0.95 */
+const mockAggregatedCapital: AggregatedResult = {
+  line_item_id: 'li_aaa',
+  final_verdict: 'CAPITAL_LIKE',
+  confidence: 0.95,
+  account_category: '器具備品',
+  useful_life: 4,
+  tax_result: {
+    line_item_id: 'li_aaa',
+    verdict: 'CAPITAL',
+    rationale: '電子計算機 別表一',
+    article_ref: '法人税法施行令第133条',
+    account_category: '器具備品',
+    useful_life: 4,
+    formal_criteria_step: null,
+    confidence: 0.9,
+  },
+  practice_result: {
+    line_item_id: 'li_aaa',
+    verdict: 'CAPITAL',
+    rationale: '過去事例：PC購入',
+    similar_cases: [{ description: 'ノートPC Dell', classification: 'CAPITAL', similarity: 0.95 }],
+    suggested_account: '器具備品',
+    confidence: 0.88,
+  },
+};
+
+/** テスト用 AggregatedResult: Tax EXPENSE / Practice UNCERTAIN → EXPENSE_LIKE, confidence 0.80 */
+const mockAggregatedExpense: AggregatedResult = {
+  line_item_id: 'li_bbb',
+  final_verdict: 'EXPENSE_LIKE',
+  confidence: 0.80,
+  account_category: '修繕費',
+  useful_life: null,
+  tax_result: {
+    line_item_id: 'li_bbb',
+    verdict: 'EXPENSE',
+    rationale: '基通7-8-3(1) 20万円未満',
+    article_ref: '基通7-8-3(1)',
+    account_category: '修繕費',
+    useful_life: null,
+    formal_criteria_step: 1,
+    confidence: 0.95,
+  },
+  practice_result: {
+    line_item_id: 'li_bbb',
+    verdict: 'UNCERTAIN',
+    rationale: '類似事例なし',
+    similar_cases: [],
+    suggested_account: null,
+    confidence: 0.3,
+  },
+};
+
+describe('transformAggregatedToV2: 基本構造（設計書 Section 5.2 スキーマ検証）', () => {
+  it('必須フィールドが全て存在すること', () => {
+    const result = transformAggregatedToV2(
+      [mockAggregatedCapital, mockAggregatedExpense],
+      mockExtractedItems,
+      'req-multi-001',
+      'trail_abc',
+      1200,
+    );
+    // 設計書 Section 5.2 の必須フィールド
+    expect(result.request_id).toBe('req-multi-001');
+    expect(result.status).toBe('success');
+    expect(result.extracted).toBeDefined();
+    expect(result.line_results).toBeDefined();
+    expect(result.summary).toBeDefined();
+    expect(result.audit_trail_id).toBe('trail_abc');
+    expect(result.elapsed_ms).toBe(1200);
+  });
+
+  it('line_results に設計書 Section 5.2 の全フィールドが存在すること', () => {
+    const result = transformAggregatedToV2(
+      [mockAggregatedCapital],
+      mockExtractedItems,
+      'req-multi-001',
+      null,
+      500,
+    );
+    const lr = result.line_results[0];
+    // Section 5.2 LineResultV2 フィールド
+    expect(lr).toHaveProperty('line_item_id');
+    expect(lr).toHaveProperty('verdict');
+    expect(lr).toHaveProperty('confidence');
+    expect(lr).toHaveProperty('account_category');
+    expect(lr).toHaveProperty('useful_life');
+    expect(lr).toHaveProperty('tax_verdict');
+    expect(lr).toHaveProperty('tax_rationale');
+    expect(lr).toHaveProperty('tax_account');
+    expect(lr).toHaveProperty('practice_verdict');
+    expect(lr).toHaveProperty('practice_rationale');
+    expect(lr).toHaveProperty('practice_account');
+    expect(lr).toHaveProperty('similar_cases');
+  });
+
+  it('audit_trail_id=null の場合 null が返ること', () => {
+    const result = transformAggregatedToV2([], [], 'req-001', null, 0);
+    expect(result.audit_trail_id).toBeNull();
+  });
+});
+
+describe('transformAggregatedToV2: 3エージェント合議 正常系（Section 5.2 verdict検証）', () => {
+  it('CAPITAL_LIKE の line_result が Aggregator 結果と一致すること（手計算検算）', () => {
+    // 根拠: mockAggregatedCapital.final_verdict = CAPITAL_LIKE, confidence = 0.95
+    const result = transformAggregatedToV2(
+      [mockAggregatedCapital, mockAggregatedExpense],
+      mockExtractedItems,
+      'req-001',
+      null,
+      800,
+    );
+    const capitalItem = result.line_results.find((r) => r.line_item_id === 'li_aaa');
+    expect(capitalItem?.verdict).toBe('CAPITAL_LIKE');
+    expect(capitalItem?.confidence).toBe(0.95);
+    expect(capitalItem?.account_category).toBe('器具備品');
+    expect(capitalItem?.useful_life).toBe(4);
+  });
+
+  it('EXPENSE_LIKE の line_result が Aggregator 結果と一致すること（手計算検算）', () => {
+    // 根拠: mockAggregatedExpense.final_verdict = EXPENSE_LIKE, confidence = 0.80
+    const result = transformAggregatedToV2(
+      [mockAggregatedCapital, mockAggregatedExpense],
+      mockExtractedItems,
+      'req-001',
+      null,
+      800,
+    );
+    const expenseItem = result.line_results.find((r) => r.line_item_id === 'li_bbb');
+    expect(expenseItem?.verdict).toBe('EXPENSE_LIKE');
+    expect(expenseItem?.confidence).toBe(0.80);
+    expect(expenseItem?.tax_verdict).toBe('EXPENSE');
+    expect(expenseItem?.practice_verdict).toBe('UNCERTAIN');
+  });
+
+  it('tax_verdict / tax_rationale / tax_account が Tax Agent 結果から取得されること', () => {
+    const result = transformAggregatedToV2(
+      [mockAggregatedCapital],
+      mockExtractedItems,
+      'req-001',
+      null,
+      100,
+    );
+    const lr = result.line_results[0];
+    expect(lr.tax_verdict).toBe('CAPITAL');
+    expect(lr.tax_rationale).toBe('電子計算機 別表一');
+    expect(lr.tax_account).toBe('器具備品');
+  });
+
+  it('practice_verdict / practice_rationale / practice_account が Practice Agent 結果から取得されること', () => {
+    const result = transformAggregatedToV2(
+      [mockAggregatedCapital],
+      mockExtractedItems,
+      'req-001',
+      null,
+      100,
+    );
+    const lr = result.line_results[0];
+    expect(lr.practice_verdict).toBe('CAPITAL');
+    expect(lr.practice_rationale).toBe('過去事例：PC購入');
+    expect(lr.practice_account).toBe('器具備品');
+  });
+
+  it('similar_cases が Practice Agent の similar_cases[].description に変換されること', () => {
+    const result = transformAggregatedToV2(
+      [mockAggregatedCapital],
+      mockExtractedItems,
+      'req-001',
+      null,
+      100,
+    );
+    const lr = result.line_results[0];
+    expect(lr.similar_cases).toEqual(['ノートPC Dell']);
+  });
+});
+
+describe('transformAggregatedToV2: summary 計算（CHECK-7b 手計算検算）', () => {
+  it('capital_total は CAPITAL_LIKE 明細の金額合計であること', () => {
+    // 手計算: li_aaa (ノートPC 250,000) → CAPITAL_LIKE
+    const result = transformAggregatedToV2(
+      [mockAggregatedCapital, mockAggregatedExpense],
+      mockExtractedItems,
+      'req-001',
+      null,
+      0,
+    );
+    expect(result.summary.capital_total).toBe(250000);
+  });
+
+  it('expense_total は EXPENSE_LIKE 明細の金額合計であること', () => {
+    // 手計算: li_bbb (修繕費 50,000) → EXPENSE_LIKE
+    const result = transformAggregatedToV2(
+      [mockAggregatedCapital, mockAggregatedExpense],
+      mockExtractedItems,
+      'req-001',
+      null,
+      0,
+    );
+    expect(result.summary.expense_total).toBe(50000);
+  });
+
+  it('guidance_total は GUIDANCE 明細の金額合計であること', () => {
+    // 手計算: GUIDANCEアイテムなし → 0
+    const result = transformAggregatedToV2(
+      [mockAggregatedCapital, mockAggregatedExpense],
+      mockExtractedItems,
+      'req-001',
+      null,
+      0,
+    );
+    expect(result.summary.guidance_total).toBe(0);
+  });
+
+  it('by_account に CAPITAL_LIKE の勘定科目集計が含まれること', () => {
+    const result = transformAggregatedToV2(
+      [mockAggregatedCapital],
+      mockExtractedItems,
+      'req-001',
+      null,
+      0,
+    );
+    const byAccount = result.summary.by_account;
+    expect(byAccount).toHaveLength(1);
+    expect(byAccount[0].account_category).toBe('器具備品');
+    expect(byAccount[0].count).toBe(1);
+    expect(byAccount[0].total_amount).toBe(250000);
+  });
+
+  it('EXPENSE_LIKE は by_account に含まれないこと（CAPITAL のみ集計）', () => {
+    const result = transformAggregatedToV2(
+      [mockAggregatedExpense],
+      mockExtractedItems,
+      'req-001',
+      null,
+      0,
+    );
+    expect(result.summary.by_account).toHaveLength(0);
+  });
+});
+
+describe('transformAggregatedToV2: 片方エージェント失敗（部分障害耐性）', () => {
+  it('Tax Agent 失敗（null）の場合 tax_verdict が UNCERTAIN になること', () => {
+    const aggWithNullTax: AggregatedResult = {
+      line_item_id: 'li_aaa',
+      final_verdict: 'GUIDANCE',
+      confidence: 0.30,
+      account_category: null,
+      useful_life: null,
+      tax_result: null,
+      practice_result: null,
+    };
+    const result = transformAggregatedToV2(
+      [aggWithNullTax],
+      mockExtractedItems,
+      'req-001',
+      null,
+      0,
+    );
+    expect(result.line_results[0].tax_verdict).toBe('UNCERTAIN');
+    expect(result.line_results[0].tax_rationale).toBe('');
+    expect(result.line_results[0].tax_account).toBeNull();
+  });
+
+  it('Practice Agent 失敗（null）の場合 practice_verdict が UNCERTAIN になること', () => {
+    const aggWithNullPractice: AggregatedResult = {
+      line_item_id: 'li_aaa',
+      final_verdict: 'CAPITAL_LIKE',
+      confidence: 0.80,
+      account_category: '器具備品',
+      useful_life: 4,
+      tax_result: {
+        line_item_id: 'li_aaa',
+        verdict: 'CAPITAL',
+        rationale: 'Tax判定',
+        article_ref: null,
+        account_category: '器具備品',
+        useful_life: 4,
+        formal_criteria_step: null,
+        confidence: 0.9,
+      },
+      practice_result: null,
+    };
+    const result = transformAggregatedToV2(
+      [aggWithNullPractice],
+      mockExtractedItems,
+      'req-001',
+      null,
+      0,
+    );
+    expect(result.line_results[0].practice_verdict).toBe('UNCERTAIN');
+    expect(result.line_results[0].practice_rationale).toBe('');
+    expect(result.line_results[0].practice_account).toBeNull();
+    expect(result.line_results[0].similar_cases).toEqual([]);
+  });
+
+  it('agentStatus=partial → status=partial が返ること', () => {
+    const result = transformAggregatedToV2(
+      [mockAggregatedCapital],
+      mockExtractedItems,
+      'req-001',
+      null,
+      0,
+      'partial',  // agentStatus
+    );
+    expect(result.status).toBe('partial');
+  });
+
+  it('両方 Agent 失敗（両方 null result）の場合 summary は全て 0 になること', () => {
+    const aggBothNull: AggregatedResult = {
+      line_item_id: 'li_aaa',
+      final_verdict: 'GUIDANCE',
+      confidence: 0.30,
+      account_category: null,
+      useful_life: null,
+      tax_result: null,
+      practice_result: null,
+    };
+    const result = transformAggregatedToV2(
+      [aggBothNull],
+      mockExtractedItems,
+      'req-001',
+      null,
+      0,
+    );
+    expect(result.summary.capital_total).toBe(0);
+    expect(result.summary.expense_total).toBe(0);
+    expect(result.summary.guidance_total).toBe(250000); // li_aaa は GUIDANCE, amount=250000
+    expect(result.line_results[0].verdict).toBe('GUIDANCE');
+  });
+});
+
+describe('transformAggregatedToV2: Promise.allSettled 部分成功パターン', () => {
+  it('Tax 成功・Practice 成功のケースで status=success、confidence=0.95', () => {
+    // Tax:CAPITAL + Practice:CAPITAL → CAPITAL_LIKE, 0.95（Section 3.5 パターン1）
+    const result = transformAggregatedToV2(
+      [mockAggregatedCapital],
+      mockExtractedItems,
+      'req-001',
+      null,
+      0,
+    );
+    expect(result.status).toBe('success');
+    expect(result.line_results[0].confidence).toBe(0.95);
+  });
+
+  it('Tax 成功・Practice UNCERTAIN のケースで confidence=0.80（Section 3.5 パターン3相当）', () => {
+    // Tax:EXPENSE + Practice:UNCERTAIN → EXPENSE_LIKE, confidence=0.80
+    const result = transformAggregatedToV2(
+      [mockAggregatedExpense],
+      mockExtractedItems,
+      'req-001',
+      null,
+      0,
+    );
+    expect(result.line_results[0].confidence).toBe(0.80);
+    expect(result.line_results[0].verdict).toBe('EXPENSE_LIKE');
+  });
+
+  it('agentStatus=partial で status=partial が返ること（Promise.allSettled 失敗時）', () => {
+    // Promise.allSettled で片方が rejected → agentStatus='partial' → status: 'partial'
+    const result = transformAggregatedToV2(
+      [mockAggregatedCapital],
+      mockExtractedItems,
+      'req-multi-partial',
+      null,
+      0,
+      'partial',
+    );
+    expect(result.status).toBe('partial');
+    // 成功した Agent の結果は正しく返ること
+    expect(result.line_results[0].verdict).toBe('CAPITAL_LIKE');
   });
 });
 

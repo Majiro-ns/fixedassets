@@ -4,7 +4,7 @@
  *
  * Phase 1: 既存 Python backend /classify_pdf（単一Gemini）を内部で呼び出し、
  *          レスポンスを v2 フォーマットへ変換して返す。
- * Phase 3: USE_MULTI_AGENT=true でマルチエージェント実装に切り替える。
+ * Phase 2: USE_MULTI_AGENT=true で Tax + Practice + Aggregator の3エージェント合議に切り替える。
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -20,6 +20,10 @@ import type {
   V2Status,
   V2Verdict,
 } from '@/types/classify_pdf_v2';
+import { runTaxAgent } from '@/lib/agents/taxAgent';
+import { runPracticeAgent } from '@/lib/agents/practiceAgent';
+import { aggregate } from '@/lib/agents/aggregator';
+import type { AggregatedResult } from '@/types/multi_agent';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
 const TIMEOUT_MS = 5000;
@@ -147,6 +151,107 @@ export function transformToV2(
   };
 }
 
+// ─── マルチエージェント用ヘルパー ──────────────────────────────────────────
+
+/**
+ * ClassifyResponse の line_items を ExtractedLineItem[] に変換する。
+ * 各明細に一意な line_item_id を割り当てる。
+ * 根拠: 設計書 Section 4.1 — マルチエージェントへの入力形式
+ */
+export function extractLineItemsFromClassify(classifyRes: ClassifyResponse): ExtractedLineItem[] {
+  const items =
+    classifyRes.line_items?.length > 0
+      ? classifyRes.line_items
+      : [{ description: 'ドキュメント全体', amount: 0, classification: classifyRes.decision }];
+
+  return items.map((item) => ({
+    line_item_id: `li_${randomUUID().replace(/-/g, '').slice(0, 12)}`,
+    description: item.description,
+    amount: item.amount ?? 0,
+  }));
+}
+
+/**
+ * AggregatedResult[] + ExtractedLineItem[] → ClassifyPDFV2Response に変換する。
+ * 根拠: 設計書 Section 5.2 レスポンス形式
+ *
+ * CHECK-9: レスポンスフィールドは Section 5.2 スキーマから直接引用:
+ *   - verdict / confidence / account_category / useful_life: Aggregator出力
+ *   - tax_verdict / tax_rationale / tax_account: Tax Agent出力
+ *   - practice_verdict / practice_rationale / practice_account: Practice Agent出力
+ *   - similar_cases: Practice Agent の similar_cases[].description
+ */
+export function transformAggregatedToV2(
+  aggregatedResults: AggregatedResult[],
+  extractedItems: ExtractedLineItem[],
+  requestId: string,
+  auditTrailId: string | null,
+  elapsedMs: number,
+  agentStatus: 'success' | 'partial' = 'success',
+): ClassifyPDFV2Response {
+  // 金額マップ（line_item_id → amount）
+  const amountMap = new Map(extractedItems.map((i) => [i.line_item_id, i.amount]));
+
+  const lineResults: LineResultV2[] = aggregatedResults.map((agg) => ({
+    line_item_id: agg.line_item_id,
+    verdict: agg.final_verdict,                            // CAPITAL_LIKE | EXPENSE_LIKE | GUIDANCE
+    confidence: agg.confidence,                            // Aggregator算出: 0.95/0.80/0.50/0.30
+    account_category: agg.account_category,                // Tax優先, Tax null時Practice採用
+    useful_life: agg.useful_life,                          // Tax Agentの値を正とする
+    tax_verdict: agg.tax_result?.verdict ?? 'UNCERTAIN',
+    tax_rationale: agg.tax_result?.rationale ?? '',
+    tax_account: agg.tax_result?.account_category ?? null,
+    practice_verdict: agg.practice_result?.verdict ?? 'UNCERTAIN',
+    practice_rationale: agg.practice_result?.rationale ?? '',
+    practice_account: agg.practice_result?.suggested_account ?? null,
+    similar_cases: agg.practice_result?.similar_cases.map((sc) => sc.description) ?? [],
+  }));
+
+  // 金額集計（CHECK-7b 手計算検証済み）
+  let capital_total = 0;
+  let expense_total = 0;
+  let guidance_total = 0;
+  const byAccountMap = new Map<string, { count: number; total_amount: number }>();
+
+  for (const lr of lineResults) {
+    const amount = amountMap.get(lr.line_item_id) ?? 0;
+    if (lr.verdict === 'CAPITAL_LIKE') {
+      capital_total += amount;
+      if (lr.account_category) {
+        const prev = byAccountMap.get(lr.account_category) ?? { count: 0, total_amount: 0 };
+        byAccountMap.set(lr.account_category, {
+          count: prev.count + 1,
+          total_amount: prev.total_amount + amount,
+        });
+      }
+    } else if (lr.verdict === 'EXPENSE_LIKE') {
+      expense_total += amount;
+    } else {
+      guidance_total += amount;
+    }
+  }
+
+  const by_account = Array.from(byAccountMap.entries()).map(([account_category, stats]) => ({
+    account_category,
+    count: stats.count,
+    total_amount: stats.total_amount,
+  }));
+
+  const extracted: ExtractedLineItems = { items: extractedItems };
+
+  const summary: V2Summary = { capital_total, expense_total, guidance_total, by_account };
+
+  return {
+    request_id: requestId,
+    status: agentStatus,
+    extracted,
+    line_results: lineResults,
+    summary,
+    audit_trail_id: auditTrailId,
+    elapsed_ms: elapsedMs,
+  };
+}
+
 // ─── fetch with timeout / retry ────────────────────────────────────────────
 
 async function fetchWithTimeout(url: string, formData: FormData): Promise<Response> {
@@ -250,7 +355,47 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     } satisfies ClassifyPDFV2Response);
   }
 
-  // 5. 変換 & レスポンス
+  // 5. マルチエージェント判定パス（USE_MULTI_AGENT=true）
+  //    根拠: 設計書 Section 5.3 エージェント実行順序
+  if (flags.useMultiAgent) {
+    const extractedItems = extractLineItemsFromClassify(classifyRes);
+    const parallelEnabled = options?.parallel_agents ?? flags.parallelAgents;
+
+    let taxResults: Awaited<ReturnType<typeof runTaxAgent>> | null = null;
+    let practiceResults: Awaited<ReturnType<typeof runPracticeAgent>> | null = null;
+    let agentStatus: 'success' | 'partial' = 'success';
+
+    if (parallelEnabled) {
+      // Promise.allSettled: 片方失敗でも残りで判定継続（根拠: Section 6 エラーハンドリング）
+      const [taxSettled, practiceSettled] = await Promise.allSettled([
+        runTaxAgent(extractedItems),
+        runPracticeAgent(extractedItems, []),
+      ]);
+      taxResults = taxSettled.status === 'fulfilled' ? taxSettled.value : null;
+      practiceResults = practiceSettled.status === 'fulfilled' ? practiceSettled.value : null;
+      if (taxSettled.status === 'rejected' || practiceSettled.status === 'rejected') {
+        agentStatus = 'partial';
+      }
+    } else {
+      // Sequential（PARALLEL_AGENTS=false の場合）
+      try { taxResults = await runTaxAgent(extractedItems); } catch { agentStatus = 'partial'; }
+      try { practiceResults = await runPracticeAgent(extractedItems, []); } catch { agentStatus = 'partial'; }
+    }
+
+    const aggregated = aggregate(taxResults, practiceResults);
+    const elapsed = Date.now() - startTime;
+    const v2Response = transformAggregatedToV2(
+      aggregated,
+      extractedItems,
+      requestId,
+      auditTrailId,
+      elapsed,
+      agentStatus,
+    );
+    return NextResponse.json(v2Response);
+  }
+
+  // 6. Phase 1 フォールバック（USE_MULTI_AGENT=false）
   const elapsed = Date.now() - startTime;
   const v2Response = transformToV2(classifyRes, requestId, auditTrailId, elapsed);
   return NextResponse.json(v2Response);

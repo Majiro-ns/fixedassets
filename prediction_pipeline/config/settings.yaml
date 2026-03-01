@@ -1,0 +1,84 @@
+llm:
+  provider: anthropic
+  model: claude-haiku-4-5-20251001
+  fallback_model: claude-sonnet-4-6
+  api_key_env: ANTHROPIC_API_KEY
+  max_tokens: 512
+  temperature: 0.7
+
+scraping:
+  min_interval_sec: 3
+  max_requests_per_session: 20
+  user_agent: "PredictionPipeline/1.0 (research)"
+
+betting:
+  default_strategy: sanrenpu_nagashi
+  unit_bet: 1200
+  wide_unit: 1100
+  max_daily_investment: 10000
+  max_races_per_day: 6
+
+keirin:
+  base_url: "https://keirin.jp/pc"
+  request_delay: 3.0
+  config_dir: "config/keirin"
+  profile_dir: "config/keirin/profiles"
+
+kyotei:
+  base_url: "https://www.boatrace.jp/owpc/pc/race"
+  request_delay: 3.0
+  config_dir: "config/kyotei"
+  profile_dir: "config/kyotei/profiles"
+
+logging:
+  level: INFO
+  format: "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+  file: "data/logs/pipeline.log"
+
+filters:
+  keirin:
+    class: ["S"]
+    race_type: ["特選", "二次予選"]
+    exclude_keywords: ["自信", "見えた", "鉄板", "間違いない"]
+    exclude_velodromes: ["小田原", "名古屋", "高知", "玉野", "武雄"]
+    exclude_track_500m: true
+    exclude_day_of_week: ["月", "日"]
+    exclude_race_number: [4, 6]
+    expected_payout_min: 20000
+    expected_payout_max: 50000
+    # ─── MLフィルター改善（2026-02-28 cmd_089）────────────────────────
+    # F10: 信頼度スコア閾値（C3フィルター強化版 hit_probability代替）
+    # classify()のconfidence_score(0-3)をhit_probability閾値の代替として使用。
+    # 実績: confidence_score=3 → hit_rate≈0.583（C型）、2 → 0.244（A型）
+    # 0.9閾値相当として最高信頼度(3)のみBUYにするには min_confidence_score: 3 を設定。
+    min_confidence_score: 3  # cmd_132k_sub1: 0.9相当(3=C型のみ)に引上げ（#T002対策案1）
+    # F11: 実力差フィルター（score_spread代替）
+    # entries[].win_rate の max-min < 閾値なら実力拮抗 → SKIP
+    # 旧パイプライン: score_spread < 12 → win_rate_spread < 0.15 が概算対応
+    min_win_rate_spread: 0.0  # 無効化（0.0=スキップなし）→ スクレイピングデータにwin_rate必要
+    # F12: C3拡張フィルター（点数上限）
+    # C3条件5: num_bets > 10 は的中率低下のため除外
+    max_bets_per_race: 10  # 10点以下のみBUY（C3フィルター条件5）
+    # score_spread フィルター（#T002対策案2 cmd_132k_sub2 2026-03-01）
+    # 競走得点 max-min < 12 の拮抗レースをSKIP（2月低パフォーマンス分析より）
+    # 0=無効化。実運用は12を推奨
+    min_score_spread: 12
+
+pipeline:
+  config_dir: "config"
+  cre_profile_path: "config/keirin/profiles/mr_t.yaml"
+  output_dir: "output"
+  log_dir: "data/logs"
+
+publisher:
+  x_api:
+    bearer_token: "${TWITTER_BEARER_TOKEN}"
+    api_key: "${TWITTER_API_KEY}"
+    api_secret: "${TWITTER_API_SECRET}"
+    access_token: "${TWITTER_ACCESS_TOKEN}"
+    access_token_secret: "${TWITTER_ACCESS_TOKEN_SECRET}"
+  note:
+    session_token: "${NOTE_SESSION_TOKEN}"
+    user_id: "${NOTE_USER_ID}"
+    magazine_id: "${NOTE_MAGAZINE_ID}"
+  dry_run: true

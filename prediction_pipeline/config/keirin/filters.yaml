@@ -1,0 +1,83 @@
+# 競輪フィルター設定（Mr.T認知プロファイル準拠）
+# filter_engine.py (FilterEngine) が直接読み込む設定ファイル
+# キー名は filter_engine.py の DEFAULT_FILTERS・各チェックメソッドと完全一致させること
+
+# ─── 後方互換キー（apply_legacy / _check_stage / _check_s1_count 用）───
+min_s1_count: 3
+# cmd_126k_sub2 2026-03-01: ROI>=91.0%のrace_typeのみ通過に更新
+allowed_stages:
+  - 予選
+  - 一予選
+  - 特選
+  - 初特選
+  - 一般
+  - 一次予選
+min_grade: S1
+
+# ─── F1: クラスフィルター（_check_class） ─────────────────────────────
+class:
+  - "S"
+
+# ─── F2: レース種別フィルター（_check_race_type） ─────────────────────
+# cmd_126k_sub2 2026-03-01: ROI>=91.0%のrace_typeのみ通過
+# 通過: 予選(ROI=?), 一予選, 特選, 初特選, 一般(194.95%), 一次予選
+# 除外: 準決勝(51.25%), 二予選/二次予選(55.38%), 決勝(0%), 選抜(80.82%), 初日特選, 特別選抜予選, 特秀
+race_type:
+  - 予選
+  - 一予選
+  - 特選
+  - 初特選
+  - 一般
+  - 一次予選
+
+# ─── F3: 逆指標キーワードフィルター（_check_keywords） ───────────────
+exclude_keywords:
+  - 自信
+  - 見えた
+  - 鉄板
+  - 間違いない
+
+# ─── F4: 競輪場フィルター（_check_velodrome） ─────────────────────────
+# 回収率0〜30%の場を除外
+exclude_velodromes:
+  - 小田原
+  - 名古屋
+  - 高知
+  - 玉野
+  - 武雄
+
+# ─── F5: バンク長フィルター（_check_bank_length） ─────────────────────
+# 500mバンクは回収率62%のため除外
+exclude_track_500m: true
+
+# ─── F6: 曜日フィルター（_check_day_of_week） ─────────────────────────
+# 月曜・日曜は回収率79〜80%のため除外
+exclude_day_of_week:
+  - 月
+  - 日
+
+# ─── F7: レース番号フィルター（_check_race_number） ───────────────────
+# 4R・6Rは回収率24〜33%のため除外
+exclude_race_number:
+  - 4
+  - 6
+
+# ─── F8: 期待配当ゾーンフィルター（_check_expected_payout） ───────────
+# 2万〜5万円ゾーンを適正範囲とする（expected_payoutがNoneの場合はF8スキップ）
+expected_payout_min: 20000
+expected_payout_max: 50000
+
+# ─── F10: 信頼度スコア閾値（apply_ml_filters / ashigaru_predict.py） ──
+# 2026-02-28 cmd_098: Type A/B有効化。confidence_score >= 1 のみ処理
+# confidence_score の意味: 0=低品質, 1=S級×対象stage, 2=+逆指標なし, 3=+良場
+# cmd_132k_sub1 2026-03-01: 0.9相当閾値(3)に引上げ（2月ROI崩壊#T002対策案1）
+# 根拠: hit_prob>=0.9の59件→的中率32.2%/高ROI、<0.9の11件→9.1%/低ROI
+min_confidence_score: 3
+
+# ─── 参考情報（filter_engine.py 未使用・分析用） ──────────────────────
+preferred_venues:
+  - 熊本     # 回収率169%
+  - 別府     # 回収率169%
+  - 防府     # 回収率155%
+  - 立川     # 高S1密度
+  - 川崎     # 安定開催

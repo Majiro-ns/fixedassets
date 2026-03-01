@@ -1,0 +1,461 @@
+{
+  "_meta": {
+    "description": "バックテスト用入力データ（5レース）",
+    "generated_by": "ashigaru2 / subtask_027a_backtest_data",
+    "generated_at": "2026-02-23T07:20:00",
+    "data_source": "mr_t_cognitive_profile.yaml（842件の統計データ）/ keirin_sample.json",
+    "note": "yosoka_634_predictions.json は data/ 配下に存在しないため、認知プロファイルの統計から構築したサンプル。mr_t_actual は全件 null。",
+    "filter_type_legend": {
+      "C": "堅実型 — 「絞」「獲りやすさ」「資金稼ぎ」系コメント × S1 × 特選/二次予選 × 得意会場",
+      "A": "標準型 — 逆指標除外 × S1 × 特選/二次予選 × 中穴ゾーン（expected_payout 20000-50000）",
+      "B": "穴狙い型 — 「高配当」「大穴」「波乱」「妙味」「伏兵」系コメント × S1 × 特選/二次予選"
+    },
+    "profile_basis": {
+      "filter_C_evidence": "n=12, 的中率58.3%, 回収率179.1%（S級×特選/二次予選×堅実系）",
+      "filter_A_evidence": "n=131, 的中率24.4%, 回収率148.7%（S級×特選/二次予選×逆指標除外）",
+      "filter_B_evidence": "n=28, 的中率17.9%, 回収率197.7%（穴狙い×S級×特選/二次予選）"
+    }
+  },
+  "races": [
+    {
+      "race_id": "keirin_kumamoto_2R_20260223",
+      "venue": "熊本",
+      "race_num": 2,
+      "grade": "S1",
+      "stage": "特選",
+      "bank_length": 400,
+      "bank_tendency": "標準バンク。展開次第でどの脚質も有利",
+      "race_date": "2026-02-23",
+      "filter_type": "C",
+      "selection_reason": "得意会場（熊本: n=34, 回収率169.3%）× S1特選 × 堅実系コメント × 2R（best_race: 的中率38.1%, 回収率235.2%）",
+      "mr_t_comment": "狙い絞れる！この展開は鮮明。3点に集約して仕留める！資金稼ぎにうってつけの一戦！",
+      "expected_payout": 15000,
+      "entries": [
+        {
+          "car_no": 1,
+          "reg_no": "101234",
+          "name": "田中雄一",
+          "grade": "S1",
+          "leg_type": "逃げ",
+          "competitive_score": 103.45,
+          "line": "1-3-5",
+          "recent_results": "1/1/2/1/3"
+        },
+        {
+          "car_no": 2,
+          "reg_no": "102345",
+          "name": "鈴木次郎",
+          "grade": "S1",
+          "leg_type": "捲り",
+          "competitive_score": 98.12,
+          "line": "2-4",
+          "recent_results": "2/1/2/3/1"
+        },
+        {
+          "car_no": 3,
+          "reg_no": "103456",
+          "name": "佐藤三郎",
+          "grade": "S1",
+          "leg_type": "差し",
+          "competitive_score": 96.78,
+          "line": "1-3-5",
+          "recent_results": "3/2/1/2/1"
+        },
+        {
+          "car_no": 4,
+          "reg_no": "104567",
+          "name": "山田四郎",
+          "grade": "S1",
+          "leg_type": "捲り",
+          "competitive_score": 92.34,
+          "line": "2-4",
+          "recent_results": "1/3/2/1/2"
+        },
+        {
+          "car_no": 5,
+          "reg_no": "105678",
+          "name": "中村五郎",
+          "grade": "S1",
+          "leg_type": "差し",
+          "competitive_score": 91.20,
+          "line": "1-3-5",
+          "recent_results": "2/2/3/1/2"
+        },
+        {
+          "car_no": 6,
+          "reg_no": "106789",
+          "name": "小林六郎",
+          "grade": "S2",
+          "leg_type": "逃げ",
+          "competitive_score": 84.56,
+          "line": "6-7",
+          "recent_results": "1/4/1/3/5"
+        },
+        {
+          "car_no": 7,
+          "reg_no": "107890",
+          "name": "加藤七郎",
+          "grade": "S2",
+          "leg_type": "追い込み",
+          "competitive_score": 82.11,
+          "line": "6-7",
+          "recent_results": "4/3/2/5/3"
+        }
+      ],
+      "mr_t_actual": null,
+      "data_source": "mr_t_cognitive_profile.yaml（統計データ）"
+    },
+    {
+      "race_id": "keirin_beppu_3R_20260223",
+      "venue": "別府",
+      "race_num": 3,
+      "grade": "S1",
+      "stage": "二次予選",
+      "bank_length": 333,
+      "bank_tendency": "小バンク。まくりが決まりにくく逃げ有利",
+      "race_date": "2026-02-23",
+      "filter_type": "C",
+      "selection_reason": "得意会場（別府: n=24, 的中率45.8%, 回収率169.3%）× S1二次予選 × 堅実系コメント × 3R（best_race: 的中率34.5%, 回収率166.5%）",
+      "mr_t_comment": "別府S1二次予選！獲りやすさ抜群。盤石の態勢で点数絞って仕留める！",
+      "expected_payout": 22000,
+      "entries": [
+        {
+          "car_no": 1,
+          "reg_no": "201234",
+          "name": "伊藤一彦",
+          "grade": "S1",
+          "leg_type": "逃げ",
+          "competitive_score": 101.23,
+          "line": "1-2",
+          "recent_results": "1/1/1/2/1"
+        },
+        {
+          "car_no": 2,
+          "reg_no": "202345",
+          "name": "渡辺二朗",
+          "grade": "S1",
+          "leg_type": "差し",
+          "competitive_score": 97.45,
+          "line": "1-2",
+          "recent_results": "2/2/3/1/2"
+        },
+        {
+          "car_no": 3,
+          "reg_no": "203456",
+          "name": "松本三男",
+          "grade": "S1",
+          "leg_type": "捲り",
+          "competitive_score": 95.67,
+          "line": "3-5-7",
+          "recent_results": "1/3/2/1/3"
+        },
+        {
+          "car_no": 4,
+          "reg_no": "204567",
+          "name": "木村四朗",
+          "grade": "S1",
+          "leg_type": "追い込み",
+          "competitive_score": 93.89,
+          "line": "4-6",
+          "recent_results": "3/1/2/4/1"
+        },
+        {
+          "car_no": 5,
+          "reg_no": "205678",
+          "name": "林五郎",
+          "grade": "S1",
+          "leg_type": "差し",
+          "competitive_score": 90.34,
+          "line": "3-5-7",
+          "recent_results": "2/2/4/3/2"
+        },
+        {
+          "car_no": 6,
+          "reg_no": "206789",
+          "name": "清水六助",
+          "grade": "S2",
+          "leg_type": "追い込み",
+          "competitive_score": 83.22,
+          "line": "4-6",
+          "recent_results": "4/3/2/5/4"
+        },
+        {
+          "car_no": 7,
+          "reg_no": "207890",
+          "name": "山本七海",
+          "grade": "S2",
+          "leg_type": "逃げ",
+          "competitive_score": 81.56,
+          "line": "3-5-7",
+          "recent_results": "1/4/3/2/5"
+        }
+      ],
+      "mr_t_actual": null,
+      "data_source": "mr_t_cognitive_profile.yaml（統計データ）"
+    },
+    {
+      "race_id": "keirin_hofu_7R_20260223",
+      "venue": "防府",
+      "race_num": 7,
+      "grade": "S1",
+      "stage": "特選",
+      "bank_length": 400,
+      "bank_tendency": "標準バンク。展開次第でどの脚質も有利",
+      "race_date": "2026-02-23",
+      "filter_type": "A",
+      "selection_reason": "得意会場（防府: n=6, 回収率155.5%）× S1特選 × 逆指標除外 × 中穴ゾーン（expected_payout 30000-50000）",
+      "mr_t_comment": "防府S1特選！波乱の可能性あり。展開を踏まえると、この妙味は見逃せない。",
+      "expected_payout": 38000,
+      "entries": [
+        {
+          "car_no": 1,
+          "reg_no": "301234",
+          "name": "岡田一輝",
+          "grade": "S1",
+          "leg_type": "逃げ",
+          "competitive_score": 99.78,
+          "line": "1-4",
+          "recent_results": "2/1/3/2/1"
+        },
+        {
+          "car_no": 2,
+          "reg_no": "302345",
+          "name": "藤田二郎",
+          "grade": "S1",
+          "leg_type": "捲り",
+          "competitive_score": 96.12,
+          "line": "2-6",
+          "recent_results": "1/2/1/3/4"
+        },
+        {
+          "car_no": 3,
+          "reg_no": "303456",
+          "name": "後藤三男",
+          "grade": "S1",
+          "leg_type": "逃げ",
+          "competitive_score": 94.45,
+          "line": "3-7",
+          "recent_results": "3/1/2/1/2"
+        },
+        {
+          "car_no": 4,
+          "reg_no": "304567",
+          "name": "橋本四郎",
+          "grade": "S1",
+          "leg_type": "差し",
+          "competitive_score": 93.67,
+          "line": "1-4",
+          "recent_results": "2/3/1/2/3"
+        },
+        {
+          "car_no": 5,
+          "reg_no": "305678",
+          "name": "西村五朗",
+          "grade": "S2",
+          "leg_type": "捲り",
+          "competitive_score": 86.23,
+          "line": "5",
+          "recent_results": "4/2/3/1/2"
+        },
+        {
+          "car_no": 6,
+          "reg_no": "306789",
+          "name": "坂本六郎",
+          "grade": "S2",
+          "leg_type": "追い込み",
+          "competitive_score": 84.89,
+          "line": "2-6",
+          "recent_results": "3/4/2/3/5"
+        },
+        {
+          "car_no": 7,
+          "reg_no": "307890",
+          "name": "村上七海",
+          "grade": "S2",
+          "leg_type": "差し",
+          "competitive_score": 82.34,
+          "line": "3-7",
+          "recent_results": "2/5/4/2/3"
+        }
+      ],
+      "mr_t_actual": null,
+      "data_source": "mr_t_cognitive_profile.yaml（統計データ）"
+    },
+    {
+      "race_id": "keirin_iwaki_5R_20260223",
+      "venue": "いわき平",
+      "race_num": 5,
+      "grade": "S1",
+      "stage": "二次予選",
+      "bank_length": 400,
+      "bank_tendency": "標準バンク。展開次第でどの脚質も有利",
+      "race_date": "2026-02-23",
+      "filter_type": "A",
+      "selection_reason": "得意会場（いわき平: n=39, 的中率25.6%, 回収率134.2%）× S1二次予選 × 逆指標除外 × 中穴ゾーン（expected_payout 40000-50000）",
+      "mr_t_comment": "いわき平S1二次予選。展開を踏まえると、ここは手堅く攻める。資金稼ぎにオススメの一戦！",
+      "expected_payout": 45000,
+      "entries": [
+        {
+          "car_no": 1,
+          "reg_no": "401234",
+          "name": "高橋一郎",
+          "grade": "S1",
+          "leg_type": "捲り",
+          "competitive_score": 100.56,
+          "line": "1-3",
+          "recent_results": "1/2/1/2/1"
+        },
+        {
+          "car_no": 2,
+          "reg_no": "402345",
+          "name": "石川二郎",
+          "grade": "S1",
+          "leg_type": "逃げ",
+          "competitive_score": 97.89,
+          "line": "2-5",
+          "recent_results": "2/1/2/1/3"
+        },
+        {
+          "car_no": 3,
+          "reg_no": "403456",
+          "name": "中島三男",
+          "grade": "S1",
+          "leg_type": "差し",
+          "competitive_score": 95.23,
+          "line": "1-3",
+          "recent_results": "3/2/3/1/2"
+        },
+        {
+          "car_no": 4,
+          "reg_no": "404567",
+          "name": "小野四郎",
+          "grade": "S1",
+          "leg_type": "逃げ",
+          "competitive_score": 92.67,
+          "line": "4-7",
+          "recent_results": "1/1/3/2/4"
+        },
+        {
+          "car_no": 5,
+          "reg_no": "405678",
+          "name": "山口五郎",
+          "grade": "S2",
+          "leg_type": "差し",
+          "competitive_score": 87.45,
+          "line": "2-5",
+          "recent_results": "2/3/1/4/2"
+        },
+        {
+          "car_no": 6,
+          "reg_no": "406789",
+          "name": "森本六郎",
+          "grade": "S2",
+          "leg_type": "追い込み",
+          "competitive_score": 85.12,
+          "line": "6",
+          "recent_results": "4/3/5/2/3"
+        },
+        {
+          "car_no": 7,
+          "reg_no": "407890",
+          "name": "池田七男",
+          "grade": "S2",
+          "leg_type": "追い込み",
+          "competitive_score": 83.78,
+          "line": "4-7",
+          "recent_results": "3/4/2/5/4"
+        }
+      ],
+      "mr_t_actual": null,
+      "data_source": "mr_t_cognitive_profile.yaml（統計データ）"
+    },
+    {
+      "race_id": "keirin_keio_9R_20260223",
+      "venue": "京王閣",
+      "race_num": 9,
+      "grade": "S1",
+      "stage": "二次予選",
+      "bank_length": 400,
+      "bank_tendency": "標準バンク。展開次第でどの脚質も有利",
+      "race_date": "2026-02-23",
+      "filter_type": "B",
+      "selection_reason": "得意会場（京王閣: n=21, 回収率145.7%）× S1二次予選 × 穴狙い系コメント（波乱・伏兵・高配当）× 高expected_payout（>60000）",
+      "mr_t_comment": "波乱必至！この展開で高配当狙う！伏兵に妙味あり。人気ラインを疑ってかかるべし！大穴の匂いがする！",
+      "expected_payout": 95000,
+      "entries": [
+        {
+          "car_no": 1,
+          "reg_no": "501234",
+          "name": "斉藤一郎",
+          "grade": "S1",
+          "leg_type": "逃げ",
+          "competitive_score": 96.78,
+          "line": "1-3-6",
+          "recent_results": "2/1/3/1/4"
+        },
+        {
+          "car_no": 2,
+          "reg_no": "502345",
+          "name": "近藤二朗",
+          "grade": "S1",
+          "leg_type": "捲り",
+          "competitive_score": 94.23,
+          "line": "2-4",
+          "recent_results": "1/3/2/4/2"
+        },
+        {
+          "car_no": 3,
+          "reg_no": "503456",
+          "name": "原田三郎",
+          "grade": "S1",
+          "leg_type": "差し",
+          "competitive_score": 93.56,
+          "line": "1-3-6",
+          "recent_results": "4/2/1/2/3"
+        },
+        {
+          "car_no": 4,
+          "reg_no": "504567",
+          "name": "福田四男",
+          "grade": "S1",
+          "leg_type": "追い込み",
+          "competitive_score": 91.89,
+          "line": "2-4",
+          "recent_results": "3/4/3/1/2"
+        },
+        {
+          "car_no": 5,
+          "reg_no": "505678",
+          "name": "長谷川五郎",
+          "grade": "S2",
+          "leg_type": "捲り",
+          "competitive_score": 88.34,
+          "line": "5-7",
+          "recent_results": "2/1/4/3/1"
+        },
+        {
+          "car_no": 6,
+          "reg_no": "506789",
+          "name": "三浦六朗",
+          "grade": "S2",
+          "leg_type": "差し",
+          "competitive_score": 85.67,
+          "line": "1-3-6",
+          "recent_results": "5/3/2/4/2"
+        },
+        {
+          "car_no": 7,
+          "reg_no": "507890",
+          "name": "野口七男",
+          "grade": "S2",
+          "leg_type": "逃げ",
+          "competitive_score": 83.45,
+          "line": "5-7",
+          "recent_results": "1/2/5/3/1"
+        }
+      ],
+      "mr_t_actual": null,
+      "data_source": "mr_t_cognitive_profile.yaml（統計データ）"
+    }
+  ]
+}

@@ -1,0 +1,211 @@
+# 競艇24場 会場マスタデータ
+# prediction_pipeline / cmd_019_karo2 / ashigaru6 / 2026-02-22
+#
+# 各フィールドの説明:
+#   code          : 場コード（2桁ゼロ埋め、BOAT RACE 公式準拠）
+#   name          : 競艇場名
+#   prefecture    : 都道府県
+#   water         : 水面種別（淡水 / 海水 / 汽水）
+#   characteristic: 水面特性（predictor.py が kyotei_prompt.txt に埋め込む）
+#   in_win_rate   : インコース（1コース）勝率の傾向（high/medium/low）
+#   notes         : 予想上の補足事項
+#
+# 出典: BOAT RACE オフィシャルウェブサイト 各場紹介ページ（2026-02確認）
+# 使用方法:
+#   import yaml
+#   venues = yaml.safe_load(open("config/kyotei/venues.yaml"))["venues"]
+#   venue = next(v for v in venues if v["code"] == "12")
+#   print(venue["characteristic"])
+
+venues:
+  - code: "01"
+    name: "桐生"
+    prefecture: "群馬県"
+    water: "淡水"
+    characteristic: "標高277m・全国最高地水面。冬季はモーター出力有利で差し多発。夏季はエンジン出力低下でイン有利に転化。"
+    in_win_rate: "medium"
+    notes: "標高の影響でモーター性能に季節差が大きい。冬の荒れレースに注意。"
+
+  - code: "02"
+    name: "戸田"
+    prefecture: "埼玉県"
+    water: "淡水"
+    characteristic: "水路幅が全国最狭（約40m）。直線距離短く、インコースが圧倒的有利。荒れにくい堅い水面。"
+    in_win_rate: "high"
+    notes: "全国屈指のイン勝率。幅狭のため差し・まくりが決まりにくい。"
+
+  - code: "03"
+    name: "江戸川"
+    prefecture: "東京都"
+    water: "汽水"
+    characteristic: "東京湾に接続する汽水域。潮汐の干満差最大1m超・強風・波浪で全国一の難水面。アウトコース有利の傾向。"
+    in_win_rate: "low"
+    notes: "全国最難関。干潮時はうねりが激しい。荒れレース多発で万舟出現率高い。"
+
+  - code: "04"
+    name: "平和島"
+    prefecture: "東京都"
+    water: "海水"
+    characteristic: "東京湾岸。海水で潮汐影響中程度。強風時に乱戦化しやすい。インの連対率は平均的。"
+    in_win_rate: "medium"
+    notes: "周辺競艇場との差別化でSG・G1開催多い。風向きに敏感な水面。"
+
+  - code: "05"
+    name: "多摩川"
+    prefecture: "東京都"
+    water: "淡水"
+    characteristic: "多摩川河口付近の静水面。波穏やかでイン有利の標準的水面。強風時のみ乱戦化。"
+    in_win_rate: "high"
+    notes: "整備された水面でインが安定。鉄板レースが多いが荒れ時の馬券妙味あり。"
+
+  - code: "06"
+    name: "浜名湖"
+    prefecture: "静岡県"
+    water: "汽水"
+    characteristic: "浜名湖（汽水）に隣接。広大な水面で波が起きやすい。潮汐影響あり・風波でアウト有利になることも。"
+    in_win_rate: "medium"
+    notes: "夏の東風・冬の北西風で水面状況が大きく変化。展示タイム要確認。"
+
+  - code: "07"
+    name: "蒲郡"
+    prefecture: "愛知県"
+    water: "淡水"
+    characteristic: "淡水・内湾型で比較的静穏な水面。モーター差が出やすく、勝率の高いモーターが有利。"
+    in_win_rate: "medium"
+    notes: "施設が整備されておりナイター開催多い。冬季は体重の軽い選手が有利。"
+
+  - code: "08"
+    name: "常滑"
+    prefecture: "愛知県"
+    water: "海水"
+    characteristic: "伊勢湾岸の海水面。潮汐影響は小さく比較的穏やか。ナイター競艇『BOATBOY』本場。"
+    in_win_rate: "medium"
+    notes: "ナイター開催の雄。夜間の気温変化でモーター出力が変動しやすい。"
+
+  - code: "09"
+    name: "津"
+    prefecture: "三重県"
+    water: "海水"
+    characteristic: "全国トップクラスのイン勝率（1コース勝率60%超）。追い風がイン有利を助長。"
+    in_win_rate: "high"
+    notes: "「インのメッカ」。1-2着固定の鉄板戦法が有効。配当は低め。"
+
+  - code: "10"
+    name: "三国"
+    prefecture: "福井県"
+    water: "海水"
+    characteristic: "日本海岸で季節風の影響大。冬の北西風（波浪）で荒れやすく、全国有数の波乱水面。"
+    in_win_rate: "low"
+    notes: "冬季は特に荒れる。強風時のアウト台頭に注意。万舟狙いに適した水面。"
+
+  - code: "11"
+    name: "びわこ"
+    prefecture: "滋賀県"
+    water: "淡水"
+    characteristic: "琵琶湖に接続。広大な水面で風の影響大。波が立つと差し・まくりが決まりやすい。"
+    in_win_rate: "medium"
+    notes: "「抜きのびわこ」と称されるほど差し決着多い。インが弱い水面の代表格。"
+
+  - code: "12"
+    name: "住之江"
+    prefecture: "大阪府"
+    water: "海水"
+    characteristic: "SG最多開催会場。整備された静水面でモーター・選手能力が直結する公正な水面。"
+    in_win_rate: "medium"
+    notes: "グランプリなどビッグレースの聖地。水面安定・選手実力がそのまま結果に出やすい。"
+
+  - code: "13"
+    name: "尼崎"
+    prefecture: "兵庫県"
+    water: "海水"
+    characteristic: "静水面でイン有利の安定水面。周回コースが広く差しも決まりやすいバランス型水面。"
+    in_win_rate: "high"
+    notes: "静水面で予想しやすい。ナイター開催あり。"
+
+  - code: "14"
+    name: "鳴門"
+    prefecture: "徳島県"
+    water: "海水"
+    characteristic: "鳴門海峡に近く潮汐が激しい。干潮時はうねりが発生しアウト有利の波乱水面。"
+    in_win_rate: "low"
+    notes: "「荒れる鳴門」。干満差が大きく、レース前の水面状況確認が必須。"
+
+  - code: "15"
+    name: "丸亀"
+    prefecture: "香川県"
+    water: "海水"
+    characteristic: "向かい風（瀬戸内海からの風）が多く、インの艇速が落ちてアウト有利になりやすい。"
+    in_win_rate: "low"
+    notes: "「まくりの丸亀」。スタートが乱れやすく3連単が荒れる。"
+
+  - code: "16"
+    name: "児島"
+    prefecture: "岡山県"
+    water: "海水"
+    characteristic: "瀬戸内海岸。潮汐影響あり・穏やかな日はイン有利、荒れると波乱化。"
+    in_win_rate: "medium"
+    notes: "競艇発祥の地（1952年）。記念開催も多い歴史ある水面。"
+
+  - code: "17"
+    name: "宮島"
+    prefecture: "広島県"
+    water: "海水"
+    characteristic: "瀬戸内海の潮汐が激しい。干満差が大きく、水位変化でコース有利不利が逆転する。"
+    in_win_rate: "medium"
+    notes: "満潮時はイン有利、干潮時はアウト有利の傾向。タイドグラフ確認必須。"
+
+  - code: "18"
+    name: "徳山"
+    prefecture: "山口県"
+    water: "海水"
+    characteristic: "静穏な内湾水面でイン有利。工場地帯の風向きで微妙に変化するが概ね標準的。"
+    in_win_rate: "high"
+    notes: "静水面でインが安定。SG開催も多い。"
+
+  - code: "19"
+    name: "下関"
+    prefecture: "山口県"
+    water: "海水"
+    characteristic: "関門海峡に近く潮流の影響大。潮汐激しく荒れやすい。強アウト艇が台頭しやすい。"
+    in_win_rate: "low"
+    notes: "「荒れる下関」。潮の影響を受けやすく、1Rと12Rで水面状況が大きく変わる。"
+
+  - code: "20"
+    name: "若松"
+    prefecture: "福岡県"
+    water: "海水"
+    characteristic: "響灘に面する海水面。潮汐・風の影響をやや受ける。イン勝率は平均やや下。"
+    in_win_rate: "medium"
+    notes: "ナイター開催あり。波乱発生率は中程度。"
+
+  - code: "21"
+    name: "芦屋"
+    prefecture: "福岡県"
+    water: "海水"
+    characteristic: "全国で最も水面が広い（幅約120m）。広水面で風の影響を受けやすく、差し・まくりが多発。"
+    in_win_rate: "low"
+    notes: "「広水面の芦屋」。インが弱く波乱傾向。スタート展示の艇速チェックが重要。"
+
+  - code: "22"
+    name: "福岡"
+    prefecture: "福岡県"
+    water: "海水"
+    characteristic: "博多湾岸。潮汐影響は中程度でイン有利の標準的水面。ナイター競艇の主要会場。"
+    in_win_rate: "medium"
+    notes: "ナイター開催（ドリームナイター）で有名。夜間は気温低下でモーター出力向上。"
+
+  - code: "23"
+    name: "唐津"
+    prefecture: "佐賀県"
+    water: "海水"
+    characteristic: "玄界灘に面し波浪・風の影響大。荒れやすい水面で全国でも波乱率高い部類。"
+    in_win_rate: "low"
+    notes: "「荒れる唐津」。特に冬季は北風で波が高くなり、アウト艇が台頭しやすい。"
+
+  - code: "24"
+    name: "大村"
+    prefecture: "長崎県"
+    water: "海水"
+    characteristic: "大村湾の閉鎖的海域。潮汐影響が最小クラス・波穏やかでイン勝率が全国最高水準。"
+    in_win_rate: "high"
+    notes: "「イン天国の大村」。全国最多開催回数を誇る聖地。3連単1-2-3が最頻出。"

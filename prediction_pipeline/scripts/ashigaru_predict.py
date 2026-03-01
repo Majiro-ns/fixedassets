@@ -277,6 +277,17 @@ def stage3_aggregate(date: str, sport: str, config_path: str) -> None:
             continue
         req = yaml.safe_load(req_file.read_text(encoding="utf-8"))
 
+        # F10フィルターチェック（cmd_149k_sub4）: f10_passed=False のレースは bet 計算しない
+        # 通常は stage2_haiku.py の get_pending_requests() で除外済み。
+        # 手動モード(stage2_process.py)で誤って処理された場合の安全弁。
+        if not req.get("f10_passed", True):
+            logger.warning(
+                "[F10除外] %s: f10_passed=False のレースが stage3 に到達。スキップ。"
+                " (stage2_haiku.py の get_pending_requests() で通常は除外済み)",
+                task_id,
+            )
+            continue
+
         # 構造化データ優先、なければテキストパース
         if res.get("axis") is not None and res.get("partners"):
             axis = res["axis"]

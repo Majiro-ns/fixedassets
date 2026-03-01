@@ -1,5 +1,12 @@
 # Mr.T 認知プロファイル（パイプライン用簡易版）
 # フルプロファイル: mr_t_cognitive_profile.yaml (netkeirin ID 634)
+#
+# 【更新履歴】
+# 2026-03-02 cmd_143k_sub1: 実パイプラインデータに基づき準決勝・二次予選を weaknesses に移動
+#   - 根拠: filters.yaml cmd_126k_sub2 コメント + cmd_139k_sub3 A3実データ検証
+#   - 準決勝 実ROI=51.25% → recovery_rate=0.51 (旧: CRE推定値1.25)
+#   - 二次予選 実ROI=55.38% → recovery_rate=0.55 (旧: CRE推定値1.44)
+#   - high_recovery_patterns/reverse_indicator_patterns: CRE推定値として status 明記
 
 profile_id: mr_t_634
 predictor_name: "Mr.T（競輪眼）"
@@ -7,7 +14,7 @@ sport: keirin
 
 # ─── 予想スタイル ─────────────────────────────────────
 style:
-  description: "ライン分析重視・S1準決勝専門予想師"
+  description: "ライン分析重視・S1特選専門予想師（準決勝・二次予選は実データで低ROI確認済み）"
   bet_type: "3連複ながし + ワイド保険"
   axis_selection: "ライン先頭S1選手"
 
@@ -50,11 +57,8 @@ strengths:
   race_types:
     - name: 特選
       recovery_rate: 1.30
-    - name: 二次予選
-      recovery_rate: 1.44
-    - name: 準決勝
-      recovery_rate: 1.25
-      note: "S1×準決勝組み合わせが最高"
+      data_source: "CRE_profile_842cases（estimated）"
+      note: "filters.yaml F2 通過種別。実パイプラインでも有効と判断"
   grades:
     - name: S1
       recovery_rate: 1.05
@@ -64,9 +68,19 @@ weaknesses:
   race_types:
     - name: 決勝
       recovery_rate: 0.67
+      data_source: "CRE_profile_842cases（estimated）"
       note: "決勝は避けるべき"
     - name: 選抜
       recovery_rate: 0.49
+      data_source: "CRE_profile_842cases（estimated）"
+    - name: 準決勝
+      recovery_rate: 0.51
+      data_source: "実パイプライン計算（cmd_139k_sub3 A3検証 / filters.yaml cmd_126k_sub2）"
+      note: "【実データ修正】CRE推定値1.25→実ROI51.25%。F2除外済み（filters.yaml race_type から削除）"
+    - name: 二次予選
+      recovery_rate: 0.55
+      data_source: "実パイプライン計算（cmd_139k_sub3 A3検証 / filters.yaml cmd_126k_sub2）"
+      note: "【実データ修正】CRE推定値1.44→実ROI55.38%。F2除外済み（filters.yaml race_type から削除）"
   race_numbers: [4, 6]
   banks: ["500m"]
   weekdays: ["日曜", "月曜"]
@@ -78,12 +92,19 @@ weaknesses:
 basic_stats:
   total_predictions: 200   # 概算（netkeirin ID 634 の蓄積予想数）
   hit_rate: 0.35            # 全予想の的中率（高精度シグナル使用時: ~41%）
-  recovery_rate: 1.15       # フィルター適用後の推定回収率
+  recovery_rate: 1.15       # フィルター適用後の推定回収率（estimated: CRE_profile_842cases）
+  # 【注意】2月実績 ROI=0.0% だが APIキー未設定が主因。プロファイル精度の検証ではない。
+  # 準決勝・二次予選除外後のフィルター適用回収率は再計算要（現在データ不足）
 
 high_recovery_patterns:
+  # 【データ出典】全て CRE_profile_842cases（netkeirin ID 634 の蓄積予想統計）の推定値
+  # 実パイプラインでのキーワード別ROI検証は未実施（2月は API キー未設定のため）
+  # status: estimated = CRE推定値。実データ検証後に更新予定
   - keyword: "絞"
     hit_rate: 0.500
     recovery_rate: 1.658
+    status: estimated
+    data_source: "CRE_profile_842cases"
     interpretation: |
       「絞れる」は真の自信シグナル。点数を絞って少点数勝負に徹すると的中率50%。
     examples:
@@ -92,6 +113,8 @@ high_recovery_patterns:
   - keyword: "獲りやすさ"
     hit_rate: 0.545
     recovery_rate: 1.507
+    status: estimated
+    data_source: "CRE_profile_842cases"
     interpretation: |
       「獲りやすい展開」認識。展開が読めている証拠で的中率が最高55%に達する。
     examples:
@@ -100,6 +123,8 @@ high_recovery_patterns:
   - keyword: "高配当"
     hit_rate: 0.300
     recovery_rate: 2.639
+    status: estimated
+    data_source: "CRE_profile_842cases"
     interpretation: |
       穴狙い宣言。回収率264%と最高値。相手を広げて高配当を狙うレース。
     examples:
@@ -108,6 +133,8 @@ high_recovery_patterns:
   - keyword: "大穴"
     hit_rate: 0.316
     recovery_rate: 2.065
+    status: estimated
+    data_source: "CRE_profile_842cases"
     interpretation: |
       伏兵を含む読み。回収率207%。相手を広く取ることで高回収につながる。
     examples:
@@ -115,21 +142,28 @@ high_recovery_patterns:
       - "大穴狙い"
 
 reverse_indicator_patterns:
+  # 【データ出典】CRE_profile_842cases の推定値
+  # 逆指標効果は実績が強く示唆（高信頼度 estimated）。F3 で除外設定済み。
   - keyword: "自信"
     hit_rate: 0.109
     recovery_rate: 0.270
+    status: estimated
+    data_source: "CRE_profile_842cases"
     interpretation: |
       逆指標。「自信あり」と明言するレースは的中率11%・回収率27%と壊滅的。
       Mr.T が「自信」と書く時は過信バイアスが発生している証拠。
   - keyword: "鉄板"
     recovery_rate: 0.609
+    status: estimated
+    data_source: "CRE_profile_842cases"
     interpretation: |
       過信バイアス。「鉄板」は回収率61%と大幅マイナス。見送り必須。
 
 # ─── LLM予想指示 ──────────────────────────────────────
 llm_instructions: |
   あなたはMr.T（競輪眼）の予想AIアシスタントです。
-  Mr.Tのスタイル: ライン分析重視、S1×準決勝特化、3連複ながし戦略。
+  Mr.Tのスタイル: ライン分析重視、S1×特選特化、3連複ながし戦略。
+  （準決勝・二次予選は実データで低ROI確認済み。予想対象外）
 
   予想時のルール:
   1. ライン先頭のS1選手を軸候補として優先する

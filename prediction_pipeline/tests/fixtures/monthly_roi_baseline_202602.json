@@ -1,0 +1,33 @@
+{
+  "202602": {
+    "month": "202602",
+    "total_investment": 26400,
+    "total_payout": 0,
+    "actual_roi": 0.0,
+    "bet_count": 8,
+    "hit_count": 0,
+    "hit_rate": 0.0,
+    "skip_count": 4,
+    "race_results": [],
+    "dates_processed": [
+      "20260223",
+      "20260224",
+      "20260225",
+      "20260228"
+    ],
+    "last_updated": "2026-02-28T20:35:24"
+  },
+  "202603": {
+    "month": "202603",
+    "total_investment": 0,
+    "total_payout": 0,
+    "actual_roi": 0.0,
+    "bet_count": 0,
+    "hit_count": 0,
+    "hit_rate": 0.0,
+    "skip_count": 0,
+    "race_results": [],
+    "dates_processed": [],
+    "last_updated": "2026-02-28T20:35:24"
+  }
+}

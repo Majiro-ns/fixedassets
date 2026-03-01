@@ -1,0 +1,36 @@
+# 機密情報
+.env
+*.env
+
+# 仮想環境
+.venv/
+venv/
+env/
+
+# Python キャッシュ
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# DB（P14-CP7: 削除・上書き禁止）
+*.db
+*.sqlite
+*.sqlite3
+
+# ログ
+*.log
+logs/
+
+# 出力（P14-CP2: git追跡必須 — output/を追跡してBUG-2再発防止）
+# output/ は git 追跡対象。削除禁止（P14-CP5）
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db

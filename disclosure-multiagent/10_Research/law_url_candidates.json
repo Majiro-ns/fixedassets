@@ -1,0 +1,36 @@
+{
+  "metadata": {
+    "yaml_path": "/mnt/c/Users/owner/Documents/Obsidian Vault/10_Projects/disclosure-multiagent/10_Research/law_entries_human_capital.yaml",
+    "total_entries": 7,
+    "unconfirmed_count": 2,
+    "candidates_found": 2,
+    "skipped_count": 0,
+    "egov_api_status": "HTTP 200 / XML / キー不要 ✅"
+  },
+  "robots_txt_summary": "fsa.go.jp: robots.txt→404。利用規約確認要、スクレイピング不実施。 laws.e-gov.go.jp: robots.txt→HTML(未公開)。公式API(/api/1/)は政府提供のため利用可。",
+  "candidates": [
+    {
+      "entry_id": "HC_20230131_001",
+      "law_name": "企業内容等の開示に関する内閣府令等の一部を改正する内閣府令（令和5年内閣府令第3号）",
+      "current_url": "https://www.fsa.go.jp/news/r4/sonota/20230131/20230131.html",
+      "proposed_url": "https://laws.e-gov.go.jp/law/348M50000040005",
+      "egov_law_id": "348M50000040005",
+      "egov_law_name": "企業内容等の開示に関する内閣府令",
+      "confidence": "medium",
+      "source": "e-Gov API lawlists",
+      "note": "e-Gov 正式名称: '企業内容等の開示に関する内閣府令'。手動 YAML が最終権威。適用前に人手確認必須。"
+    },
+    {
+      "entry_id": "HC_20230331_001",
+      "law_name": "企業内容等の開示に関する内閣府令（令和5年内閣府令第3号 適用開始）",
+      "current_url": "https://www.fsa.go.jp/news/r4/sonota/20230131/20230131.html",
+      "proposed_url": "https://laws.e-gov.go.jp/law/348M50000040005",
+      "egov_law_id": "348M50000040005",
+      "egov_law_name": "企業内容等の開示に関する内閣府令",
+      "confidence": "medium",
+      "source": "e-Gov API lawlists",
+      "note": "e-Gov 正式名称: '企業内容等の開示に関する内閣府令'。手動 YAML が最終権威。適用前に人手確認必須。"
+    }
+  ],
+  "skipped": []
+}

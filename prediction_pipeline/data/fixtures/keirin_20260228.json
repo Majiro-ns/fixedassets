@@ -1,0 +1,2395 @@
+[
+  {
+    "venue_code": "44",
+    "venue_name": "大垣",
+    "venue_slug": "ogaki",
+    "race_num": 1,
+    "race_no": "1",
+    "grade": "",
+    "stage": "",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/ogaki/racedetail/4420260228010001/?l-id=l-pc-srci-srdi-raceinfo_kaisai_detail_info_nav_btn",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "阿部 英斗",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 104.75,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 2,
+        "name": "椎木尾 拓哉",
+        "grade": "S1",
+        "leg_type": "追",
+        "score": 107.78,
+        "comment": "土生君。"
+      },
+      {
+        "car_no": 3,
+        "name": "古川 尚耶",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 103.57,
+        "comment": "松崎君。"
+      },
+      {
+        "car_no": 4,
+        "name": "牧 剛央",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 99.4,
+        "comment": "園田君。"
+      },
+      {
+        "car_no": 5,
+        "name": "土生 敦弘",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 102.44,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 6,
+        "name": "稲垣 裕之",
+        "grade": "S2",
+        "leg_type": "両",
+        "score": 96.76,
+        "comment": "近畿３番手。"
+      },
+      {
+        "car_no": 7,
+        "name": "松崎 広太",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 102.22,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 8,
+        "name": "城 幸弘",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 97.18,
+        "comment": "関東３番手。"
+      },
+      {
+        "car_no": 9,
+        "name": "園田 匠",
+        "grade": "S1",
+        "leg_type": "追",
+        "score": 108.92,
+        "comment": "阿部君。"
+      }
+    ]
+  },
+  {
+    "venue_code": "44",
+    "venue_name": "大垣",
+    "venue_slug": "ogaki",
+    "race_num": 2,
+    "race_no": "2",
+    "grade": "S",
+    "stage": "Ｓ級一予選",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/ogaki/racedetail/4420260228010002/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "原田 研太朗",
+        "grade": "S1",
+        "leg_type": "逃",
+        "score": 102.0,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 2,
+        "name": "尾方 祐仁",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 100.66,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 3,
+        "name": "宿口 陽一",
+        "grade": "S1",
+        "leg_type": "両",
+        "score": 107.5,
+        "comment": "寺沼君。"
+      },
+      {
+        "car_no": 4,
+        "name": "竹内 雄作",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 97.76,
+        "comment": "尾方君。"
+      },
+      {
+        "car_no": 5,
+        "name": "竹村 勇祐",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 102.69,
+        "comment": "照井君。"
+      },
+      {
+        "car_no": 6,
+        "name": "佐野 梅一",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 90.46,
+        "comment": "地元勢へ。"
+      },
+      {
+        "car_no": 7,
+        "name": "寺沼 拓摩",
+        "grade": "S2",
+        "leg_type": "両",
+        "score": 106.42,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 8,
+        "name": "照井 拓成",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 96.1,
+        "comment": "自力自在。"
+      },
+      {
+        "car_no": 9,
+        "name": "山本 拳也",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 100.84,
+        "comment": "原田君。"
+      }
+    ]
+  },
+  {
+    "venue_code": "44",
+    "venue_name": "大垣",
+    "venue_slug": "ogaki",
+    "race_num": 3,
+    "race_no": "3",
+    "grade": "S",
+    "stage": "Ｓ級一予選",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/ogaki/racedetail/4420260228010003/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "三宅 達也",
+        "grade": "S1",
+        "leg_type": "追",
+        "score": 104.4,
+        "comment": "河端君。"
+      },
+      {
+        "car_no": 2,
+        "name": "纐纈 洸翔",
+        "grade": "S1",
+        "leg_type": "両",
+        "score": 102.7,
+        "comment": "村田さん。"
+      },
+      {
+        "car_no": 3,
+        "name": "菅原 裕太",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 102.91,
+        "comment": "川越君。"
+      },
+      {
+        "car_no": 4,
+        "name": "野中 祐志",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 97.69,
+        "comment": "小池君。"
+      },
+      {
+        "car_no": 5,
+        "name": "川越 勇星",
+        "grade": "S2",
+        "leg_type": "両",
+        "score": 102.31,
+        "comment": "自力自在。"
+      },
+      {
+        "car_no": 6,
+        "name": "小池 千啓",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 92.86,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 7,
+        "name": "河端 朋之",
+        "grade": "S1",
+        "leg_type": "逃",
+        "score": 107.41,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 8,
+        "name": "西岡 拓朗",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 96.58,
+        "comment": "岡山勢。"
+      },
+      {
+        "car_no": 9,
+        "name": "村田 祐樹",
+        "grade": "S1",
+        "leg_type": "逃",
+        "score": 99.63,
+        "comment": "自力。"
+      }
+    ]
+  },
+  {
+    "venue_code": "44",
+    "venue_name": "大垣",
+    "venue_slug": "ogaki",
+    "race_num": 4,
+    "race_no": "4",
+    "grade": "S",
+    "stage": "Ｓ級一予選",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/ogaki/racedetail/4420260228010004/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "上田 国広",
+        "grade": "S1",
+        "leg_type": "追",
+        "score": 106.06,
+        "comment": "橋本君。"
+      },
+      {
+        "car_no": 2,
+        "name": "浮島 知稀",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 98.39,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 3,
+        "name": "伏見 俊昭",
+        "grade": "S1",
+        "leg_type": "追",
+        "score": 107.86,
+        "comment": "小松崎君。"
+      },
+      {
+        "car_no": 4,
+        "name": "佐川 翔吾",
+        "grade": "S2",
+        "leg_type": "両",
+        "score": 97.63,
+        "comment": "中部勢へ。"
+      },
+      {
+        "car_no": 5,
+        "name": "小松崎 大地",
+        "grade": "S1",
+        "leg_type": "両",
+        "score": 104.72,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 6,
+        "name": "加賀山 淳",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 95.13,
+        "comment": "自力自在。"
+      },
+      {
+        "car_no": 7,
+        "name": "岡本 大嗣",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 102.25,
+        "comment": "浮島君。"
+      },
+      {
+        "car_no": 8,
+        "name": "長田 祐弥",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 95.4,
+        "comment": "加賀山君。"
+      },
+      {
+        "car_no": 9,
+        "name": "橋本 優己",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 103.75,
+        "comment": "自力。"
+      }
+    ]
+  },
+  {
+    "venue_code": "44",
+    "venue_name": "大垣",
+    "venue_slug": "ogaki",
+    "race_num": 5,
+    "race_no": "5",
+    "grade": "S",
+    "stage": "Ｓ級一予選",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/ogaki/racedetail/4420260228010005/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "山下 一輝",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 101.63,
+        "comment": "才迫君。"
+      },
+      {
+        "car_no": 2,
+        "name": "杉本 正隆",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 104.89,
+        "comment": "福田君。"
+      },
+      {
+        "car_no": 3,
+        "name": "村田 雅一",
+        "grade": "S1",
+        "leg_type": "追",
+        "score": 108.12,
+        "comment": "小森君。"
+      },
+      {
+        "car_no": 4,
+        "name": "才迫 開",
+        "grade": "S2",
+        "leg_type": "両",
+        "score": 99.87,
+        "comment": "自力自在。"
+      },
+      {
+        "car_no": 5,
+        "name": "福田 稔希",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 103.88,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 6,
+        "name": "室井 竜二",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 94.0,
+        "comment": "中国勢。"
+      },
+      {
+        "car_no": 7,
+        "name": "清水 一幸",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 102.66,
+        "comment": "近畿３番手。"
+      },
+      {
+        "car_no": 8,
+        "name": "武藤 篤弘",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 97.42,
+        "comment": "関東３番手。"
+      },
+      {
+        "car_no": 9,
+        "name": "小森 貴大",
+        "grade": "S1",
+        "leg_type": "両",
+        "score": 106.45,
+        "comment": "自力自在。"
+      }
+    ]
+  },
+  {
+    "venue_code": "44",
+    "venue_name": "大垣",
+    "venue_slug": "ogaki",
+    "race_num": 6,
+    "race_no": "6",
+    "grade": "S",
+    "stage": "Ｓ級一予選",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/ogaki/racedetail/4420260228010006/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "和田 圭",
+        "grade": "S1",
+        "leg_type": "追",
+        "score": 108.42,
+        "comment": "渡邉さん。"
+      },
+      {
+        "car_no": 2,
+        "name": "不破 将登",
+        "grade": "S2",
+        "leg_type": "両",
+        "score": 101.57,
+        "comment": "岩井君。"
+      },
+      {
+        "car_no": 3,
+        "name": "増原 正人",
+        "grade": "S2",
+        "leg_type": "両",
+        "score": 102.75,
+        "comment": "山本君。"
+      },
+      {
+        "car_no": 4,
+        "name": "竹山 陵太",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 98.04,
+        "comment": "北３番手。"
+      },
+      {
+        "car_no": 5,
+        "name": "岩井 芯",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 101.89,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 6,
+        "name": "吉川 嘉斗",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 94.44,
+        "comment": "中国勢へ。"
+      },
+      {
+        "car_no": 7,
+        "name": "渡邉 一成",
+        "grade": "S2",
+        "leg_type": "両",
+        "score": 104.75,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 8,
+        "name": "岩本 和也",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 96.77,
+        "comment": "地元勢へ。"
+      },
+      {
+        "car_no": 9,
+        "name": "山本 直",
+        "grade": "S2",
+        "leg_type": "両",
+        "score": 101.73,
+        "comment": "自力。"
+      }
+    ]
+  },
+  {
+    "venue_code": "44",
+    "venue_name": "大垣",
+    "venue_slug": "ogaki",
+    "race_num": 7,
+    "race_no": "7",
+    "grade": "S",
+    "stage": "Ｓ級一予選",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/ogaki/racedetail/4420260228010007/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "東口 善朋",
+        "grade": "S1",
+        "leg_type": "追",
+        "score": 108.3,
+        "comment": "中釜君。"
+      },
+      {
+        "car_no": 2,
+        "name": "鈴木 浩太",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 98.95,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 3,
+        "name": "原口 昌平",
+        "grade": "S2",
+        "leg_type": "両",
+        "score": 102.92,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 4,
+        "name": "松岡 孔明",
+        "grade": "S2",
+        "leg_type": "両",
+        "score": 97.95,
+        "comment": "九州３番手。"
+      },
+      {
+        "car_no": 5,
+        "name": "藤田 勝也",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 100.64,
+        "comment": "近畿３番手。"
+      },
+      {
+        "car_no": 6,
+        "name": "藤原 憲征",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 96.75,
+        "comment": "単騎。"
+      },
+      {
+        "car_no": 7,
+        "name": "中釜 章成",
+        "grade": "S1",
+        "leg_type": "逃",
+        "score": 109.6,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 8,
+        "name": "望月 永悟",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 97.38,
+        "comment": "鈴木君。"
+      },
+      {
+        "car_no": 9,
+        "name": "小岩 大介",
+        "grade": "S1",
+        "leg_type": "追",
+        "score": 104.76,
+        "comment": "原口君。"
+      }
+    ]
+  },
+  {
+    "venue_code": "44",
+    "venue_name": "大垣",
+    "venue_slug": "ogaki",
+    "race_num": 8,
+    "race_no": "8",
+    "grade": "S",
+    "stage": "Ｓ級一予選",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/ogaki/racedetail/4420260228010008/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "栗山 和樹",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 104.21,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 2,
+        "name": "朝倉 佳弘",
+        "grade": "S1",
+        "leg_type": "追",
+        "score": 100.0,
+        "comment": "藤田君。"
+      },
+      {
+        "car_no": 3,
+        "name": "中村 圭志",
+        "grade": "S1",
+        "leg_type": "追",
+        "score": 105.77,
+        "comment": "伊藤君。"
+      },
+      {
+        "car_no": 4,
+        "name": "藤田 周磨",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 97.0,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 5,
+        "name": "三宅 裕武",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 97.21,
+        "comment": "地元勢へ。"
+      },
+      {
+        "car_no": 6,
+        "name": "石口 慶多",
+        "grade": "S2",
+        "leg_type": "両",
+        "score": 90.77,
+        "comment": "単騎で。"
+      },
+      {
+        "car_no": 7,
+        "name": "松岡 篤哉",
+        "grade": "S2",
+        "leg_type": "両",
+        "score": 101.8,
+        "comment": "栗山君。"
+      },
+      {
+        "car_no": 8,
+        "name": "佐山 寛明",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 96.57,
+        "comment": "単騎で。"
+      },
+      {
+        "car_no": 9,
+        "name": "伊藤 颯馬",
+        "grade": "S1",
+        "leg_type": "逃",
+        "score": 103.7,
+        "comment": "自力。"
+      }
+    ]
+  },
+  {
+    "venue_code": "44",
+    "venue_name": "大垣",
+    "venue_slug": "ogaki",
+    "race_num": 9,
+    "race_no": "9",
+    "grade": "S",
+    "stage": "Ｓ級一予選",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/ogaki/racedetail/4420260228010009/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "石毛 克幸",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 104.47,
+        "comment": "青野君。"
+      },
+      {
+        "car_no": 2,
+        "name": "田尾 駿介",
+        "grade": "S1",
+        "leg_type": "追",
+        "score": 108.25,
+        "comment": "小川君。"
+      },
+      {
+        "car_no": 3,
+        "name": "金子 哲大",
+        "grade": "S2",
+        "leg_type": "両",
+        "score": 97.25,
+        "comment": "牧田君。"
+      },
+      {
+        "car_no": 4,
+        "name": "関 貴之",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 95.69,
+        "comment": "関東３番手。"
+      },
+      {
+        "car_no": 5,
+        "name": "青野 将大",
+        "grade": "S1",
+        "leg_type": "逃",
+        "score": 108.95,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 6,
+        "name": "牧田 悠生",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 93.05,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 7,
+        "name": "米嶋 恵介",
+        "grade": "S2",
+        "leg_type": "両",
+        "score": 98.61,
+        "comment": "四国勢。"
+      },
+      {
+        "car_no": 8,
+        "name": "土屋 裕二",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 95.58,
+        "comment": "南関３番手。"
+      },
+      {
+        "car_no": 9,
+        "name": "小川 三士郎",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 101.6,
+        "comment": "自力。"
+      }
+    ]
+  },
+  {
+    "venue_code": "44",
+    "venue_name": "大垣",
+    "venue_slug": "ogaki",
+    "race_num": 10,
+    "race_no": "10",
+    "grade": "S",
+    "stage": "Ｓ級一予選",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/ogaki/racedetail/4420260228010010/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "志田 龍星",
+        "grade": "S1",
+        "leg_type": "逃",
+        "score": 108.25,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 2,
+        "name": "佐々木 翔一",
+        "grade": "S2",
+        "leg_type": "両",
+        "score": 100.57,
+        "comment": "佐藤君。"
+      },
+      {
+        "car_no": 3,
+        "name": "中田 雄喜",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 100.15,
+        "comment": "鈴木君。"
+      },
+      {
+        "car_no": 4,
+        "name": "鈴木 伸之",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 98.45,
+        "comment": "地元勢へ。"
+      },
+      {
+        "car_no": 5,
+        "name": "稲吉 悠大",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 99.7,
+        "comment": "九州３番手。"
+      },
+      {
+        "car_no": 6,
+        "name": "紺野 哲也",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 0.0,
+        "comment": "北３番手。"
+      },
+      {
+        "car_no": 7,
+        "name": "山口 富生",
+        "grade": "S1",
+        "leg_type": "追",
+        "score": 102.73,
+        "comment": "志田君。"
+      },
+      {
+        "car_no": 8,
+        "name": "鈴木 涼介",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 94.23,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 9,
+        "name": "佐藤 壮志",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 100.43,
+        "comment": "自力。"
+      }
+    ]
+  },
+  {
+    "venue_code": "44",
+    "venue_name": "大垣",
+    "venue_slug": "ogaki",
+    "race_num": 11,
+    "race_no": "11",
+    "grade": "S",
+    "stage": "Ｓ級一予選",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/ogaki/racedetail/4420260228010011/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "吉田 有希",
+        "grade": "S1",
+        "leg_type": "逃",
+        "score": 108.86,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 2,
+        "name": "川津 悠揮",
+        "grade": "S1",
+        "leg_type": "追",
+        "score": 103.75,
+        "comment": "原君。"
+      },
+      {
+        "car_no": 3,
+        "name": "立部 楓真",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 102.33,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 4,
+        "name": "天田 裕輝",
+        "grade": "S2",
+        "leg_type": "両",
+        "score": 99.07,
+        "comment": "関東３番手。"
+      },
+      {
+        "car_no": 5,
+        "name": "久島 尚樹",
+        "grade": "S2",
+        "leg_type": "両",
+        "score": 100.58,
+        "comment": "立部君。"
+      },
+      {
+        "car_no": 6,
+        "name": "中村 弘之輔",
+        "grade": "S2",
+        "leg_type": "両",
+        "score": 96.58,
+        "comment": "北３番手。"
+      },
+      {
+        "car_no": 7,
+        "name": "神山 拓弥",
+        "grade": "S1",
+        "leg_type": "追",
+        "score": 109.28,
+        "comment": "吉田君。"
+      },
+      {
+        "car_no": 8,
+        "name": "東矢 昇太",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 97.76,
+        "comment": "九州３番手。"
+      },
+      {
+        "car_no": 9,
+        "name": "原 大智",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 99.68,
+        "comment": "自力自在。"
+      }
+    ]
+  },
+  {
+    "venue_code": "44",
+    "venue_name": "大垣",
+    "venue_slug": "ogaki",
+    "race_num": 12,
+    "race_no": "12",
+    "grade": "S",
+    "stage": "Ｓ級初特選",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/ogaki/racedetail/4420260228010012/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "郡司 浩平",
+        "grade": "SS",
+        "leg_type": "両",
+        "score": 117.7,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 2,
+        "name": "清水 裕友",
+        "grade": "S1",
+        "leg_type": "両",
+        "score": 114.25,
+        "comment": "町田君。"
+      },
+      {
+        "car_no": 3,
+        "name": "山口 拳矢",
+        "grade": "S1",
+        "leg_type": "両",
+        "score": 114.95,
+        "comment": "単騎で。"
+      },
+      {
+        "car_no": 4,
+        "name": "佐々木 龍",
+        "grade": "S1",
+        "leg_type": "追",
+        "score": 111.33,
+        "comment": "郡司君。"
+      },
+      {
+        "car_no": 5,
+        "name": "古性 優作",
+        "grade": "SS",
+        "leg_type": "両",
+        "score": 118.07,
+        "comment": "単騎で。"
+      },
+      {
+        "car_no": 6,
+        "name": "坂井 洋",
+        "grade": "S1",
+        "leg_type": "両",
+        "score": 110.85,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 7,
+        "name": "菅田 壱道",
+        "grade": "S1",
+        "leg_type": "両",
+        "score": 112.83,
+        "comment": "坂井君。"
+      },
+      {
+        "car_no": 8,
+        "name": "町田 太我",
+        "grade": "S1",
+        "leg_type": "逃",
+        "score": 111.0,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 9,
+        "name": "嘉永 泰斗",
+        "grade": "SS",
+        "leg_type": "逃",
+        "score": 117.85,
+        "comment": "単騎で。"
+      }
+    ]
+  },
+  {
+    "venue_code": "55",
+    "venue_name": "和歌山",
+    "venue_slug": "wakayama",
+    "race_num": 1,
+    "race_no": "1",
+    "grade": "",
+    "stage": "",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/wakayama/racedetail/5520260228010001/?l-id=l-pc-srci-srdi-raceinfo_kaisai_detail_info_nav_btn",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "外崎 一成",
+        "grade": "A2",
+        "leg_type": "追",
+        "score": 84.31,
+        "comment": "北の３番手。"
+      },
+      {
+        "car_no": 2,
+        "name": "山田 隼司",
+        "grade": "A2",
+        "leg_type": "両",
+        "score": 80.88,
+        "comment": "自力です。"
+      },
+      {
+        "car_no": 3,
+        "name": "岡田 啓渡",
+        "grade": "A1",
+        "leg_type": "両",
+        "score": 87.67,
+        "comment": "森君目標。"
+      },
+      {
+        "car_no": 4,
+        "name": "菅田 和宏",
+        "grade": "A2",
+        "leg_type": "逃",
+        "score": 83.52,
+        "comment": "自力勝負。"
+      },
+      {
+        "car_no": 5,
+        "name": "竹内 一暢",
+        "grade": "A1",
+        "leg_type": "追",
+        "score": 86.37,
+        "comment": "山田君へ。"
+      },
+      {
+        "car_no": 6,
+        "name": "森 柾斗",
+        "grade": "A2",
+        "leg_type": "逃",
+        "score": 0.0,
+        "comment": "自力です。"
+      },
+      {
+        "car_no": 7,
+        "name": "佐藤 雅彦",
+        "grade": "A1",
+        "leg_type": "追",
+        "score": 88.85,
+        "comment": "菅田君へ。"
+      }
+    ]
+  },
+  {
+    "venue_code": "55",
+    "venue_name": "和歌山",
+    "venue_slug": "wakayama",
+    "race_num": 2,
+    "race_no": "2",
+    "grade": "A",
+    "stage": "Ａ級予選",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/wakayama/racedetail/5520260228010002/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "成田 健児",
+        "grade": "A1",
+        "leg_type": "追",
+        "score": 88.33,
+        "comment": "先行以外何でも。"
+      },
+      {
+        "car_no": 2,
+        "name": "増田 仁",
+        "grade": "A2",
+        "leg_type": "逃",
+        "score": 83.03,
+        "comment": "自力です。"
+      },
+      {
+        "car_no": 3,
+        "name": "八尋 翔平",
+        "grade": "A2",
+        "leg_type": "追",
+        "score": 83.95,
+        "comment": "魚屋君へ。"
+      },
+      {
+        "car_no": 4,
+        "name": "田村 真広",
+        "grade": "A2",
+        "leg_type": "追",
+        "score": 83.0,
+        "comment": "中四国勢に。"
+      },
+      {
+        "car_no": 5,
+        "name": "魚屋 周成",
+        "grade": "A1",
+        "leg_type": "逃",
+        "score": 85.68,
+        "comment": "自力でいく。"
+      },
+      {
+        "car_no": 6,
+        "name": "渡邊 一洋",
+        "grade": "A2",
+        "leg_type": "追",
+        "score": 78.38,
+        "comment": "成田君に。"
+      },
+      {
+        "car_no": 7,
+        "name": "二條 祐也",
+        "grade": "A1",
+        "leg_type": "追",
+        "score": 86.5,
+        "comment": "増田君へ。"
+      }
+    ]
+  },
+  {
+    "venue_code": "55",
+    "venue_name": "和歌山",
+    "venue_slug": "wakayama",
+    "race_num": 3,
+    "race_no": "3",
+    "grade": "A",
+    "stage": "Ａ級予選",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/wakayama/racedetail/5520260228010003/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "油谷 蒼",
+        "grade": "A2",
+        "leg_type": "逃",
+        "score": 85.44,
+        "comment": "自力です。"
+      },
+      {
+        "car_no": 2,
+        "name": "土井 勲",
+        "grade": "A2",
+        "leg_type": "追",
+        "score": 81.33,
+        "comment": "葛西君へ。"
+      },
+      {
+        "car_no": 3,
+        "name": "高谷 雅彦",
+        "grade": "A1",
+        "leg_type": "両",
+        "score": 82.92,
+        "comment": "自力でいく。"
+      },
+      {
+        "car_no": 4,
+        "name": "鈴木 謙二",
+        "grade": "A1",
+        "leg_type": "追",
+        "score": 89.66,
+        "comment": "高谷さんに。"
+      },
+      {
+        "car_no": 5,
+        "name": "堺 文人",
+        "grade": "A2",
+        "leg_type": "追",
+        "score": 84.88,
+        "comment": "油谷君へ。"
+      },
+      {
+        "car_no": 6,
+        "name": "葛西 雄太郎",
+        "grade": "A2",
+        "leg_type": "両",
+        "score": 79.27,
+        "comment": "自力です。"
+      },
+      {
+        "car_no": 7,
+        "name": "倉野 隆太郎",
+        "grade": "A2",
+        "leg_type": "追",
+        "score": 82.5,
+        "comment": "近畿両者へ。"
+      }
+    ]
+  },
+  {
+    "venue_code": "55",
+    "venue_name": "和歌山",
+    "venue_slug": "wakayama",
+    "race_num": 4,
+    "race_no": "4",
+    "grade": "A",
+    "stage": "Ａ級予選",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/wakayama/racedetail/5520260228010004/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "立花 成泰",
+        "grade": "A1",
+        "leg_type": "追",
+        "score": 87.66,
+        "comment": "同県野上君。"
+      },
+      {
+        "car_no": 2,
+        "name": "須賀 和彦",
+        "grade": "A2",
+        "leg_type": "追",
+        "score": 84.75,
+        "comment": "舟山君へ。"
+      },
+      {
+        "car_no": 3,
+        "name": "梶原 大地",
+        "grade": "A2",
+        "leg_type": "逃",
+        "score": 88.82,
+        "comment": "自力です。"
+      },
+      {
+        "car_no": 4,
+        "name": "宮倉 勇",
+        "grade": "A2",
+        "leg_type": "追",
+        "score": 84.53,
+        "comment": "単騎で走る"
+      },
+      {
+        "car_no": 5,
+        "name": "野上 竜太",
+        "grade": "A1",
+        "leg_type": "逃",
+        "score": 80.52,
+        "comment": "自力勝負。"
+      },
+      {
+        "car_no": 6,
+        "name": "舟山 佑京",
+        "grade": "A2",
+        "leg_type": "逃",
+        "score": 79.22,
+        "comment": "自力自在に"
+      },
+      {
+        "car_no": 7,
+        "name": "立石 拓也",
+        "grade": "A1",
+        "leg_type": "両",
+        "score": 86.88,
+        "comment": "梶原君へ。"
+      }
+    ]
+  },
+  {
+    "venue_code": "55",
+    "venue_name": "和歌山",
+    "venue_slug": "wakayama",
+    "race_num": 5,
+    "race_no": "5",
+    "grade": "A",
+    "stage": "Ａ級初日特選",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/wakayama/racedetail/5520260228010005/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "高橋 昇平",
+        "grade": "A1",
+        "leg_type": "追",
+        "score": 93.33,
+        "comment": "栗本君へ。"
+      },
+      {
+        "car_no": 2,
+        "name": "稲毛 知也",
+        "grade": "A1",
+        "leg_type": "逃",
+        "score": 94.04,
+        "comment": "自力です。"
+      },
+      {
+        "car_no": 3,
+        "name": "原 真司",
+        "grade": "A1",
+        "leg_type": "追",
+        "score": 93.95,
+        "comment": "下井君へ。"
+      },
+      {
+        "car_no": 4,
+        "name": "中村 良二",
+        "grade": "A1",
+        "leg_type": "追",
+        "score": 95.56,
+        "comment": "稲毛君目標。"
+      },
+      {
+        "car_no": 5,
+        "name": "上田 学",
+        "grade": "A1",
+        "leg_type": "追",
+        "score": 92.0,
+        "comment": "中村君の後ろ。"
+      },
+      {
+        "car_no": 6,
+        "name": "栗本 尚宗",
+        "grade": "A1",
+        "leg_type": "両",
+        "score": 92.0,
+        "comment": "自力です。"
+      },
+      {
+        "car_no": 7,
+        "name": "下井 竜",
+        "grade": "A1",
+        "leg_type": "逃",
+        "score": 93.72,
+        "comment": "自力勝負。"
+      }
+    ]
+  },
+  {
+    "venue_code": "55",
+    "venue_name": "和歌山",
+    "venue_slug": "wakayama",
+    "race_num": 6,
+    "race_no": "6",
+    "grade": "",
+    "stage": "ガールズ予選１",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/wakayama/racedetail/5520260228010006/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "岡村 育子",
+        "grade": "L1",
+        "leg_type": "追",
+        "score": 45.4,
+        "comment": "取れた位置から。"
+      },
+      {
+        "car_no": 2,
+        "name": "下条 未悠",
+        "grade": "L1",
+        "leg_type": "両",
+        "score": 51.66,
+        "comment": "自力自在に。"
+      },
+      {
+        "car_no": 3,
+        "name": "篠崎 新純",
+        "grade": "L1",
+        "leg_type": "両",
+        "score": 49.55,
+        "comment": "自在にやる。"
+      },
+      {
+        "car_no": 4,
+        "name": "高尾 貴美歌",
+        "grade": "L1",
+        "leg_type": "両",
+        "score": 53.44,
+        "comment": "臨機応変に。"
+      },
+      {
+        "car_no": 5,
+        "name": "佐伯 智恵",
+        "grade": "L1",
+        "leg_type": "両",
+        "score": 48.0,
+        "comment": "取れた所から。"
+      },
+      {
+        "car_no": 6,
+        "name": "岡田 優歩",
+        "grade": "L1",
+        "leg_type": "両",
+        "score": 53.63,
+        "comment": "自力勝負で。"
+      },
+      {
+        "car_no": 7,
+        "name": "佐藤 乃愛",
+        "grade": "L1",
+        "leg_type": "両",
+        "score": 46.23,
+        "comment": "自在です。"
+      }
+    ]
+  },
+  {
+    "venue_code": "55",
+    "venue_name": "和歌山",
+    "venue_slug": "wakayama",
+    "race_num": 7,
+    "race_no": "7",
+    "grade": "",
+    "stage": "ガールズ予選１",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/wakayama/racedetail/5520260228010007/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "高橋 梨香",
+        "grade": "L1",
+        "leg_type": "両",
+        "score": 53.33,
+        "comment": "自在戦で。"
+      },
+      {
+        "car_no": 2,
+        "name": "成田 可菜絵",
+        "grade": "L1",
+        "leg_type": "両",
+        "score": 49.62,
+        "comment": "自力自在。"
+      },
+      {
+        "car_no": 3,
+        "name": "赤池 七虹",
+        "grade": "L1",
+        "leg_type": "両",
+        "score": 48.83,
+        "comment": "自在です。"
+      },
+      {
+        "car_no": 4,
+        "name": "萩原 瑞生",
+        "grade": "L1",
+        "leg_type": "追",
+        "score": 45.66,
+        "comment": "流れを見て。"
+      },
+      {
+        "car_no": 5,
+        "name": "児玉 碧衣",
+        "grade": "L1",
+        "leg_type": "逃",
+        "score": 57.25,
+        "comment": "自力です。"
+      },
+      {
+        "car_no": 6,
+        "name": "近澤 諒香",
+        "grade": "L1",
+        "leg_type": "両",
+        "score": 46.46,
+        "comment": "自在にやる。"
+      },
+      {
+        "car_no": 7,
+        "name": "磯村 光舞",
+        "grade": "L1",
+        "leg_type": "両",
+        "score": 52.03,
+        "comment": "何でもやる。"
+      }
+    ]
+  },
+  {
+    "venue_code": "55",
+    "venue_name": "和歌山",
+    "venue_slug": "wakayama",
+    "race_num": 8,
+    "race_no": "8",
+    "grade": "S",
+    "stage": "Ｓ級予選",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/wakayama/racedetail/5520260228010008/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "伊藤 正樹",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 98.33,
+        "comment": "原田君へ。"
+      },
+      {
+        "car_no": 2,
+        "name": "梅崎 隆介",
+        "grade": "S2",
+        "leg_type": "両",
+        "score": 100.66,
+        "comment": "自力です。"
+      },
+      {
+        "car_no": 3,
+        "name": "房州 輝也",
+        "grade": "S2",
+        "leg_type": "両",
+        "score": 96.62,
+        "comment": "一人でやる。"
+      },
+      {
+        "car_no": 4,
+        "name": "佐藤 龍二",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 98.09,
+        "comment": "自分も一人で。"
+      },
+      {
+        "car_no": 5,
+        "name": "藤岡 隆治",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 95.7,
+        "comment": "九州勢追走。"
+      },
+      {
+        "car_no": 6,
+        "name": "原田 翔真",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 93.52,
+        "comment": "自力勝負で。"
+      },
+      {
+        "car_no": 7,
+        "name": "市橋 司優人",
+        "grade": "S1",
+        "leg_type": "両",
+        "score": 102.9,
+        "comment": "梅崎さんへ。"
+      }
+    ]
+  },
+  {
+    "venue_code": "55",
+    "venue_name": "和歌山",
+    "venue_slug": "wakayama",
+    "race_num": 9,
+    "race_no": "9",
+    "grade": "S",
+    "stage": "Ｓ級予選",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/wakayama/racedetail/5520260228010009/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "福島 武士",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 100.68,
+        "comment": "瀬戸君へ。"
+      },
+      {
+        "car_no": 2,
+        "name": "池野 健太",
+        "grade": "S1",
+        "leg_type": "逃",
+        "score": 96.93,
+        "comment": "自力です。"
+      },
+      {
+        "car_no": 3,
+        "name": "志村 太賀",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 103.06,
+        "comment": "塩島君に。"
+      },
+      {
+        "car_no": 4,
+        "name": "瀬戸 栄作",
+        "grade": "S2",
+        "leg_type": "両",
+        "score": 98.76,
+        "comment": "自力でいく。"
+      },
+      {
+        "car_no": 5,
+        "name": "塩島 嵩一朗",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 101.78,
+        "comment": "自力勝負。"
+      },
+      {
+        "car_no": 6,
+        "name": "戸田 洋平",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 94.92,
+        "comment": "一人で走る。"
+      },
+      {
+        "car_no": 7,
+        "name": "松岡 健介",
+        "grade": "S2",
+        "leg_type": "両",
+        "score": 97.43,
+        "comment": "池野君に。"
+      }
+    ]
+  },
+  {
+    "venue_code": "55",
+    "venue_name": "和歌山",
+    "venue_slug": "wakayama",
+    "race_num": 10,
+    "race_no": "10",
+    "grade": "S",
+    "stage": "Ｓ級予選",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/wakayama/racedetail/5520260228010010/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "太田 龍希",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 95.52,
+        "comment": "自力でいく。"
+      },
+      {
+        "car_no": 2,
+        "name": "大洞 翔平",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 102.19,
+        "comment": "神田さんへ。"
+      },
+      {
+        "car_no": 3,
+        "name": "内藤 宣彦",
+        "grade": "S1",
+        "leg_type": "追",
+        "score": 104.59,
+        "comment": "小原君に。"
+      },
+      {
+        "car_no": 4,
+        "name": "神田 龍",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 98.18,
+        "comment": "自力です。"
+      },
+      {
+        "car_no": 5,
+        "name": "渡邉 晴智",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 98.79,
+        "comment": "東北両者へ。"
+      },
+      {
+        "car_no": 6,
+        "name": "中島 将尊",
+        "grade": "S2",
+        "leg_type": "両",
+        "score": 93.23,
+        "comment": "太田君へ。"
+      },
+      {
+        "car_no": 7,
+        "name": "小原 佑太",
+        "grade": "S1",
+        "leg_type": "逃",
+        "score": 103.76,
+        "comment": "自力勝負。"
+      }
+    ]
+  },
+  {
+    "venue_code": "55",
+    "venue_name": "和歌山",
+    "venue_slug": "wakayama",
+    "race_num": 11,
+    "race_no": "11",
+    "grade": "S",
+    "stage": "Ｓ級予選",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/wakayama/racedetail/5520260228010011/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "渡辺 十夢",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 102.33,
+        "comment": "石塚君へ。"
+      },
+      {
+        "car_no": 2,
+        "name": "田中 陽平",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 99.12,
+        "comment": "薦田君に。"
+      },
+      {
+        "car_no": 3,
+        "name": "伊東 翔貴",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 99.1,
+        "comment": "自力です。"
+      },
+      {
+        "car_no": 4,
+        "name": "石塚 輪太郎",
+        "grade": "S1",
+        "leg_type": "逃",
+        "score": 103.92,
+        "comment": "自力でいく。"
+      },
+      {
+        "car_no": 5,
+        "name": "薦田 将伍",
+        "grade": "S2",
+        "leg_type": "逃",
+        "score": 95.4,
+        "comment": "自力勝負。"
+      },
+      {
+        "car_no": 6,
+        "name": "小谷 実",
+        "grade": "S2",
+        "leg_type": "追",
+        "score": 94.11,
+        "comment": "近畿３番手。"
+      },
+      {
+        "car_no": 7,
+        "name": "大森 慶一",
+        "grade": "S1",
+        "leg_type": "追",
+        "score": 101.46,
+        "comment": "伊東君へ。"
+      }
+    ]
+  },
+  {
+    "venue_code": "55",
+    "venue_name": "和歌山",
+    "venue_slug": "wakayama",
+    "race_num": 12,
+    "race_no": "12",
+    "grade": "S",
+    "stage": "Ｓ級初日特選",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/wakayama/racedetail/5520260228010012/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "松岡 貴久",
+        "grade": "S1",
+        "leg_type": "追",
+        "score": 106.84,
+        "comment": "林君に任せて。"
+      },
+      {
+        "car_no": 2,
+        "name": "小林 泰正",
+        "grade": "S1",
+        "leg_type": "逃",
+        "score": 112.05,
+        "comment": "自力でいく。"
+      },
+      {
+        "car_no": 3,
+        "name": "松坂 洋平",
+        "grade": "S1",
+        "leg_type": "両",
+        "score": 105.86,
+        "comment": "単騎で走る。"
+      },
+      {
+        "car_no": 4,
+        "name": "佐藤 友和",
+        "grade": "S1",
+        "leg_type": "両",
+        "score": 109.0,
+        "comment": "小林君へ。"
+      },
+      {
+        "car_no": 5,
+        "name": "岩津 裕介",
+        "grade": "S1",
+        "leg_type": "追",
+        "score": 109.55,
+        "comment": "九州両者へ。"
+      },
+      {
+        "car_no": 6,
+        "name": "林 大悟",
+        "grade": "S1",
+        "leg_type": "逃",
+        "score": 104.75,
+        "comment": "自力です。"
+      },
+      {
+        "car_no": 7,
+        "name": "須永 優太",
+        "grade": "S1",
+        "leg_type": "追",
+        "score": 107.37,
+        "comment": "佐藤さんへ。"
+      }
+    ]
+  },
+  {
+    "venue_code": "62",
+    "venue_name": "広島",
+    "venue_slug": "hiroshima",
+    "race_num": 1,
+    "race_no": "1",
+    "grade": "",
+    "stage": "",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/hiroshima/racedetail/6220260228010001/?l-id=l-pc-srci-srdi-raceinfo_kaisai_detail_info_nav_btn",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "常次 勇人",
+        "grade": "A1",
+        "leg_type": "逃",
+        "score": 89.23,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 2,
+        "name": "是永 幸寛",
+        "grade": "A2",
+        "leg_type": "追",
+        "score": 86.13,
+        "comment": "緒方君へ。"
+      },
+      {
+        "car_no": 3,
+        "name": "宮内 善光",
+        "grade": "A1",
+        "leg_type": "追",
+        "score": 86.12,
+        "comment": "決めず先手。"
+      },
+      {
+        "car_no": 4,
+        "name": "荻野 哲",
+        "grade": "A2",
+        "leg_type": "追",
+        "score": 82.44,
+        "comment": "近畿へ。"
+      },
+      {
+        "car_no": 5,
+        "name": "筒井 裕哉",
+        "grade": "A1",
+        "leg_type": "追",
+        "score": 87.3,
+        "comment": "常次君目標。"
+      },
+      {
+        "car_no": 6,
+        "name": "河上 陽一",
+        "grade": "A2",
+        "leg_type": "両",
+        "score": 80.87,
+        "comment": "先手ライン。"
+      },
+      {
+        "car_no": 7,
+        "name": "緒方 慎太朗",
+        "grade": "A2",
+        "leg_type": "逃",
+        "score": 81.83,
+        "comment": "自力勝負。"
+      }
+    ]
+  },
+  {
+    "venue_code": "62",
+    "venue_name": "広島",
+    "venue_slug": "hiroshima",
+    "race_num": 2,
+    "race_no": "2",
+    "grade": "A",
+    "stage": "Ａ級予選",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/hiroshima/racedetail/6220260228010002/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "山本 修平",
+        "grade": "A1",
+        "leg_type": "逃",
+        "score": 86.6,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 2,
+        "name": "工藤 文彦",
+        "grade": "A2",
+        "leg_type": "追",
+        "score": 84.78,
+        "comment": "切れ目から。"
+      },
+      {
+        "car_no": 3,
+        "name": "加藤 寛治",
+        "grade": "A1",
+        "leg_type": "両",
+        "score": 87.29,
+        "comment": "森崎君へ。"
+      },
+      {
+        "car_no": 4,
+        "name": "森崎 英登",
+        "grade": "A2",
+        "leg_type": "逃",
+        "score": 85.22,
+        "comment": "自力勝負。"
+      },
+      {
+        "car_no": 5,
+        "name": "藤田 大輔",
+        "grade": "A1",
+        "leg_type": "追",
+        "score": 87.76,
+        "comment": "山本君。"
+      },
+      {
+        "car_no": 6,
+        "name": "関根 彰人",
+        "grade": "A2",
+        "leg_type": "追",
+        "score": 81.1,
+        "comment": "決めずに。"
+      },
+      {
+        "car_no": 7,
+        "name": "木本 賢二",
+        "grade": "A2",
+        "leg_type": "追",
+        "score": 83.78,
+        "comment": "愛知の後ろ。"
+      }
+    ]
+  },
+  {
+    "venue_code": "62",
+    "venue_name": "広島",
+    "venue_slug": "hiroshima",
+    "race_num": 3,
+    "race_no": "3",
+    "grade": "A",
+    "stage": "Ａ級予選",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/hiroshima/racedetail/6220260228010003/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "井田 晶之",
+        "grade": "A1",
+        "leg_type": "両",
+        "score": 81.66,
+        "comment": "前で頑張る。"
+      },
+      {
+        "car_no": 2,
+        "name": "中村 翔平",
+        "grade": "A2",
+        "leg_type": "両",
+        "score": 87.95,
+        "comment": "石川君マーク。"
+      },
+      {
+        "car_no": 3,
+        "name": "松本 卓也",
+        "grade": "A1",
+        "leg_type": "両",
+        "score": 88.95,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 4,
+        "name": "高比良 豪",
+        "grade": "A1",
+        "leg_type": "追",
+        "score": 85.06,
+        "comment": "九州３番手。"
+      },
+      {
+        "car_no": 5,
+        "name": "上田 隼",
+        "grade": "A1",
+        "leg_type": "追",
+        "score": 82.39,
+        "comment": "井田君へ。"
+      },
+      {
+        "car_no": 6,
+        "name": "米澤 大輔",
+        "grade": "A2",
+        "leg_type": "追",
+        "score": 80.5,
+        "comment": "同県の松本君。"
+      },
+      {
+        "car_no": 7,
+        "name": "石川 航大",
+        "grade": "A1",
+        "leg_type": "逃",
+        "score": 89.16,
+        "comment": "自力勝負。"
+      }
+    ]
+  },
+  {
+    "venue_code": "62",
+    "venue_name": "広島",
+    "venue_slug": "hiroshima",
+    "race_num": 4,
+    "race_no": "4",
+    "grade": "A",
+    "stage": "Ａ級予選",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/hiroshima/racedetail/6220260228010004/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "大瀬戸 潤一郎",
+        "grade": "A1",
+        "leg_type": "追",
+        "score": 86.8,
+        "comment": "中原君へ。"
+      },
+      {
+        "car_no": 2,
+        "name": "戸塚 涼介",
+        "grade": "A2",
+        "leg_type": "逃",
+        "score": 81.55,
+        "comment": "自力勝負。"
+      },
+      {
+        "car_no": 3,
+        "name": "杉山 剛",
+        "grade": "A2",
+        "leg_type": "両",
+        "score": 82.16,
+        "comment": "境君マーク。"
+      },
+      {
+        "car_no": 4,
+        "name": "和田 禎嗣",
+        "grade": "A1",
+        "leg_type": "追",
+        "score": 86.2,
+        "comment": "戸塚君。"
+      },
+      {
+        "car_no": 5,
+        "name": "中原 航大",
+        "grade": "A1",
+        "leg_type": "逃",
+        "score": 88.17,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 6,
+        "name": "塩川 真一郎",
+        "grade": "A2",
+        "leg_type": "追",
+        "score": 0.0,
+        "comment": "中国３番手。"
+      },
+      {
+        "car_no": 7,
+        "name": "境 啓亨",
+        "grade": "A2",
+        "leg_type": "逃",
+        "score": 80.41,
+        "comment": "前で。"
+      }
+    ]
+  },
+  {
+    "venue_code": "62",
+    "venue_name": "広島",
+    "venue_slug": "hiroshima",
+    "race_num": 5,
+    "race_no": "5",
+    "grade": "A",
+    "stage": "Ａ級予選",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/hiroshima/racedetail/6220260228010005/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "成海 大聖",
+        "grade": "A1",
+        "leg_type": "逃",
+        "score": 85.36,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 2,
+        "name": "瀧野 勝太",
+        "grade": "A2",
+        "leg_type": "追",
+        "score": 85.19,
+        "comment": "中近へ。"
+      },
+      {
+        "car_no": 3,
+        "name": "山田 雅之",
+        "grade": "A1",
+        "leg_type": "追",
+        "score": 89.0,
+        "comment": "谷口君へ。"
+      },
+      {
+        "car_no": 4,
+        "name": "宮崎 康司",
+        "grade": "A2",
+        "leg_type": "両",
+        "score": 81.23,
+        "comment": "大分へ。"
+      },
+      {
+        "car_no": 5,
+        "name": "谷口 友真",
+        "grade": "A1",
+        "leg_type": "逃",
+        "score": 88.76,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 6,
+        "name": "山本 恵太郎",
+        "grade": "A2",
+        "leg_type": "追",
+        "score": 81.13,
+        "comment": "先手ライン。"
+      },
+      {
+        "car_no": 7,
+        "name": "川野 正芳",
+        "grade": "A2",
+        "leg_type": "追",
+        "score": 87.38,
+        "comment": "同県の成海君。"
+      }
+    ]
+  },
+  {
+    "venue_code": "62",
+    "venue_name": "広島",
+    "venue_slug": "hiroshima",
+    "race_num": 6,
+    "race_no": "6",
+    "grade": "A",
+    "stage": "Ａ級予選",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/hiroshima/racedetail/6220260228010006/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "田中 和磨",
+        "grade": "A2",
+        "leg_type": "逃",
+        "score": 91.69,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 2,
+        "name": "緑川 修平",
+        "grade": "A2",
+        "leg_type": "逃",
+        "score": 82.45,
+        "comment": "自力自在に。"
+      },
+      {
+        "car_no": 3,
+        "name": "東 鉄也",
+        "grade": "A2",
+        "leg_type": "両",
+        "score": 84.61,
+        "comment": "自力自在。"
+      },
+      {
+        "car_no": 4,
+        "name": "廣川 泰昭",
+        "grade": "A2",
+        "leg_type": "追",
+        "score": 80.64,
+        "comment": "中国の後ろ。"
+      },
+      {
+        "car_no": 5,
+        "name": "中石 昌芳",
+        "grade": "A1",
+        "leg_type": "追",
+        "score": 87.25,
+        "comment": "田中君へ。"
+      },
+      {
+        "car_no": 6,
+        "name": "大内 達也",
+        "grade": "A2",
+        "leg_type": "追",
+        "score": 77.23,
+        "comment": "緑川君。"
+      },
+      {
+        "car_no": 7,
+        "name": "藤井 孝則",
+        "grade": "A2",
+        "leg_type": "追",
+        "score": 78.2,
+        "comment": "東君任せ。"
+      }
+    ]
+  },
+  {
+    "venue_code": "62",
+    "venue_name": "広島",
+    "venue_slug": "hiroshima",
+    "race_num": 7,
+    "race_no": "7",
+    "grade": "A",
+    "stage": "Ａ級初日特選",
+    "date": "20260228",
+    "bank_length": 400,
+    "sport": "keirin",
+    "detail_url": "https://keirin.kdreams.jp/hiroshima/racedetail/6220260228010007/",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "能代谷 元",
+        "grade": "A1",
+        "leg_type": "両",
+        "score": 92.33,
+        "comment": "前で頑張る。"
+      },
+      {
+        "car_no": 2,
+        "name": "伊藤 世哉",
+        "grade": "A1",
+        "leg_type": "追",
+        "score": 96.21,
+        "comment": "単騎です。"
+      },
+      {
+        "car_no": 3,
+        "name": "野口 大誠",
+        "grade": "A1",
+        "leg_type": "両",
+        "score": 92.04,
+        "comment": "決めず。"
+      },
+      {
+        "car_no": 4,
+        "name": "高市 訓但",
+        "grade": "A1",
+        "leg_type": "追",
+        "score": 92.83,
+        "comment": "藤田さん。"
+      },
+      {
+        "car_no": 5,
+        "name": "泉 慶輔",
+        "grade": "A1",
+        "leg_type": "追",
+        "score": 95.6,
+        "comment": "南関へ。"
+      },
+      {
+        "car_no": 6,
+        "name": "稲葉 一真",
+        "grade": "A1",
+        "leg_type": "追",
+        "score": 89.4,
+        "comment": "能代谷さん。"
+      },
+      {
+        "car_no": 7,
+        "name": "藤田 昌宏",
+        "grade": "A1",
+        "leg_type": "両",
+        "score": 95.44,
+        "comment": "自力。"
+      }
+    ]
+  }
+]

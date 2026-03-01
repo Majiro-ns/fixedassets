@@ -1,0 +1,212 @@
+{
+  "batch_id": "20260228_143249",
+  "generated_at": "2026-02-28T14:32:49.100724",
+  "total_races": 8,
+  "meta": {
+    "sport": "keirin",
+    "date": "20260228",
+    "profile": "mr_t"
+  },
+  "predictions": [
+    {
+      "timestamp": "2026-02-28T14:32:49.097688",
+      "date": "20260228",
+      "sport": "keirin",
+      "race_info": {
+        "venue_name": "大垣",
+        "race_no": "",
+        "grade": "G3",
+        "stage": "",
+        "start_time": "20260228"
+      },
+      "predictor": {
+        "name": "Mr.T（競輪眼）",
+        "profile_id": "mr_t_634",
+        "model": "unknown"
+      },
+      "prediction": {
+        "text": "予想生成エラー: ANTHROPIC_API_KEY 環境変数が設定されていません",
+        "entries": []
+      },
+      "bet": {
+        "bet_type": "skip",
+        "reason": "予想エラー: ANTHROPIC_API_KEY 環境変数が設定されていません"
+      }
+    },
+    {
+      "timestamp": "2026-02-28T14:32:49.098435",
+      "date": "20260228",
+      "sport": "keirin",
+      "race_info": {
+        "venue_name": "和歌山",
+        "race_no": "",
+        "grade": "F1",
+        "stage": "",
+        "start_time": "20260228"
+      },
+      "predictor": {
+        "name": "Mr.T（競輪眼）",
+        "profile_id": "mr_t_634",
+        "model": "unknown"
+      },
+      "prediction": {
+        "text": "予想生成エラー: ANTHROPIC_API_KEY 環境変数が設定されていません",
+        "entries": []
+      },
+      "bet": {
+        "bet_type": "skip",
+        "reason": "予想エラー: ANTHROPIC_API_KEY 環境変数が設定されていません"
+      }
+    },
+    {
+      "timestamp": "2026-02-28T14:32:49.098833",
+      "date": "20260228",
+      "sport": "keirin",
+      "race_info": {
+        "venue_name": "松山",
+        "race_no": "",
+        "grade": "F1",
+        "stage": "",
+        "start_time": "20260228"
+      },
+      "predictor": {
+        "name": "Mr.T（競輪眼）",
+        "profile_id": "mr_t_634",
+        "model": "unknown"
+      },
+      "prediction": {
+        "text": "予想生成エラー: ANTHROPIC_API_KEY 環境変数が設定されていません",
+        "entries": []
+      },
+      "bet": {
+        "bet_type": "skip",
+        "reason": "予想エラー: ANTHROPIC_API_KEY 環境変数が設定されていません"
+      }
+    },
+    {
+      "timestamp": "2026-02-28T14:32:49.099176",
+      "date": "20260228",
+      "sport": "keirin",
+      "race_info": {
+        "venue_name": "西武園",
+        "race_no": "",
+        "grade": "F2",
+        "stage": "",
+        "start_time": "20260228"
+      },
+      "predictor": {
+        "name": "Mr.T（競輪眼）",
+        "profile_id": "mr_t_634",
+        "model": "unknown"
+      },
+      "prediction": {
+        "text": "予想生成エラー: ANTHROPIC_API_KEY 環境変数が設定されていません",
+        "entries": []
+      },
+      "bet": {
+        "bet_type": "skip",
+        "reason": "予想エラー: ANTHROPIC_API_KEY 環境変数が設定されていません"
+      }
+    },
+    {
+      "timestamp": "2026-02-28T14:32:49.099540",
+      "date": "20260228",
+      "sport": "keirin",
+      "race_info": {
+        "venue_name": "松阪",
+        "race_no": "",
+        "grade": "F2",
+        "stage": "",
+        "start_time": "20260228"
+      },
+      "predictor": {
+        "name": "Mr.T（競輪眼）",
+        "profile_id": "mr_t_634",
+        "model": "unknown"
+      },
+      "prediction": {
+        "text": "予想生成エラー: ANTHROPIC_API_KEY 環境変数が設定されていません",
+        "entries": []
+      },
+      "bet": {
+        "bet_type": "skip",
+        "reason": "予想エラー: ANTHROPIC_API_KEY 環境変数が設定されていません"
+      }
+    },
+    {
+      "timestamp": "2026-02-28T14:32:49.099884",
+      "date": "20260228",
+      "sport": "keirin",
+      "race_info": {
+        "venue_name": "奈良",
+        "race_no": "",
+        "grade": "F2",
+        "stage": "",
+        "start_time": "20260228"
+      },
+      "predictor": {
+        "name": "Mr.T（競輪眼）",
+        "profile_id": "mr_t_634",
+        "model": "unknown"
+      },
+      "prediction": {
+        "text": "予想生成エラー: ANTHROPIC_API_KEY 環境変数が設定されていません",
+        "entries": []
+      },
+      "bet": {
+        "bet_type": "skip",
+        "reason": "予想エラー: ANTHROPIC_API_KEY 環境変数が設定されていません"
+      }
+    },
+    {
+      "timestamp": "2026-02-28T14:32:49.100238",
+      "date": "20260228",
+      "sport": "keirin",
+      "race_info": {
+        "venue_name": "広島",
+        "race_no": "",
+        "grade": "F2",
+        "stage": "",
+        "start_time": "20260228"
+      },
+      "predictor": {
+        "name": "Mr.T（競輪眼）",
+        "profile_id": "mr_t_634",
+        "model": "unknown"
+      },
+      "prediction": {
+        "text": "予想生成エラー: ANTHROPIC_API_KEY 環境変数が設定されていません",
+        "entries": []
+      },
+      "bet": {
+        "bet_type": "skip",
+        "reason": "予想エラー: ANTHROPIC_API_KEY 環境変数が設定されていません"
+      }
+    },
+    {
+      "timestamp": "2026-02-28T14:32:49.100552",
+      "date": "20260228",
+      "sport": "keirin",
+      "race_info": {
+        "venue_name": "小倉",
+        "race_no": "",
+        "grade": "F2",
+        "stage": "",
+        "start_time": "20260228"
+      },
+      "predictor": {
+        "name": "Mr.T（競輪眼）",
+        "profile_id": "mr_t_634",
+        "model": "unknown"
+      },
+      "prediction": {
+        "text": "予想生成エラー: ANTHROPIC_API_KEY 環境変数が設定されていません",
+        "entries": []
+      },
+      "bet": {
+        "bet_type": "skip",
+        "reason": "予想エラー: ANTHROPIC_API_KEY 環境変数が設定されていません"
+      }
+    }
+  ]
+}

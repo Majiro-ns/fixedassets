@@ -1,0 +1,42 @@
+{
+  "timestamp": "2026-03-01T18:00:01.881440",
+  "date": "20260301",
+  "sport": "keirin",
+  "race_info": {
+    "venue_name": "川崎",
+    "race_no": 9,
+    "grade": "?",
+    "stage": "?",
+    "date": "20260301",
+    "sport": "keirin"
+  },
+  "predictor": {
+    "name": "Mr.T（競輪眼）",
+    "profile_id": "mr_t_634",
+    "model": "claude-code-agent"
+  },
+  "prediction": {
+    "text": "軸: 1番（山田太郎）\n相手: 2番（鈴木一郎）、3番（田中健一）\n買い目: 3連単 1-23-23ながし（4点）\n根拠: ライン構成・脚質は出走表に未記載のため競走得点のみで判断。S1班の1〜3番が得点上位（0.31/0.29/0.27）でS2・A1班を上回る。1番山田太郎が競走得点最高のため軸。川崎400m標準バンクの準決勝は展開次第だが、S1上位3名の争いが本線。"
+  },
+  "bet": {
+    "bet_type": "3連複ながし",
+    "axis": 1,
+    "partners": [
+      2,
+      3
+    ],
+    "combinations": [
+      [
+        1,
+        2,
+        3
+      ]
+    ],
+    "num_bets": 1,
+    "unit_bet": 1200,
+    "total_investment": 1200,
+    "display": "3連複ながし 1-23"
+  },
+  "filter_type": "A",
+  "filter_passed": true
+}

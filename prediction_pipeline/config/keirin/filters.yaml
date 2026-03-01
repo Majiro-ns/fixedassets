@@ -63,8 +63,11 @@ exclude_race_number:
   - 6
 
 # ─── F8: 期待配当ゾーンフィルター（_check_expected_payout） ───────────
-# 2万〜5万円ゾーンを適正範囲とする（expected_payoutがNoneの場合はF8スキップ）
-expected_payout_min: 20000
+# cmd_146k_sub1 2026-03-02: min を20,000→3,000に引き下げ（score_spreadとの矛盾解消）
+# 矛盾の根拠: score_spread>=12通過レースの推定配当最大=9,600円(9車立て) < 旧min20,000
+# → 通過レース0件を引き起こしていた設計バグを修正
+# 新設計: 3,000円未満（掛金以下水準）のみ除外。9車立ては全通過、7/8車極端格差のみ除外
+expected_payout_min: 3000
 expected_payout_max: 50000
 
 # ─── score_spread フィルター（#T002対策案2 cmd_132k_sub2 2026-03-01） ─

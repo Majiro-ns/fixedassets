@@ -1,0 +1,68 @@
+[
+  {
+    "venue_code": "14",
+    "venue_name": "川崎",
+    "race_num": 9,
+    "race_no": "9",
+    "grade": "S1",
+    "stage": "特選",
+    "bank_length": 400,
+    "start_time": "20260225",
+    "date": "20260225",
+    "race_token": "",
+    "sport": "keirin",
+    "entries": [
+      {"car_no": 1, "name": "サンプル選手A", "grade": "S1", "leg_type": "逃げ"},
+      {"car_no": 2, "name": "サンプル選手B", "grade": "S1", "leg_type": "捲り"},
+      {"car_no": 3, "name": "サンプル選手C", "grade": "S1", "leg_type": "差し"},
+      {"car_no": 4, "name": "サンプル選手D", "grade": "S2", "leg_type": "逃げ"},
+      {"car_no": 5, "name": "サンプル選手E", "grade": "S2", "leg_type": "捲り"},
+      {"car_no": 6, "name": "サンプル選手F", "grade": "A1", "leg_type": "追い込み"},
+      {"car_no": 7, "name": "サンプル選手G", "grade": "A1", "leg_type": "追い込み"}
+    ]
+  },
+  {
+    "venue_code": "11",
+    "venue_name": "立川",
+    "race_num": 11,
+    "race_no": "11",
+    "grade": "S1",
+    "stage": "二次予選",
+    "bank_length": 400,
+    "start_time": "20260225",
+    "date": "20260225",
+    "race_token": "",
+    "sport": "keirin",
+    "entries": [
+      {"car_no": 1, "name": "サンプル選手H", "grade": "S1", "leg_type": "逃げ"},
+      {"car_no": 2, "name": "サンプル選手I", "grade": "S1", "leg_type": "逃げ"},
+      {"car_no": 3, "name": "サンプル選手J", "grade": "S1", "leg_type": "捲り"},
+      {"car_no": 4, "name": "サンプル選手K", "grade": "S1", "leg_type": "差し"},
+      {"car_no": 5, "name": "サンプル選手L", "grade": "S1", "leg_type": "差し"},
+      {"car_no": 6, "name": "サンプル選手M", "grade": "S2", "leg_type": "追い込み"},
+      {"car_no": 7, "name": "サンプル選手N", "grade": "S2", "leg_type": "追い込み"}
+    ]
+  },
+  {
+    "venue_code": "12",
+    "venue_name": "松戸",
+    "race_num": 3,
+    "race_no": "3",
+    "grade": "A1",
+    "stage": "一般",
+    "bank_length": 400,
+    "start_time": "20260225",
+    "date": "20260225",
+    "race_token": "",
+    "sport": "keirin",
+    "entries": [
+      {"car_no": 1, "name": "サンプル選手O", "grade": "A1", "leg_type": "逃げ"},
+      {"car_no": 2, "name": "サンプル選手P", "grade": "A1", "leg_type": "捲り"},
+      {"car_no": 3, "name": "サンプル選手Q", "grade": "A1", "leg_type": "差し"},
+      {"car_no": 4, "name": "サンプル選手R", "grade": "A2", "leg_type": "追い込み"},
+      {"car_no": 5, "name": "サンプル選手S", "grade": "A2", "leg_type": "追い込み"},
+      {"car_no": 6, "name": "サンプル選手T", "grade": "A2", "leg_type": "追い込み"},
+      {"car_no": 7, "name": "サンプル選手U", "grade": "A2", "leg_type": "追い込み"}
+    ]
+  }
+]

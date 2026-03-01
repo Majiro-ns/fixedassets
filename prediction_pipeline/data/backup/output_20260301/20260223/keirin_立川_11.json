@@ -1,0 +1,95 @@
+{
+  "timestamp": "2026-02-23T06:40:21.222751",
+  "date": "20260223",
+  "sport": "keirin",
+  "race_info": {
+    "venue_name": "立川",
+    "race_no": "11",
+    "grade": "S1",
+    "stage": "二次予選",
+    "start_time": "20260225"
+  },
+  "predictor": {
+    "name": "Mr.T（競輪眼）",
+    "profile_id": "mr_t_634",
+    "model": "dry-run"
+  },
+  "prediction": {
+    "text": "[DRY RUN] 立川 11R S1 二次予選 [filter_type=C]\n軸: 1番\n相手: 2番、3番、4番\nコメント: テスト予想（API未呼び出し）",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "サンプル選手H",
+        "grade": "S1",
+        "leg_type": "逃げ"
+      },
+      {
+        "car_no": 2,
+        "name": "サンプル選手I",
+        "grade": "S1",
+        "leg_type": "逃げ"
+      },
+      {
+        "car_no": 3,
+        "name": "サンプル選手J",
+        "grade": "S1",
+        "leg_type": "捲り"
+      },
+      {
+        "car_no": 4,
+        "name": "サンプル選手K",
+        "grade": "S1",
+        "leg_type": "差し"
+      },
+      {
+        "car_no": 5,
+        "name": "サンプル選手L",
+        "grade": "S1",
+        "leg_type": "差し"
+      },
+      {
+        "car_no": 6,
+        "name": "サンプル選手M",
+        "grade": "S2",
+        "leg_type": "追い込み"
+      },
+      {
+        "car_no": 7,
+        "name": "サンプル選手N",
+        "grade": "S2",
+        "leg_type": "追い込み"
+      }
+    ]
+  },
+  "bet": {
+    "bet_type": "3連複ながし",
+    "axis": 1,
+    "partners": [
+      2,
+      3,
+      4
+    ],
+    "combinations": [
+      [
+        1,
+        2,
+        3
+      ],
+      [
+        1,
+        2,
+        4
+      ],
+      [
+        1,
+        3,
+        4
+      ]
+    ],
+    "num_bets": 3,
+    "unit_bet": 1200,
+    "total_investment": 3600,
+    "display": "3連複ながし 1-234"
+  },
+  "filter_type": "C"
+}

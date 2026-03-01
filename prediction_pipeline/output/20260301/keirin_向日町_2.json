@@ -1,0 +1,82 @@
+{
+  "timestamp": "2026-03-01T18:40:15.905006",
+  "date": "20260301",
+  "sport": "keirin",
+  "race_info": {
+    "venue_name": "向日町",
+    "race_no": "2",
+    "grade": "",
+    "stage": "チャレンジ予選",
+    "start_time": ""
+  },
+  "predictor": {
+    "name": "Mr.T（競輪眼）",
+    "profile_id": "mr_t_634",
+    "model": "unknown"
+  },
+  "prediction": {
+    "text": "",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "島田 茂希",
+        "grade": "A3",
+        "leg_type": "逃",
+        "score": 68.55,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 2,
+        "name": "谷澤 優貴",
+        "grade": "A3",
+        "leg_type": "逃",
+        "score": 77.28,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 3,
+        "name": "高森 圭介",
+        "grade": "A3",
+        "leg_type": "追",
+        "score": 68.23,
+        "comment": "藤本君。"
+      },
+      {
+        "car_no": 4,
+        "name": "町田 勝志",
+        "grade": "A3",
+        "leg_type": "追",
+        "score": 70.11,
+        "comment": "中部勢へ。"
+      },
+      {
+        "car_no": 5,
+        "name": "吉野 猛",
+        "grade": "A3",
+        "leg_type": "追",
+        "score": 71.96,
+        "comment": "谷澤君。"
+      },
+      {
+        "car_no": 6,
+        "name": "藤本 龍也",
+        "grade": "A3",
+        "leg_type": "両",
+        "score": 65.84,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 7,
+        "name": "中野 良",
+        "grade": "A3",
+        "leg_type": "追",
+        "score": 74.14,
+        "comment": "島田君。"
+      }
+    ]
+  },
+  "bet": {
+    "bet_type": "skip",
+    "reason": "フィルター除外: F1[クラス]:  は除外クラス（許可: ['S']）; F2[種別]: 'チャレンジ予選' は除外種別（許可: ['予選', '一予選', '特選', '初特選', '一般', '一次予選']）; F6[曜日]: 日曜日は除外対象（除外: ['月', '日']）; score_spread[実力差]: spread=11.44 < 閾値12（拮抗レース: 予測精度低下）"
+  }
+}

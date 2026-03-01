@@ -1,0 +1,446 @@
+{
+  "date": "20260301",
+  "fetched_at": "2026-03-01T18:01:40",
+  "races": [
+    {
+      "venue": "向日町",
+      "race_no": 1,
+      "trifecta_result": [
+        5,
+        2,
+        7
+      ],
+      "trifecta_payout": 1590,
+      "trio_result": [
+        2,
+        5,
+        7
+      ],
+      "trio_payout": 340
+    },
+    {
+      "venue": "向日町",
+      "race_no": 2,
+      "trifecta_result": [
+        7,
+        2,
+        1
+      ],
+      "trifecta_payout": 12620,
+      "trio_result": [
+        1,
+        2,
+        7
+      ],
+      "trio_payout": 1000
+    },
+    {
+      "venue": "向日町",
+      "race_no": 3,
+      "trifecta_result": [
+        3,
+        7,
+        5
+      ],
+      "trifecta_payout": 4980,
+      "trio_result": [
+        3,
+        5,
+        7
+      ],
+      "trio_payout": 2620
+    },
+    {
+      "venue": "向日町",
+      "race_no": 4,
+      "trifecta_result": [
+        2,
+        7,
+        4
+      ],
+      "trifecta_payout": 170,
+      "trio_result": [
+        2,
+        4,
+        7
+      ],
+      "trio_payout": 160
+    },
+    {
+      "venue": "向日町",
+      "race_no": 5,
+      "trifecta_result": [
+        4,
+        2,
+        1
+      ],
+      "trifecta_payout": 2900,
+      "trio_result": [
+        1,
+        2,
+        4
+      ],
+      "trio_payout": 760
+    },
+    {
+      "venue": "向日町",
+      "race_no": 6,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "向日町",
+      "race_no": 7,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "向日町",
+      "race_no": 8,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "向日町",
+      "race_no": 9,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "向日町",
+      "race_no": 10,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "向日町",
+      "race_no": 11,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "武雄",
+      "race_no": 1,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "武雄",
+      "race_no": 2,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "武雄",
+      "race_no": 3,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "武雄",
+      "race_no": 4,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "武雄",
+      "race_no": 5,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "武雄",
+      "race_no": 6,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "武雄",
+      "race_no": 7,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "kishiwada",
+      "race_no": 1,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "kishiwada",
+      "race_no": 2,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "kishiwada",
+      "race_no": 3,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "kishiwada",
+      "race_no": 4,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "kishiwada",
+      "race_no": 5,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "kishiwada",
+      "race_no": 6,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "kishiwada",
+      "race_no": 7,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "komatsushima",
+      "race_no": 1,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "komatsushima",
+      "race_no": 2,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "komatsushima",
+      "race_no": 3,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "komatsushima",
+      "race_no": 4,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "komatsushima",
+      "race_no": 5,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "komatsushima",
+      "race_no": 6,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "komatsushima",
+      "race_no": 7,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "kurume",
+      "race_no": 1,
+      "trifecta_result": [
+        1,
+        4,
+        6
+      ],
+      "trifecta_payout": 1700,
+      "trio_result": [
+        1,
+        4,
+        6
+      ],
+      "trio_payout": 400
+    },
+    {
+      "venue": "kurume",
+      "race_no": 2,
+      "trifecta_result": [
+        1,
+        3,
+        4
+      ],
+      "trifecta_payout": 94840,
+      "trio_result": [
+        1,
+        3,
+        4
+      ],
+      "trio_payout": 7960
+    },
+    {
+      "venue": "kurume",
+      "race_no": 3,
+      "trifecta_result": [
+        4,
+        1,
+        3
+      ],
+      "trifecta_payout": 1790,
+      "trio_result": [
+        1,
+        3,
+        4
+      ],
+      "trio_payout": 700
+    },
+    {
+      "venue": "kurume",
+      "race_no": 4,
+      "trifecta_result": [
+        1,
+        4,
+        2
+      ],
+      "trifecta_payout": 820,
+      "trio_result": [
+        1,
+        2,
+        4
+      ],
+      "trio_payout": 450
+    },
+    {
+      "venue": "kurume",
+      "race_no": 5,
+      "trifecta_result": [
+        1,
+        4,
+        2
+      ],
+      "trifecta_payout": 14080,
+      "trio_result": [
+        1,
+        2,
+        4
+      ],
+      "trio_payout": 4250
+    },
+    {
+      "venue": "kurume",
+      "race_no": 6,
+      "trifecta_result": [
+        1,
+        7,
+        2
+      ],
+      "trifecta_payout": 2480,
+      "trio_result": [
+        1,
+        2,
+        7
+      ],
+      "trio_payout": 1510
+    },
+    {
+      "venue": "kurume",
+      "race_no": 7,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "kurume",
+      "race_no": 8,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "kurume",
+      "race_no": 9,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "kurume",
+      "race_no": 10,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "kurume",
+      "race_no": 11,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    },
+    {
+      "venue": "kurume",
+      "race_no": 12,
+      "trifecta_result": [],
+      "trifecta_payout": 0,
+      "trio_result": [],
+      "trio_payout": 0
+    }
+  ]
+}

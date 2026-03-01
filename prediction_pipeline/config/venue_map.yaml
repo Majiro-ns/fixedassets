@@ -1,0 +1,72 @@
+# 英語slug → 日本語venue_name マッピング
+# ===========================================
+# 用途: kdreams.jpのURLスラグと予測側venue_nameの突合（BUG-3対策）
+# 出典: 競輪公式会場リスト + src/kdreams_scraper.py VENUE_SLUG/VENUE_NAME
+#
+# BUG-3の背景:
+#   KdreamsResultScraperがvenue_code (例: "56", "73") を返すケースで
+#   src/kdreams_scraper.VENUE_NAME に該当コードが存在しない場合、
+#   英語slugがvenue_nameとして使われ予測との突合に失敗する。
+#   本ファイルでslug→日本語名の2次ルックアップを提供する。
+#
+# 使用方法:
+#   collect_results.py で load_venue_slug_map() を呼び出し、
+#   VENUE_NAME_MAP.get(venue_code) が None の場合にこのマップで補完する。
+
+slug_to_name:
+  # 北海道・東北
+  hakodate: 函館
+  aomori: 青森
+  iwakitaira: いわき平
+
+  # 関東信越
+  yahiko: 弥彦
+  maebashi: 前橋
+  toride: 取手
+  utsunomiya: 宇都宮
+  omiya: 大宮
+  seibupark: 西武園
+  keiokaku: 京王閣
+  tachikawa: 立川
+  matsudo: 松戸
+  chiba: 千葉
+  kawasaki: 川崎
+  hiratsuka: 平塚
+  odawara: 小田原
+  ito: 伊東
+
+  # 東海
+  shizuoka: 静岡
+  hamamatsu: 浜松
+  toyohashi: 豊橋
+  nagoya: 名古屋
+  gifu: 岐阜
+  ogaki: 大垣
+  yokkaichi: 四日市
+  matsusaka: 松阪
+
+  # 近畿
+  seibuen: 西武園
+  mukomachi: 向日町
+  wakayama: 和歌山
+  kishiwada: 岸和田  # venue_code "56" or "29" (BUG-3で発見)
+  nara: 奈良
+
+  # 中国
+  tamano: 玉野
+  hiroshima: 広島
+  hofu: 防府
+
+  # 四国
+  takamatsu: 高松
+  matsuyama: 松山
+  kochi: 高知
+  komatsushima: 小松島  # venue_code "73" (BUG-3で発見、VENUE_NAMEに未登録)
+
+  # 九州
+  kokura: 小倉
+  kurume: 久留米
+  takeo: 武雄
+  sasebo: 佐世保
+  beppu: 別府
+  kumamoto: 熊本

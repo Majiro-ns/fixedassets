@@ -1,0 +1,82 @@
+{
+  "timestamp": "2026-03-01T18:40:15.914881",
+  "date": "20260301",
+  "sport": "keirin",
+  "race_info": {
+    "venue_name": "向日町",
+    "race_no": "5",
+    "grade": "",
+    "stage": "ガールズ予選１",
+    "start_time": ""
+  },
+  "predictor": {
+    "name": "Mr.T（競輪眼）",
+    "profile_id": "mr_t_634",
+    "model": "unknown"
+  },
+  "prediction": {
+    "text": "",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "牧田 咲子",
+        "grade": "L1",
+        "leg_type": "両",
+        "score": 47.95,
+        "comment": "自在。"
+      },
+      {
+        "car_no": 2,
+        "name": "尾崎 睦",
+        "grade": "L1",
+        "leg_type": "両",
+        "score": 57.38,
+        "comment": "自力。"
+      },
+      {
+        "car_no": 3,
+        "name": "平子 結菜",
+        "grade": "L1",
+        "leg_type": "両",
+        "score": 50.6,
+        "comment": "自力自在。"
+      },
+      {
+        "car_no": 4,
+        "name": "那須 萌美",
+        "grade": "L1",
+        "leg_type": "両",
+        "score": 55.83,
+        "comment": "自在。"
+      },
+      {
+        "car_no": 5,
+        "name": "田野口 佳奈",
+        "grade": "L1",
+        "leg_type": "両",
+        "score": 47.26,
+        "comment": "自在。"
+      },
+      {
+        "car_no": 6,
+        "name": "中野 咲",
+        "grade": "L1",
+        "leg_type": "両",
+        "score": 51.45,
+        "comment": "自在。"
+      },
+      {
+        "car_no": 7,
+        "name": "塩田 日海",
+        "grade": "L1",
+        "leg_type": "追",
+        "score": 44.91,
+        "comment": "流れに乗れる様に"
+      }
+    ]
+  },
+  "bet": {
+    "bet_type": "skip",
+    "reason": "フィルター除外: F1[クラス]:  は除外クラス（許可: ['S']）; F2[種別]: 'ガールズ予選１' は除外種別（許可: ['予選', '一予選', '特選', '初特選', '一般', '一次予選']）; F6[曜日]: 日曜日は除外対象（除外: ['月', '日']）"
+  }
+}

@@ -1,0 +1,12 @@
+# PDF解析 PoC 用
+pymupdf>=1.23.0
+pdfplumber>=0.10.0
+# LLM API（M3 ギャップ分析・M4 松竹梅提案エージェント用）
+anthropic>=0.40.0
+# YAML読み込み（M2 法令収集エージェント用）
+pyyaml>=6.0
+# Streamlit UI（M5-2 簡易UI用）
+streamlit>=1.30.0
+# Word/Excel出力（M9 ドキュメントエクスポーター用）
+python-docx>=1.0.0
+openpyxl>=3.0.0

@@ -1,0 +1,25 @@
+{
+  "timestamp": "2026-03-01T18:33:50.732823",
+  "date": "20260301",
+  "sport": "keirin",
+  "race_info": {
+    "venue_name": "静岡",
+    "race_no": "",
+    "grade": "F2",
+    "stage": "",
+    "start_time": "20260301"
+  },
+  "predictor": {
+    "name": "Mr.T（競輪眼）",
+    "profile_id": "mr_t_634",
+    "model": "unknown"
+  },
+  "prediction": {
+    "text": "",
+    "entries": []
+  },
+  "bet": {
+    "bet_type": "skip",
+    "reason": "フィルター除外: F1[クラス]: F2 は除外クラス（許可: ['S']）; F2[種別]: '' は除外種別（許可: ['予選', '一予選', '特選', '初特選', '一般', '一次予選']）"
+  }
+}

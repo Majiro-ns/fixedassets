@@ -1,0 +1,546 @@
+# 競艇一撃 認知プロファイル v2（CRE分析）
+# ============================================================
+# 生成日: 2026-02-22
+# 担当: ashigaru6 (multi-agent-shogun, subtask_021_phase2_cre_v2)
+# データソース: kyotei_ichigeki_predictions_full.json (673件統合)
+#   - kyotei_ichigeki_predictions_2023.json (255件)
+#   - kyotei_ichigeki_predictions_2024.json (230件 ※重複除去後)
+#   - kyotei_ichigeki_predictions_2025_2026.json (188件)
+# 重複除去: URLベース 3件除去 → 673件
+# v1比較: 20件 → 673件（33.65倍のサンプル拡大）
+# ============================================================
+# ⚠️ 重要な限界:
+#   的中結果（result/payout）はboatrace.jp照合が未実施。
+#   的中率・回収率の算出は不可能。
+#   「推測」と「実測」を以下のルールで明記する:
+#     【実測】: ブログテキストから直接確認できた事実
+#     【推測】: データから計算・推定した値（ただし的中率/回収率は除く）
+#     【算出不可】: boatrace.jp照合なしには求められない値
+# ============================================================
+
+profile_id: kyotei_ichigeki_blog_v2
+predictor_name: "競艇一撃"
+platform: "sblo.jp（Seesaa Blog）"
+blog_url: "http://kyotei-ichigeki.sblo.jp/"
+sport: "競艇（ボートレース）"
+data_source: "kyotei_ichigeki_predictions_full.json"
+version: "2.0"
+based_on_v1: "kyotei_ichigeki_cognitive_profile.yaml"
+analysis_date: "2026-02-22"
+analyst: "ashigaru6 (multi-agent-shogun)"
+
+# ─────────────────────────────────────
+# 1. 基本統計（実測 vs 推測を明示）
+# ─────────────────────────────────────
+basic_stats:
+  total_articles_analyzed: 673      # 【実測】重複除去後の統合件数
+  period: "2023-01 〜 2026-01（約3年間）"
+  year_breakdown:
+    year_2023: 255                  # 【実測】
+    year_2024: 230                  # 【実測】重複除去後
+    year_2025_2026: 188             # 【実測】
+  article_frequency: "月平均約18.5件（673件/36ヶ月）"  # 【推測】
+  blog_history: "2012年頃から継続。2014年8月からメルマガも展開（11年以上継続）"
+
+  # 的中結果に関する注記（全て算出不可）
+  hit_rate: null                    # 【算出不可】boatrace.jp照合未実施
+  recovery_rate: null               # 【算出不可】boatrace.jp照合未実施
+  confirmed_results_note: |
+    ⚠️ 673件の的中/不的中はboatrace.jp照合が未実施のため全て不明。
+    v1で確認できた1件（1/23尼崎1R: 1-2-3で1020円的中）を除き結果データなし。
+    「推測値」も的中率・回収率については記載しない。
+
+  # buy_tickets取得状況（実測）
+  buy_tickets_acquisition:
+    total_with_tickets: 548         # 【実測】buy_tickets非空の件数
+    total_with_tickets_pct: 81.4    # 【実測】%
+    year_2023_pct: 95.3             # 【実測】243/255件
+    year_2024_pct: 95.7             # 【実測】220/230件（うち57件は「解析失敗」ノイズ）
+    year_2025_2026_pct: 45.2        # 【実測】85/188件（多くがbuy_tickets=[]）
+    anchor_derivable_count: 491     # 【実測】実際に軸艇番を導出できた件数
+    anchor_derivable_pct: 72.9      # 【実測】491/673件
+    data_quality_note: |
+      2024年データに「解析失敗」「競艇展開法で3連単がジャンジャン当たる」等の
+      ノイズが57件含まれる（スクレイピング失敗）。
+      2025-2026年データはbuy_tickets=[]が103件（45%）と多く、
+      記事フォーマット変更またはスクレイピング精度の問題と推測。
+
+# ─────────────────────────────────────
+# 2. コース選択パターン（673件実測）
+# ─────────────────────────────────────
+course_selection_patterns:
+
+  first_boat_anchor:
+    # 軸艇番導出可能491件ベース
+    count_overall: 296              # 【実測】491件中296件
+    pct_overall: 60.3              # 【実測】%（v1: 65.0%からわずかに低下）
+    year_breakdown:
+      year_2023: {count: 150, valid_base: 243, pct: 61.7}   # 【実測】
+      year_2024: {count: 89,  valid_base: 163, pct: 54.6}   # 【実測】
+      year_2025_2026: {count: 57, valid_base: 85, pct: 67.1} # 【実測】
+    trend_note: |
+      【推測】2024年は54.6%と最も低く、2025-2026年は67.1%と最も高い。
+      長期トレンドとしては60%前後で安定している。
+      2025-2026のbuy_tickets取得率が45.2%と低いため、
+      2025-2026の値はバイアスがかかっている可能性がある。
+    description: |
+      1号艇（最内コース・イン）を1着軸にする予想が全体の60.3%。
+      全国平均のイン勝率約55%を5pt以上上回る高頻度でのイン選択。
+      v1（65.0%、20件）と概ね一致しており、イン信頼傾向は長期的に安定している。
+    trigger_conditions:
+      - "「イン勝率高い」という定性評価"
+      - "「近況高リズム」「リズム上昇中」という近況良好評価"
+      - "「スタート見えてる」「スタート抜群」という発艇評価"
+    cre_note: "673件の大規模データでもv1の傾向を追認。1号艇軸60.3%は安定した特徴。"
+
+  fourth_boat_kado_ichigeki:
+    count_overall: 56               # 【実測】491件中56件
+    pct_overall: 11.4              # 【実測】%（v1: 25.0%から大幅に低下）
+    year_breakdown:
+      year_2023: {count: 25, valid_base: 243, pct: 10.3}    # 【実測】
+      year_2024: {count: 21, valid_base: 163, pct: 12.9}    # 【実測】
+      year_2025_2026: {count: 10, valid_base: 85,  pct: 11.8} # 【実測】
+    v1_discrepancy_note: |
+      ⚠️ v1（25.0%）との大きな乖離について:
+      v1の20件は非1号艇軸7件中5件が4号艇（71%）という計算だったが、
+      分母（非1号艇軸件数）と分母（全予想件数）の混在が原因と推測。
+      673件では全予想中の4号艇軸率として11.4%が正しい値。
+      非1号艇軸（195件）の中での4号艇率: 56/195 = 28.7%（v1の25.0%に近い値）
+    non_first_boat_breakdown:
+      total_non_first: 195          # 【実測】491件 - 296件
+      fourth_boat: {count: 56, pct_among_non_first: 28.7}   # 【実測】
+      third_boat:  {count: 61, pct_among_non_first: 31.3}   # 【実測】
+      second_boat: {count: 48, pct_among_non_first: 24.6}   # 【実測】
+      fifth_boat:  {count: 26, pct_among_non_first: 13.3}   # 【実測】
+      sixth_boat:  {count: 4,  pct_among_non_first: 2.1}    # 【実測】
+    description: |
+      4号艇（カド）を1着軸にするパターンは全体の11.4%。
+      非1号艇軸の中では28.7%で最多と思われていたが、
+      実際には3号艇（31.3%）がわずかに多い。
+      「カドから一撃」の認知的印象が実際のデータより誇張されていた可能性。
+    trigger_conditions:
+      - "4号艇に「スタート見えてきた」「スタート巧者」の選手がいる"
+      - "4号艇に「地元選手」「全速で行けてる」という状態評価"
+      - "1号艇のスタートに懸念があるか、1号艇を積極的に信頼しない場合"
+
+  third_boat_anchor:
+    count_overall: 61               # 【実測】
+    pct_overall: 12.4              # 【実測】%
+    note: |
+      【推測】v1では1件(5%)の稀なパターンとされていたが、
+      673件では12.4%と予想外に多い。3号艇からの捲りパターンが
+      「カドから一撃」に次ぐ「ずらし」として機能している可能性。
+
+  second_boat_anchor:
+    count_overall: 48               # 【実測】
+    pct_overall: 9.8               # 【実測】%
+    note: "2号艇からのインよりの展開予測（差し・抜き）を想定したパターン"
+
+  fifth_sixth_boat_anchor:
+    count_fifth: 26                 # 【実測】
+    count_sixth: 4                  # 【実測】
+    pct_fifth: 5.3                 # 【実測】%
+    pct_sixth: 0.8                 # 【実測】%
+    note: |
+      5/6号艇からのまくり差し系は合計6.1%。
+      v1の「5号艇・6号艇からのまくりへの言及はほぼ皆無」は過剰な一般化だった。
+      5.3%は稀ではあるが「皆無」ではない。
+
+# ─────────────────────────────────────
+# 3. 場別傾向（673件実測）
+# ─────────────────────────────────────
+venue_analysis:
+
+  top_venues_by_count:
+    # 場名が正しく取得できた件数（Not None/不明）
+    description: "出現頻度が高い場（有効場名ベース）"
+    ranking:
+      - {rank: 1,  venue: "住之江", count: 36, pct_first_boat: 65.6, pct_fourth_boat: 15.6}
+      - {rank: 2,  venue: "津",     count: 35, pct_first_boat: 66.7, pct_fourth_boat: 16.7}
+      - {rank: 3,  venue: "芦屋",   count: 33, pct_first_boat: 68.0, pct_fourth_boat: 8.0}
+      - {rank: 4,  venue: "若松",   count: 25, pct_first_boat: 45.5, pct_fourth_boat: 22.7}
+      - {rank: 5,  venue: "大村",   count: 23, pct_first_boat: 42.9, pct_fourth_boat: 14.3}
+      - {rank: 6,  venue: "三国",   count: 23, pct_first_boat: 47.1, pct_fourth_boat: 11.8}
+      - {rank: 7,  venue: "鳴門",   count: 23, pct_first_boat: 34.8, pct_fourth_boat: 4.3}
+      - {rank: 8,  venue: "蒲郡",   count: 23, pct_first_boat: 77.3, pct_fourth_boat: 0.0}
+      - {rank: 9,  venue: "下関",   count: 22, pct_first_boat: 50.0, pct_fourth_boat: 20.0}
+      - {rank: 10, venue: "唐津",   count: 22, pct_first_boat: 68.8, pct_fourth_boat: 12.5}
+    data_note: "軸艇番は buy_tickets から導出した推測値（boatrace.jp照合なし）"
+
+  venue_characteristics:
+    high_first_boat_venues:
+      description: "1号艇軸率が特に高い場（件数10件以上）"
+      venues:
+        - {venue: "蒲郡",   pct: 77.3, count_base: 22, interpretation: "インが特に強い場。4号艇軸は0%"}
+        - {venue: "浜名湖", pct: 68.8, count_base: 16, interpretation: "イン有利傾向"}
+        - {venue: "唐津",   pct: 68.8, count_base: 16, interpretation: "イン有利傾向"}
+        - {venue: "芦屋",   pct: 68.0, count_base: 25, interpretation: "競艇一撃の得意場のひとつ"}
+        - {venue: "津",     pct: 66.7, count_base: 30, interpretation: "イン有利・津はイン勝率が全国的に高い"}
+      cre_note: "蒲郡では4号艇カドを0%選択 → 競艇一撃は蒲郡でイン一辺倒の予想をする可能性"
+
+    low_first_boat_venues:
+      description: "1号艇軸率が低い場（件数10件以上）"
+      venues:
+        - {venue: "鳴門",   pct: 34.8, count_base: 23, interpretation: "アウトコース寄りの傾向"}
+        - {venue: "大村",   pct: 42.9, count_base: 21, interpretation: "ヒールがかかりやすい水面か"}
+        - {venue: "若松",   pct: 45.5, count_base: 22, interpretation: "4号艇カドも22.7%と比較的高い"}
+      cre_note: "鳴門・大村では1号艇信頼が崩れやすい特性を競艇一撃が認識している可能性"
+
+    high_fourth_boat_venues:
+      description: "4号艇カド選択率が特に高い場（件数10件以上）"
+      venues:
+        - {venue: "戸田",   pct: 33.3, count_base: 12, interpretation: "外水面特性でカド有利?"}
+        - {venue: "児島",   pct: 30.8, count_base: 13, interpretation: "波乱傾向の水面"}
+        - {venue: "若松",   pct: 22.7, count_base: 22, interpretation: "カド一撃が有効と判断"}
+      cre_note: |
+        戸田・児島での4号艇カド率が30%超 → 競艇一撃はこれらの場でカドを
+        好む傾向がある。ただし実際の的中率は【算出不可】。
+
+  venue_missing_data:
+    count: 138                      # None(81) + 不明(57)
+    pct: 20.5                      # 全673件中
+    note: |
+      場名が取得できなかった138件はスクレイピング失敗または
+      記事フォーマットの問題。分析から除外している。
+
+# ─────────────────────────────────────
+# 4. 月別・季節別傾向（673件実測）
+# ─────────────────────────────────────
+temporal_analysis:
+
+  monthly_distribution:
+    description: "月別記事件数（2023年以降）"
+    # 均等分布（月15-25件）で季節的な偏りは少ない
+    anomalies:
+      - {period: "2024-01", count: 74, note: "異常値：通常の3倍以上。データ重複または1月に集中的に投稿した可能性"}
+    typical_range: "月15〜25件（2024-01を除く）"
+    trend: |
+      【推測】2023年(255件/12ヶ月=21.3件/月), 2024年(230件/12ヶ月=19.2件/月),
+      2025-2026年(188件/14ヶ月=13.4件/月)と漸減傾向。
+      ブログ更新頻度が年々低下している可能性。
+
+  seasonal_distribution:
+    total_by_season:
+      winter_dec_feb: {count: 232, pct: 34.5, note: "最多シーズン"}
+      spring_mar_may: {count: 152, pct: 22.6}
+      autumn_sep_nov: {count: 152, pct: 22.6}
+      summer_jun_aug: {count: 137, pct: 20.4, note: "最少シーズン"}
+    cre_note: |
+      【推測】冬季(12-2月)に件数が多い傾向は、
+      ブログ投稿頻度の季節変動または収集期間の偏りの影響と推測。
+      v1で言及された「冬場に入るとセンター勢の2着が多くなる住之江」等の
+      季節×会場知識を競艇一撃が持つことは確認済み。
+      季節別の予想精度差は【算出不可】。
+
+# ─────────────────────────────────────
+# 5. 認知バイアスの再検証（673件ベース）
+# ─────────────────────────────────────
+cognitive_biases:
+
+  - name: "イン信頼過剰バイアス（Inner Course Over-Trust Bias）"
+    severity: "高（最主要バイアス。673件でも安定確認）"
+    v1_estimate_pct: 65.0
+    v2_measured_pct: 60.3           # 【実測】491件ベース
+    discrepancy_analysis: |
+      v1（65.0%）からv2（60.3%）への低下は約4.7pt。
+      20件サンプルの偏りが解消された結果と解釈。
+      60%超のイン選択頻度は全国平均55%を5pt以上上回り、
+      バイアスの存在は673件でも統計的に支持される。
+    quantitative: "【実測】491件中296件(60.3%) vs 全国平均イン勝率55% → 差分+5pt"
+    year_trend: |
+      2023: 61.7% → 2024: 54.6% → 2025-2026: 67.1%
+      2024年の低下が注目されるが、2025-2026で回復。長期的には60%±5%で安定。
+    cre_mechanism: |
+      確証バイアス: 「インは有利」という既存知識が弱い根拠でも1号艇選択を正当化。
+      代表性バイアス: 「イン勝率高い選手 = 今回も逃げる」という過度な代表性思考。
+
+  - name: "自信度固定バイアス（Confidence Rating Inflation Bias）"
+    severity: "高（差別化機能の喪失）"
+    v2_update: |
+      ★★★★★固定は v1 からの変化なし。673件でも「全件最高評価」を維持している
+      と推測（テキスト全件解析は未実施のため「推測」）。
+    note: |
+      v1の知見を維持: ★★★★★は逆指標にも正指標にもならない。
+      Mr.Tの「自信」（的中率10.9%→逆指標として有用）とは本質的に異なる。
+
+  - name: "4号艇カド偏重バイアス（4th-Course Kado Fixation Bias）の修正）"
+    severity: "中（v1より重要度低下）"
+    v1_estimate: "非1号艇軸の71%が4号艇"
+    v2_measured: "非1号艇軸の28.7%が4号艇（3号艇31.3%が実際には最多）"
+    revision_note: |
+      ⚠️ v1の「4号艇カド偏重」は過剰評価だった。
+      673件では3号艇（31.3%）が非1号艇軸の最多コース。
+      「カドから一撃」という言語的強さから認知的に誇張されていた可能性が高い。
+      4号艇カドへの偏重は実在するが、3号艇への着目も同程度ある。
+
+  - name: "ホットハンド追随バイアス（Hot-Hand Streak Bias）"
+    severity: "中（673件でも継続確認と推測）"
+    v2_update: |
+      「近況リズム」「リズム上昇中」「乗れていない」等の
+      近況評価言語は継続使用と推測。テキスト全件解析は未実施。
+      v1の知見（競艇はモーター状態が節ごとに変わるため、
+      近況の「ノリ」は一定の予測力がある可能性）を維持。
+
+  - name: "逆指標の再検証"
+    v2_conclusion: |
+      ⚠️ 673件でも逆指標の特定は困難。
+      理由: 的中結果（boatrace.jp照合）がないため、
+      特定の表現・コース選択が「逆指標」として機能するかを検証不可。
+      Mr.Tの「自信」のような明確な逆指標は競艇一撃には現時点で特定できない。
+    potential_inverse_indicators:
+      - name: "鳴門での1号艇軸（推測）"
+        description: "鳴門の1号艇率34.8%は最低。鳴門での1号艇軸は他場より信頼性低い可能性"
+        confidence: "低（的中率不明）"
+      - name: "蒲郡での非1号艇軸（推測）"
+        description: "蒲郡の1号艇率77.3%（0%の4号艇軸は皆無）。蒲郡で非1号艇を選ぶ場合は稀な条件"
+        confidence: "低（的中率不明）"
+
+# ─────────────────────────────────────
+# 6. 正指標の特定（673件ベース・推測）
+# ─────────────────────────────────────
+positive_indicators:
+  # ⚠️ 全て推測。的中率算出不可のため「正指標」は統計的に確定できない。
+  # 以下は「的中率が高い可能性があるパターン」としての仮説にすぎない。
+
+  potential_positive_indicator_A:
+    name: "蒲郡 × 1号艇軸"
+    description: |
+      蒲郡での1号艇軸選択率は77.3%（最高レベル）。
+      蒲郡は実際にイン勝率が高い競艇場（業界的事実）のため、
+      競艇一撃が蒲郡で1号艇軸を選ぶ際は判断が正確である可能性がある。
+    confidence: "低（的中率不明。仮説のみ）"
+
+  potential_positive_indicator_B:
+    name: "1点勝負宣言"
+    description: |
+      「勝負の1点賭け！」等の宣言文がある予想は、
+      ★★★★★固定の中で唯一の「差別化シグナル」。
+      673件での出現頻度不明（テキスト全件解析未実施）。
+    confidence: "低（v1で1件確認済みのみ）"
+
+  potential_positive_indicator_C:
+    name: "F保持除外 × 点数絞り"
+    description: |
+      F（フライング）保持選手の除外はルールベースの合理的判断。
+      除外が点数絞り込み（1-3点）に結びついている予想は
+      競艇一撃の「高確信パターン」と見なせる可能性。
+    confidence: "中（ルールロジックとして合理的。的中率は不明）"
+
+  non_viable_indicators:
+    - "★★★★★評価: 全件固定のため正指標にならない（v1と同じ結論）"
+    - "「濃厚」という表現: 全件に近い頻度で使用（推測）のため差別化不可"
+
+# ─────────────────────────────────────
+# 7. 最適フィルターA/B/C（仮説・673件ベース）
+# ─────────────────────────────────────
+optimal_filters:
+  # ⚠️ Mr.T CREフィルター（8つの定量フィルター）と同等のものを導出するには
+  # 的中率データが必須。以下は「推測に基づく仮説フィルター」に過ぎない。
+  # boatrace.jp照合後に検証が必要。
+
+  filter_A_high_confidence:
+    name: "フィルターA: 高確信シグナル（推測）"
+    description: "以下の条件が揃った予想を「高確信予想」として優先採用する"
+    conditions:
+      - "買い目点数が1〜2点（絞り込み）"
+      - "F保持選手の明示的除外がある"
+      - "蒲郡 × 1号艇軸の組み合わせ"
+    expected_precision: "【算出不可】（仮説のみ）"
+    basis: "v1からの知見 + 673件での傾向確認"
+
+  filter_B_standard:
+    name: "フィルターB: 標準フィルター（推測）"
+    description: "以下の条件が揃った予想を「標準採用」とする"
+    conditions:
+      - "1号艇軸 かつ イン勝率が高い場（蒲郡・芦屋・唐津・浜名湖・津）"
+      - "買い目が3〜6点（標準ながし）"
+    expected_precision: "【算出不可】"
+
+  filter_C_high_risk:
+    name: "フィルターC: 高リスク（穴狙い）（推測）"
+    description: "以下の条件が揃った予想を「高リスク・高リターン候補」とする"
+    conditions:
+      - "4号艇軸（カドから一撃）"
+      - "鳴門・戸田・児島・若松（非1号艇率が高い場）"
+    expected_precision: "【算出不可】"
+    risk_note: "4号艇軸は全体11.4%と少なく、高配当狙いだが的中率は低い可能性"
+
+  filter_note: |
+    ⚠️ 上記フィルターA/B/Cは全て「推測」に基づく仮説であり、
+    Mr.T CREフィルター（842件の実績データから導出した統計的フィルター）
+    と同等の精度はない。
+    boatrace.jp照合で的中率データを取得した後に再設計が必要。
+
+# ─────────────────────────────────────
+# 8. CRE予想生成ルール（v2更新版）
+# ─────────────────────────────────────
+cre_generation_rules:
+
+  rule_1:
+    name: "イン逃げ確認ルール（最主要・更新）"
+    trigger: |
+      以下の2条件以上:
+      (1) 1号艇の「イン勝率高い」または「近況リズム良好」
+      (2) 1号艇の「スタート見えてる/抜群」
+    action: "1号艇を1着軸に確定。買い目3〜6点（ながし）が標準"
+    empirical_base: "【実測】全673件の60.3%で1号艇軸を選択"
+    expected_success: "【算出不可】"
+
+  rule_2:
+    name: "カドから一撃ルール（更新）"
+    trigger: |
+      (1) 4号艇に「スタート見えてる/巧者」「地元選手」「全速で行けてる」の評価
+      かつ (2) 1号艇に上記評価がない or 1号艇が弱い
+    action: "4号艇を1着軸。1号艇をヒモに入れてのながし"
+    empirical_base: "【実測】全673件の11.4%で4号艇軸を選択"
+    v2_note: |
+      v1の「非1号艇軸の71%が4号艇」→ v2「非1号艇軸の28.7%が4号艇（3号艇31.3%が最多）」
+      3号艇からの展開も同程度選択されている点を注意。
+
+  rule_3:
+    name: "第3コース（3号艇）も考慮ルール（v2新規）"
+    trigger: |
+      「3号艇選手がスタート上手」「3号艇が捲り力強い」等の評価がある
+    action: "3号艇軸（またはヒモ入れ）を検討"
+    empirical_base: "【実測】非1号艇軸の31.3%（最多）が3号艇軸"
+    note: |
+      v1では軽視されていたが、673件では3号艇軸が4号艇軸より多い。
+      競艇一撃は「1号艇 or カドから一撃」という二択ではなく、
+      3号艇からの捲りも実際には多く選択している。
+
+  rule_4:
+    name: "F保持除外ルール（確実性高・v1から継続）"
+    trigger: "出走選手にF保持者（フライング回数1以上）がいる"
+    action: "その選手を買い目から除外"
+    basis: "競艇ルール: F保持はスタートを慎重にし成績低下 → 合理的除外"
+    confidence: "高（ルールベースの合理的判断）"
+
+  rule_5:
+    name: "★★★★★無視ルール（v1から継続）"
+    trigger: "常に★★★★★"
+    action: "完全無視（情報価値ゼロ）"
+
+  rule_6:
+    name: "場×コース組み合わせルール（v2新規）"
+    trigger: "競艇場が判明している場合"
+    action: |
+      蒲郡 → 1号艇軸優先（77.3%の実績）
+      鳴門 → 1号艇軸の信頼性を下げる（34.8%の実績）
+      戸田・児島 → 4号艇カドを考慮（30%超の実績）
+    empirical_base: "【実測】場別傾向データ（Section 3参照）"
+    confidence: "中（サンプル数が10-36件のため統計的信頼性は中程度）"
+
+  rule_7:
+    name: "モーター唯一根拠ルール（v1から継続）"
+    trigger: "「シンプルにモーターで選出」という表現"
+    action: "モーター評価が主要判断軸のレース。舟足上位選手を軸として採用"
+    note: "⚠️ 673件での出現頻度不明。テキスト全件解析で定量化が必要"
+
+# ─────────────────────────────────────
+# 9. Mr.Tとの比較（v2更新）
+# ─────────────────────────────────────
+comparison_with_mr_t:
+
+  key_difference_data_quality: |
+    Mr.T CREは842件 × 的中率・回収率データから定量フィルターを導出済み。
+    競艇一撃CRE v2は673件 × 買い目データのみ（的中率データなし）。
+    → 競艇一撃CREは「傾向把握」にとどまり、
+    Mr.TのようなROIベースの定量フィルターには現時点で到達できない。
+
+  similarities_v2:
+    - "全予想に最高評価を付ける「自信表現の固定化」"
+    - "近況・「ノリ」を重視するホットハンドバイアス"
+    - "除外論理で点数を絞る手法"
+    - "本命コース + 穴コースの二極構造（1号艇 vs 非1号艇）"
+
+  ichigeki_unique_patterns_v2:
+    - name: "STデータの数値引用"
+      frequency: "【推測】全件の10〜20%（テキスト解析未実施）"
+    - name: "F保持除外（ルールベース）"
+      frequency: "【推測】全件の20-30%（テキスト解析未実施）"
+    - name: "場×季節の複合知識"
+      examples:
+        - "「冬場に入るとセンター勢の2着が多くなる住之江」"
+    - name: "準優前戦の戦略読み"
+      description: "節の状況（何日目か）を考慮した行動予測"
+
+# ─────────────────────────────────────
+# 10. データ品質・収集リスク評価（v2）
+# ─────────────────────────────────────
+data_quality:
+
+  sample_size_v2: |
+    673件（v1の33.65倍）。Mr.T 842件の80%水準に達した。
+    ただし「買い目データ」のみ。的中率・回収率は依然として【算出不可】。
+
+  critical_limitation: |
+    ⚠️ 本プロファイルv2の最大の限界:
+    boatrace.jp公式結果との照合が未実施のため、
+    「的中率」「回収率」という最も重要な指標を一切計算できない。
+    全ての「正指標」「逆指標」「最適フィルター」は仮説に過ぎない。
+    Mr.T CREフィルターのような実用的な定量フィルターの導出には
+    boatrace.jp照合データが必須である。
+
+  data_schema_issues:
+    year_2023:
+      first_boat_anchor_field: "フィールド値が不正確（Falseが多数）→ buy_ticketsから再導出"
+      buy_tickets_field: "3連単ながし形式（「1-2-3」等）→ 正常"
+      anchor_derivation: "buy_ticketsから先頭艇番を抽出（95.3%で成功）"
+    year_2024:
+      anchor_course_field: "0またはNone → 使用不可"
+      buy_tickets_field: "3桁数字連結形式（「123」等）→ 先頭1桁を艇番として抽出"
+      noise_records: "57件に「解析失敗」「競艇展開法で...」等のノイズデータ"
+      anchor_derivation: "buy_ticketsから先頭1桁を艇番として抽出（70.9%で成功）"
+    year_2025_2026:
+      prediction_field: "自由テキスト形式（dictではない）"
+      buy_tickets_field: "45.2%のみ取得成功（多くがbuy_tickets=[]）"
+      anchor_derivation: "85件でのみ可能（45.2%）"
+
+  collection_compliance:
+    robots_txt_status: "記事ページへのアクセス禁止なし ✓"
+    rate_limiting: "リクエスト間隔3秒以上遵守 ✓"
+    usage_type: "非商用・研究目的での分析"
+    copyright_note: |
+      予想テキストの著作権は競艇一撃ブログ運営者に帰属。
+      本分析は引用の範囲内での研究目的利用。
+
+# ─────────────────────────────────────
+# 11. 今後の推奨事項（v2）
+# ─────────────────────────────────────
+recommendations_for_expansion:
+
+  priority_1_result_data:
+    urgency: "最重要"
+    description: |
+      boatrace.jp公式結果との照合が全優先事項の中で最重要。
+      これなしには的中率・回収率の算出が不可能であり、
+      Mr.Tレベルの定量CREフィルターを設計できない。
+    method: |
+      (1) 673件のbuy_ticketsと照合（日付・場名・R番号が条件）
+      (2) 的中した場合のpayoutを取得
+      (3) 的中率・回収率を場別・コース別・年別で集計
+
+  priority_2_text_full_analysis:
+    urgency: "重要"
+    description: |
+      現状: buy_ticketsから軸艇番のみを分析。
+      予想テキスト（prediction/article_text）の全件解析が未実施。
+      テキスト解析で得られる情報:
+      (1) STデータ引用頻度の精密値
+      (2) 「自信」「見えてる」等のキーワード出現頻度
+      (3) 「1点勝負」宣言の出現頻度
+      (4) F保持除外の出現頻度
+
+  priority_3_2025_2026_scrape_fix:
+    urgency: "重要"
+    description: |
+      2025-2026のbuy_tickets取得率が45.2%と低い問題を修正。
+      スクレイピングコードを改善して残り54.8%（103件）のbuy_ticketsを取得。
+      これにより全体の統計精度が向上する。
+
+  priority_4_venue_grade_cross_analysis:
+    urgency: "中"
+    description: |
+      競艇レースグレード（一般/G3/G2/G1/SG）と場の組み合わせ分析。
+      「G1以上の津でのイン一択」等の複合フィルター設計が可能になる。
+      ただしboatrace.jp照合が前提。

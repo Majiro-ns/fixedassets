@@ -1,0 +1,9 @@
+🏁【{venue} {race_num}R / {grade}】S評価
+━━━━━━━━━━━
+🎯 軸: {axis}
+💰 買い目: {buy_tickets}
+📊 {reasoning_short}
+━━━━━━━━━━━
+📈 今月 回収率{monthly_recovery}% 的中{hit_count}/{total_count}件
+
+#競輪予想 #{venue}競輪 #S評価

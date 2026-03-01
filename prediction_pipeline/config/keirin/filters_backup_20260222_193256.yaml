@@ -1,0 +1,24 @@
+# 競輪フィルター設定（Mr.T認知プロファイル準拠）
+# S1準決勝・決勝のみ対象とする
+
+min_s1_count: 3
+allowed_stages:
+  - 準決勝
+  - 決勝
+min_grade: S1
+
+# Mr.T特定条件フィルター（任意）
+preferred_venues:
+  - 熊本     # 回収率169%
+  - 別府     # 回収率169%
+  - 防府     # 回収率155%
+  - 立川     # 高S1密度
+  - 川崎     # 安定開催
+
+avoid_race_numbers:
+  - 4
+  - 6        # Mr.T不得意レース番号
+
+prefer_race_types:
+  - 特選     # 回収率130%
+  - 二次予選  # 回収率144%

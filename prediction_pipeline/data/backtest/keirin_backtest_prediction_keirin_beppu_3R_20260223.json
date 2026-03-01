@@ -1,0 +1,82 @@
+{
+  "race_id": "keirin_beppu_3R_20260223",
+  "filter_type": "C",
+  "filter_type_label": "堅実型",
+  "predictor": {
+    "name": "Mr.T（競輪眼）",
+    "profile_id": "mr_t_634",
+    "cre_strategy": "filter_C: S1×二次予選×得意会場×333m逃げ有利×堅実系キーワード（点数絞り）"
+  },
+  "race_summary": {
+    "venue": "別府",
+    "race_num": 3,
+    "grade": "S1",
+    "stage": "二次予選",
+    "bank_length": 333,
+    "bank_tendency": "小バンク。まくりが決まりにくく逃げ有利",
+    "expected_payout": 22000
+  },
+  "prediction": {
+    "comment": "別府3R S1二次予選！333m小バンクは逃げ天国。伊藤選手（1番）の直近5走で1着3回の安定感に賭ける。点数絞って盤石の3点勝負！獲りやすさ抜群の一戦！",
+    "axis_player": {
+      "car_no": 1,
+      "name": "伊藤一彦",
+      "grade": "S1",
+      "leg_type": "逃げ",
+      "competitive_score": 101.23,
+      "line": "1-2",
+      "recent_results": "1/1/1/2/1"
+    },
+    "partner_players": [
+      {
+        "car_no": 2,
+        "name": "渡辺二朗",
+        "grade": "S1",
+        "leg_type": "差し",
+        "competitive_score": 97.45,
+        "role": "軸ライン番手（ライン1-2）"
+      },
+      {
+        "car_no": 3,
+        "name": "松本三男",
+        "grade": "S1",
+        "leg_type": "捲り",
+        "competitive_score": 95.67,
+        "role": "対抗ライン先頭（ライン3-5-7）"
+      },
+      {
+        "car_no": 4,
+        "name": "木村四朗",
+        "grade": "S1",
+        "leg_type": "追い込み",
+        "competitive_score": 93.89,
+        "role": "差し線（ライン4-6）"
+      }
+    ]
+  },
+  "axis": 1,
+  "partners": [2, 3, 4],
+  "reasoning": "伊藤一彦(1番)は競走得点101.23で全出走中最高。直近5走1/1/1/2/1と圧倒的安定感。333m小バンクは捲りが決まりにくく逃げ有利のため、伊藤の逃げ切りが最有力シナリオ。渡辺(2番/97.45)はライン番手として最も3着に絡みやすい。松本(3番/95.67)は対抗ライン捲りだが333mでは捲りは不利、それでも競走得点3位で無視できない。木村(4番/93.89、recent=3/1/2/4/1)は追い込みで展開次第の3着候補。別府は得意会場（n=24, 的中率45.8%, 回収率169.3%）かつ3Rは好成績（的中率34.5%, 回収率166.5%）。C堅実型で3点絞り込み。逆指標キーワードは一切不使用。",
+  "bet_type": "3連複ながし",
+  "bet_lines": [
+    [1, 2, 3],
+    [1, 2, 4],
+    [1, 3, 4]
+  ],
+  "num_bets": 3,
+  "unit_bet": 1200,
+  "estimated_investment": 3600,
+  "display": "3連複ながし 1-234（3点）",
+  "cre_signals": {
+    "high_confidence_used": ["点数絞り", "盤石", "獲りやすさ抜群"],
+    "low_confidence_avoided": ["自信", "見えた", "鉄板", "間違いない"],
+    "bank_factor": "333m逃げ有利（捲り系不利）",
+    "profile_basis": {
+      "filter_C_hit_rate": 0.583,
+      "filter_C_recovery_rate": 1.791,
+      "venue_別府_hit_rate": 0.458,
+      "venue_別府_recovery": 1.693,
+      "race_3R_recovery": 1.665
+    }
+  }
+}

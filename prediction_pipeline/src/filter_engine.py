@@ -38,6 +38,7 @@ YAML で定義されたフィルター条件をレースデータに適用する
 """
 
 import os
+import re
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -70,7 +71,8 @@ DEFAULT_FILTERS: Dict[str, Any] = {
     # F7: 除外レース番号
     "exclude_race_number": [4, 6],
     # F8: 期待配当ゾーン（この範囲内を「通過」とみなす）
-    "expected_payout_min": 20000,
+    # cmd_146k_sub1: 20,000→3,000 (score_spreadとの矛盾解消)
+    "expected_payout_min": 3000,
     "expected_payout_max": 50000,
     # score_spread フィルター（#T002対策案2 cmd_132k_sub2 2026-03-01）
     # 競走得点 max-min < 閾値なら拮抗レース → SKIP。0=無効
@@ -453,13 +455,18 @@ class FilterEngine:
     def _check_race_type(self, race: Dict[str, Any]) -> Tuple[bool, str]:
         """
         F2: レース種別フィルター。
-        設定: filters.keirin.race_type (例: ["特選", "二次予選"])
-        決勝67%・選抜49%は除外。特選・二次予選のみ通過。
+        設定: filters.keirin.race_type (例: ["一予選", "特選", "予選" 等)
+        決勝0%・準決勝51%・選抜49%・二予選55%は除外。
+
+        scraper出力は "Ｓ級一予選" / "Ａ級予選" 等、全角グレードプレフィックス付き。
+        filters.yaml は "一予選" / "予選" 等プレフィックスなし。
+        正規化（先頭の [Ａ-Ｚ]級 を除去）して完全一致で判定する（cmd_141k_sub1）。
         """
         allowed = self.filters.get("race_type", DEFAULT_FILTERS["race_type"])
         stage = str(race.get("stage", ""))
-        # 完全一致で判定（部分一致だと「予選」⊆「二次予選」等のfalse positiveが発生）
-        passed = stage in allowed
+        # 全角グレードプレフィックス（Ｓ級、Ａ級等）を除去してから完全一致で判定
+        normalized_stage = re.sub(r'^[Ａ-Ｚ]級', '', stage)
+        passed = normalized_stage in allowed
         return passed, f"F2[種別]: {stage!r} は除外種別（許可: {allowed}）"
 
     def _check_score_spread(self, race: Dict[str, Any]) -> Tuple[bool, str]:
@@ -570,7 +577,7 @@ class FilterEngine:
         payout_max = self.filters.get("expected_payout_max", DEFAULT_FILTERS["expected_payout_max"])
 
         # 5万〜10万ゾーンは除外（設定ではmax=50000, excludeゾーン=50000-100000）
-        # 現設定: min=20000, max=50000 → この範囲外を除外
+        # 現設定: min=3,000, max=50000 → この範囲外を除外
         passed = payout_min <= int(expected) <= payout_max
         return passed, (
             f"F8[配当ゾーン]: 期待配当 {expected:,}円 が適正ゾーン"

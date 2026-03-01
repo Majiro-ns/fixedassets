@@ -1,0 +1,72 @@
+# 競艇専用フィルター設定（KF1〜KF9）
+# FilterEngine(config_path, sport="kyotei") で読み込む。
+# 全設定値はこのファイルから読む。ハードコード禁止。
+# cmd_025 / ashigaru2 実装 / 2026-02-23
+
+# ─── KF1: 級別フィルター ──────────────────────────────────────────
+# A1選手が最低人数以上出走しているレースのみ通過。
+# FilterEngine._kf1_check_class が参照する。
+allowed_classes:
+  - A1
+  - A2
+min_a1_count: 3   # A1選手最低3名
+
+# ─── KF2: グレードフィルター ──────────────────────────────────────
+# SG/G1/G2/G3のみ対象。一般戦は原則除外。
+# FilterEngine._kf2_check_grade が参照する。
+allowed_grades:
+  - SG
+  - G1
+  - G2
+  - G3
+allow_general_with_conditions: true  # 一般戦を全条件クリア時に許可する将来拡張用フラグ
+
+# ─── KF3: モーター勝率フィルター ──────────────────────────────────
+# 全出走艇の平均モーター勝率が閾値以上のレースのみ通過。
+# FilterEngine._kf3_check_motor_win_rate が参照する。
+min_motor_win_rate: 0.40   # 平均モーター勝率40%以上
+
+# ─── KF4: コース別イン逃げ率フィルター ───────────────────────────
+# 1号艇の1コース勝率が閾値以上のレースのみ通過。
+# FilterEngine._kf4_check_course1_win_rate が参照する。
+min_course1_win_rate: 0.45  # 1号艇1コース勝率45%以上
+
+# ─── KF5: F数（フライング）フィルター ────────────────────────────
+# exclude_race_with_f=true の場合、F持ち選手がいるレースを除外。
+# FilterEngine._kf5_check_f_count が参照する。
+max_f_count_for_axis: 0    # F数合計0のみ通過
+exclude_race_with_f: false  # レース自体は除外しない（軸判断は predictor 側）
+
+# ─── KF6: 水面特性フィルター ──────────────────────────────────────
+# 荒れやすい競艇場・強風時は除外。
+# FilterEngine._kf6_check_venue が参照する。
+exclude_venues:
+  - 江戸川    # 水面が荒れやすい（川水面・潮汐の影響大）
+max_wind_speed_ms: 7.0  # 風速7m/s以上は見送り
+
+# ─── KF7: 曜日フィルター ──────────────────────────────────────────
+# 競輪と同一ロジック・同一キー名（_check_day_of_week を共用）。
+# FilterEngine._check_day_of_week が参照する。
+exclude_day_of_week:
+  - 月
+  - 日
+
+# ─── KF8: 期待配当ゾーンフィルター ───────────────────────────────
+# 競輪と同一ロジック・同一キー名（_check_expected_payout を共用）。
+# FilterEngine._check_expected_payout が参照する。
+# 競艇は競輪より低配当寄りのため閾値を調整。
+expected_payout_min: 15000   # 1万5千円以上
+expected_payout_max: 60000   # 6万円以下（超高配当ゾーンは荒れすぎ）
+
+# ─── KF9 分類基準（FilterEngine.classify が参照）───────────────────
+# KF9 は classify() メソッドの出力として実現する。
+# type: C（堅実型）/ A（標準型）/ B（穴狙い型）
+# 上記 expected_payout_min/max と allowed_grades が classify() の判定に使われる。
+
+# ─── 逆指標キーワード（コメント付きの場合のみ適用）────────────────
+# FilterEngine._check_keywords が参照する（競輪と共用）。
+exclude_keywords:
+  - 自信
+  - 見えた
+  - 鉄板
+  - 間違いない

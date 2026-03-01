@@ -1,0 +1,68 @@
+{
+  "timestamp": "2026-02-23T06:40:28.058404",
+  "date": "20260223",
+  "sport": "kyotei",
+  "race_info": {
+    "venue_name": "桐生",
+    "race_no": "3",
+    "grade": "G3",
+    "stage": "一般",
+    "start_time": "20260225"
+  },
+  "predictor": {
+    "name": "カタル【競艇予想屋】",
+    "profile_id": "kataru_note_kataru4649",
+    "model": "unknown"
+  },
+  "prediction": {
+    "text": "",
+    "entries": [
+      {
+        "boat_number": 1,
+        "racer_name": "サンプル選手M",
+        "racer_class": "A2",
+        "motor_win_rate": 0.45,
+        "avg_start_timing": 0.16
+      },
+      {
+        "boat_number": 2,
+        "racer_name": "サンプル選手N",
+        "racer_class": "B1",
+        "motor_win_rate": 0.38,
+        "avg_start_timing": 0.19
+      },
+      {
+        "boat_number": 3,
+        "racer_name": "サンプル選手O",
+        "racer_class": "B1",
+        "motor_win_rate": 0.36,
+        "avg_start_timing": 0.2
+      },
+      {
+        "boat_number": 4,
+        "racer_name": "サンプル選手P",
+        "racer_class": "B1",
+        "motor_win_rate": 0.32,
+        "avg_start_timing": 0.22
+      },
+      {
+        "boat_number": 5,
+        "racer_name": "サンプル選手Q",
+        "racer_class": "B2",
+        "motor_win_rate": 0.28,
+        "avg_start_timing": 0.24
+      },
+      {
+        "boat_number": 6,
+        "racer_name": "サンプル選手R",
+        "racer_class": "B2",
+        "motor_win_rate": 0.25,
+        "avg_start_timing": 0.26
+      }
+    ]
+  },
+  "bet": {
+    "bet_type": "skip",
+    "reason": "フィルター除外: KF1[級別]: A1選手 0名（最低 3名必要）; KF3[モーター勝率]: 平均 34.0%（最低 40.0%）"
+  }
+}

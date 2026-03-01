@@ -1,0 +1,21 @@
+# tests/fixtures/test_laws.yaml
+# test_m6_law_url_collector.py 用テストフィクスチャ
+#
+# source_confirmed: false → 処理対象（2件）
+# source_confirmed: true  → スキップ対象（1件）
+
+entries:
+  - id: TEST-001
+    law_name: "テスト法令A"
+    source: "https://example.com/a"
+    source_confirmed: false
+
+  - id: TEST-002
+    law_name: "テスト法令B"
+    source: "https://example.com/b"
+    source_confirmed: true
+
+  - id: TEST-003
+    law_name: "テスト法令C（一致なし）"
+    source: "https://example.com/c"
+    source_confirmed: false

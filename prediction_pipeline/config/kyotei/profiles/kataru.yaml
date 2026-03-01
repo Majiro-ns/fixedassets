@@ -1,0 +1,583 @@
+# カタル【競艇予想屋】認知プロファイル（CRE分析）
+# ============================================================
+# 生成日: 2026-02-22
+# 担当: ashigaru2
+# タスク: subtask_018a_kataru_cre (cmd_018)
+# データソース: note.com/kataru4649 (公開情報 + 第三者検証レポート)
+# 分析手法: 公開情報CRE + 第三者検証データ統合分析
+#
+# ⚠️ 重要な注意事項 ⚠️
+# カタルのnote記事は全て有料（¥444-555）のため、生の予想データへのアクセス不可。
+# Mr.T（842件JSON）と異なり、定量分析は以下に制限される:
+#   - 第三者検証レポート（複数サイト・合計約100件レビュー）
+#   - 公開プロフィール・記事タイトル（note）
+#   - 第三者引用の予想コメント例（限定）
+# 「推測」と「事実」を明示的に区別している。
+# note ToS（第17版）: スクレイピング・自動収集・AI学習利用は明示禁止。
+# ============================================================
+
+profile_id: kataru_note_kataru4649
+predictor_name: "カタル【競艇予想屋】"
+platform_id: "kataru4649"
+platform_url: "https://note.com/kataru4649"
+sport: "競艇（ボートレース）"
+secondary_sport: "競馬（副業的に一部）"
+analysis_date: "2026-02-22"
+data_quality: "MEDIUM-LOW（有料記事アクセス不可のため推定ベース）"
+
+# ─────────────────────────────────────
+# 1. 基本統計（第三者検証データ統合）
+# ─────────────────────────────────────
+basic_stats:
+  total_articles_on_note: 15064       # 事実（プロフィールページ直接確認）
+  note_followers: 21462               # 事実（プロフィールページ直接確認）
+  x_followers_approx: 17000           # 推測（複数レビュー記載から中央値）
+  article_price_range: "¥444～¥555"   # 事実（プロフィールページ記事価格）
+  free_articles: 0                    # 事実（全記事有料確認）
+  posting_frequency: "毎日複数記事"   # 推測（15064件÷稼働期間から）
+
+  # 30戦検証（2025/04/13〜05/12）← 最も信頼性が高い検証データ
+  verified_30battles:
+    source: "https://fukuoka-kyotei.com/column/kyoutei-kataru/"
+    period: "2025-04-13 〜 2025-05-12"
+    n: 30
+    wins: 12
+    losses: 18
+    hit_rate: 0.400
+    recovery_rate: 1.040
+    total_investment: 90000
+    total_payout: 94000
+    net_profit: 4000
+    data_quality: "HIGH（外部検証者による独立観測）"
+
+  # 複数検証統合推定（加重平均・信頼区間）
+  aggregate_estimate:
+    hit_rate: 0.48                    # 推測（30戦40%〜7戦85%の加重推定）
+    recovery_rate: 1.06               # 推測（複数検証の加重平均）
+    confidence: "LOW（サンプル数不足・短期バイアス）"
+    note: |
+      短期検証（7戦）の85%は統計的に意味が薄い。
+      最長30戦（40%、ROI 104%）が最信頼データ。
+      note上の15,064件全体の成績は不明。
+
+  # 主戦術別推定
+  main_pick_only_recovery_rate: 0.785  # 事実（レビューサイト記載）
+  combined_picks_recovery_rate: 1.040  # 事実（30戦検証）
+
+# ─────────────────────────────────────
+# 2. 予想スタイル（事実ベース）
+# ─────────────────────────────────────
+prediction_style:
+  core_philosophy: "厳選予想・本命2点以内"  # 事実（自己申告）
+  self_description: |
+    "競艇予想屋のカタルです。予想は厳選で本命は2点より多くはしたくないですね。
+    穴狙いの時は広めに高配当を取り切りたいと思います。"
+  # 事実: 自己紹介文から直接引用（note.com/kataru4649）
+
+  buy_pattern:
+    standard_mode:  # 事実（複数事例観察）
+      description: "1号艇軸の2点本命"
+      examples:
+        - "1-23-23（本命2点）"
+        - "1-23-4（抑え）"
+        - "1-4-23（差しパターン）"
+      typical_points: 2  # 事実（「2点勝負」明示）
+      typical_odds_target: "10〜70倍"  # 事実（レビュー記載）
+
+    hole_mode:  # 事実（自己申告）
+      description: "穴狙い時は広めに展開"
+      trigger: "高配当が見込めるレース"
+      typical_points: 4  # 推測（事例: 1-23-234の4点セット）
+
+  bet_size:  # 推測（複数レビュー記載）
+    per_point: "数万円〜数十万円（自己ベット額）"
+    note_subscriber_per_race: "3,000円程度"  # 推測（¥555/記事×点数から推定）
+
+  article_structure:  # 事実（記事タイトルパターン分析）
+    title_pattern: "🔥🌐{時間帯}以降🔥🌐狙える🔥🌐資金配分あり🔥{本命N}点勝負🔥"
+    content_includes:
+      - "対象レース（場名・レース番号）"
+      - "展開予想・根拠テキスト"  # 事実（レビュー「展開まで記載」と言及）
+      - "買い目（本命・抑え分離）"
+      - "資金配分比率"
+    grade_coverage: "一般〜G1/SG"  # 事実（G1レースの事例確認）
+
+# ─────────────────────────────────────
+# 3. 重視指標（CRE推定）
+# ─────────────────────────────────────
+weighted_factors:
+  # データに基づく定量分析不可のため、コメント例・スタイル記述から推定
+  # 信頼度スケール: HIGH / MEDIUM / LOW
+
+  player_ability:
+    weight: "HIGH"                  # 事実（コメント例から直接確認）
+    evidence: |
+      コメント例: "①峰選手の腕が抜群で敵なしですね。
+      ２，３号艇もSGクラスの腕で③篠崎選手が安定していますね"
+      → 選手個人の評価が予想根拠の中心
+    keywords_observed: ["腕が抜群", "SGクラスの腕", "安定している", "敵なし"]
+
+  boat_number_course:
+    weight: "HIGH"                  # 推測（1号艇軸支配から）
+    evidence: |
+      標準買い目: 1-23-23、1-23-4 → 1号艇軸が支配的
+      唐津G1例: 本命1-24-24、抑え1-24-36 → 1号艇軸
+      → インコース（1号艇）への強い傾倒
+    bias_flag: "インコース信頼バイアス（後述）"
+
+  race_development_yoso:
+    weight: "HIGH"                  # 事実（複数レビューで「展開まで記載」と言及）
+    evidence: "レビューサイト: 「詳しく展開を記載しているので、説得力が増します」"
+
+  motor_performance:
+    weight: "MEDIUM"                # 推測（競艇必須情報だが直接言及確認なし）
+    evidence: "直接言及なし。ただし競艇予想の標準情報として使用と推測"
+
+  water_surface_conditions:
+    weight: "LOW"                   # 推測（言及確認なし）
+    evidence: "干満・風向き・波高への言及を第三者資料で確認できず"
+
+  player_relationships:
+    weight: "LOW"                   # 推測（師弟・同期への言及確認なし）
+    evidence: "師弟関係・同期関係への言及を確認できず"
+
+  recent_results:
+    weight: "MEDIUM"                # 推測（直近選手成績は競艇標準指標）
+    evidence: "G1選手（峰・篠崎等）のランク言及あり。直近出走成績の参照と推測"
+
+# ─────────────────────────────────────
+# 4. 認知バイアス（Mr.Tとの対比）
+# ─────────────────────────────────────
+cognitive_biases:
+
+  - name: "インコース（1号艇）信頼バイアス"
+    severity: "STRONG"
+    confidence: "MEDIUM（推測）"
+    evidence: |
+      全観察事例で1号艇軸の買い目を使用。
+      若松12R: 1-X-X系、唐津G1: 1-24-24（本命）、1-24-36（抑え）
+    quantitative: |
+      唐津G1事例: 1-2-4的中、払戻560円（低配当）
+      → インコース軸が的中しても低配当になりやすい
+    mr_t_comparison: |
+      Mr.T（競輪）: 特定選手への依存バイアス（脇本不発シナリオ依存）
+      カタル（競艇）: 1号艇コース固定バイアス
+      → 競技特性の違いを反映（競艇のイン勝率は全国平均55%超）
+    counter_evidence: "競艇はイン有利なため部分的に合理的。過剰傾倒が問題の可能性"
+
+  - name: "厳選過信バイアス（主観的確信と客観成績の乖離）"
+    severity: "MEDIUM"
+    confidence: "MEDIUM（推測）"
+    evidence: |
+      自己申告: 「本当に狙えるときだけ公開」（厳選の強調）
+      実績: 30戦最大検証で的中率40%（ROI 104%）
+      → 「厳選」の自己評価と客観成績にギャップ
+    quantitative: |
+      主戦術のみROI: 78.5%（主戦術単独では赤字）
+      複合（主戦術＋抑え）: ROI 104%（ほぼトントン）
+    mr_t_comparison: |
+      Mr.Tの「自信」バイアス（ROI 27%）より軽微。
+      カタルは厳選を強調しつつも実際の選別精度は平均的。
+
+  - name: "中穴固定志向バイアス（10-70倍レンジへの収束）"
+    severity: "MEDIUM"
+    confidence: "HIGH（事実）"
+    evidence: "複数レビュー: 「10倍〜70倍あたりの予想を狙う」"
+    quantitative: |
+      [事実] 的中報告の配当帯: 10-70倍が大多数
+      [推測] 10倍未満（人気）と100倍超（大穴）は少ない
+    interpretation: |
+      中穴は勝率・配当のバランスが良く合理的。
+      ただし固定化により高配当機会を逸失する可能性。
+    mr_t_comparison: |
+      Mr.T: 「大穴」「高配当」明示で最高ROI
+      カタル: 中穴レンジ固定 → ROIが安定するが上限も限られる
+
+  - name: "大口資金集中バイアス（自己ベットの歪み）"
+    severity: "LOW"
+    confidence: "LOW（推測）"
+    evidence: |
+      複数レビュー: 「1レースに10万〜100万円ベット」
+      批判記事: 「人気決着レースに大金をベットして稼いでいる可能性」
+    interpretation: |
+      自己の大口ベットと読者推奨記事の内容が乖離する可能性。
+      高人気（低配当）レースへの自己ベット → 記事では中穴推奨 → 構造的乖離リスク。
+    quantitative: "検証不可（自己ベット実績データなし）"
+
+  - name: "夜間・時間帯最適化バイアス"
+    severity: "LOW"
+    confidence: "LOW（推測）"
+    evidence: |
+      記事タイトル: "🔥🌐16時以降🔥🌐狙える🔥"（時間帯明示）
+      競艇予想はナイター・デイレースの区分が重要
+    quantitative: "夜間92%的中率の主張あり（出典: 検証サイト、サンプル不明）"
+    caution: "92%は極短期サンプルの可能性が高く、統計的意味は薄い"
+
+# ─────────────────────────────────────
+# 5. ずらしパターン
+# ─────────────────────────────────────
+shift_patterns:
+  standard_mode:
+    description: "1号艇軸の堅い2点勝負（人気通り）"
+    target_odds: "10〜30倍"
+    confidence: "HIGH（事実）"
+
+  hole_mode:
+    trigger: "高配当・穴が見込めるレース（条件不明確）"    # 推測
+    description: "買い目を4点以上に広げ高配当狙い"
+    target_odds: "30〜70倍以上"
+    confidence: "MEDIUM（自己申告ベース）"
+    zurasshi_logic: |
+      「穴狙いの時は広めに高配当を取り切りたい」（自己申告）
+      → モーター差・展開劣位を認識した時に穴に転換（推測）
+      → 具体的ずらし条件は有料記事内のため不明
+
+  grade_pattern:
+    g1_above: "SG/G1でも予想公開（事実）"
+    note: "重賞レースへの対応あり → 大舞台で穴を狙う志向と推測"
+
+# ─────────────────────────────────────
+# 6. 予想テキスト構文パターン
+# ─────────────────────────────────────
+text_patterns:
+  # データ: コメント例（第三者引用）+ 記事タイトルパターン分析
+
+  causal_reasoning_template:
+    pattern: "[艇番][選手名]の[能力評価]。[他艇]の[評価]。"
+    example: "①峰選手の腕が抜群で敵なしですね。２，３号艇もSGクラスの腕で③篠崎選手が安定していますね"
+    note: "選手→艇番の評価順。能力評価が根拠の中心"
+
+  confidence_keywords:
+    high_confidence:   # 推測（競艇予想師の一般的表現 + 自己申告から）
+      - "狙える"         # 事実（記事タイトルに常出現）
+      - "資金配分あり"   # 事実（記事タイトルに常出現）
+      - "2点勝負"        # 事実（記事タイトルに常出現）
+      - "鉄板"           # 推測
+      - "堅い"           # 推測
+      - "敵なし"         # 事実（コメント例確認）
+
+    medium_confidence:  # 推測
+      - "妙味"
+      - "面白い"
+      - "チャンス"
+      - "期待"
+
+    hole_keywords:      # 推測（自己申告から）
+      - "穴"
+      - "高配当"
+      - "広め"
+
+    negative_keywords:  # 推測（未確認）
+      - "不安"
+      - "微妙"
+      - "信頼できない"
+
+  inverse_indicator_comparison:
+    mr_t: "「自信」「見えた」「鉄板」= 逆指標（ROI 0〜36%）"
+    kataru: |
+      逆指標の特定不可（有料記事アクセスなし）。
+      ただし「厳選」自体の効果は30戦ROI 104%（ほぼトントン）。
+      「主戦術のみ」ROI 78.5%は赤字 → 主戦術＝逆指標の可能性あり。
+    hypothesis: "カタルにおいては「2点本命」自体が逆指標の可能性（抑えがないと赤字）"
+
+# ─────────────────────────────────────
+# 7. 場所・グレード別パターン（限定データ）
+# ─────────────────────────────────────
+situation_patterns:
+  # ⚠️ 定量データ不足。観察事例のみ。
+
+  venues_observed:
+    - 多摩川
+    - 三国
+    - 住之江
+    - 若松
+    - 大村
+    - 児島
+    - 唐津  # G1レース事例確認
+  note: "全国の場を対象。特定の得意場・苦手場は定量確認不可"
+
+  grade_coverage:
+    general: "対象（デフォルト）"
+    g3: "対象"
+    g2: "対象"
+    g1: "対象（事実: 唐津G1事例確認）"
+    sg: "対象（推測）"
+    note: "重賞レースも予想公開 = 上位グレードへの積極的挑戦"
+
+  g1_case_study:
+    race: "唐津11R（G1）"
+    main_pick: "1-24-24"
+    sub_pick: "1-24-36"
+    result: "1-2-4的中"
+    payout: 560  # 円
+    interpretation: |
+      G1でも1号艇軸の堅い予想。的中したが配当560円（超低配当）。
+      → G1=荒れやすいが、インコース軸固定で低配当リスク。
+
+  time_preference:
+    preference: "16時以降・夜間"       # 事実（記事タイトルから）
+    claimed_night_hit_rate: 0.92        # 疑問あり（出典不明・短期サンプル疑惑）
+    actual_30battle_hr: 0.40            # 事実（30戦検証）
+    note: "夜間特化の主張は統計的に未検証"
+
+# ─────────────────────────────────────
+# 8. note利用規約リスク評価
+# ─────────────────────────────────────
+tos_risk_assessment:
+  platform: "note.com"
+  tos_version: "第17版（2024年12月24日制定）"
+  tos_url: "https://terms.help-note.com/hc/ja/articles/44943817565465"
+
+  prohibited_actions:
+    - action: "クローリング・スクレイピング等の自動化データ収集"
+      risk: "HIGH"
+      applicable: true
+    - action: "データマイニング・テキストマイニング等のコンピューター言語解析"
+      risk: "HIGH"
+      applicable: true
+    - action: "生成AI等への学習利用"
+      risk: "HIGH"
+      applicable: true
+    - action: "有料記事の無断転載・引用"
+      risk: "HIGH"
+      applicable: true
+
+  current_approach:
+    method: "WebFetch（公開プロフィールページのみ）+ 第三者レビューサイト参照"
+    tos_compliance: "COMPLIANT"
+    note: |
+      有料記事へのアクセスなし。
+      公開プロフィールページのみFetch（記事タイトル・価格確認）。
+      第三者レビューサイトの引用コメントは孫引き扱い。
+      → 現在の分析手法はnote ToSに違反しない。
+
+  recommended_data_acquisition_route:
+    route_A:
+      method: "note記事購入（手動読み取り）"
+      cost: "¥555/記事 × サンプル50件 = 約27,750円"
+      tos_risk: "NONE（正規購入）"
+      data_quality: "HIGH"
+      feasibility: "MEDIUM（費用と時間が必要）"
+    route_B:
+      method: "カタル公認のデータ共有・API提供"
+      cost: "交渉次第"
+      tos_risk: "NONE"
+      data_quality: "HIGH"
+      feasibility: "LOW（確率低い）"
+    route_C:
+      method: "X（Twitter）の無料投稿テキスト収集"
+      cost: "0円"
+      tos_risk: "LOW"
+      data_quality: "LOW（予想根拠テキストが限定的）"
+      feasibility: "HIGH"
+
+# ─────────────────────────────────────
+# 9. Mr.T vs カタル 比較分析
+# ─────────────────────────────────────
+comparison_with_mr_t:
+  mr_t_profile: "keirin-expansion/mr_t_cognitive_profile.yaml"
+
+  metric_comparison:
+    hit_rate:
+      mr_t: 0.228                  # 実測値（836件）
+      kataru: "0.40〜0.55"         # 推定（30戦〜20日検証）
+      advantage: "カタル（的中率は高い）"
+    recovery_rate:
+      mr_t: 0.944                  # 実測値（836件）
+      kataru: "1.04〜1.12"         # 推定（30戦〜20日検証）
+      advantage: "カタル（回収率は高い）"
+    data_quality:
+      mr_t: "HIGH（842件JSON直接分析）"
+      kataru: "LOW（有料記事アクセス不可）"
+
+  sport_specific_differences:
+    keirin:
+      key_factors: ["選手能力", "脚質", "ライン", "バンク特性"]
+      main_bias_type: "選手依存・脚質過信"
+      mr_t_main_bias: "自信言語バイアス（逆指標）"
+    boat_racing:
+      key_factors: ["コース（号艇）", "モーター", "スタート", "水面"]
+      main_bias_type: "インコース固定・選手能力過重"
+      kataru_main_bias: "インコース（1号艇）信頼バイアス"
+
+  cre_generation_rules_comparison:
+    mr_t_rule: "「自信」「見えた」「鉄板」を含むコメント → 回避シグナル"
+    kataru_rule: |
+      「2点本命のみ」→ 回避シグナル（ROI 78.5%）
+      「主戦術＋抑え複合」→ 採用シグナル（ROI 104%）
+      「穴狙い広め」→ 採用時は配当バンドに注意
+
+# ─────────────────────────────────────
+# 10. CRE生成ルール（予想パイプライン向け）
+# ─────────────────────────────────────
+cre_generation_rules:
+  # ⚠️ 以下のルールは推測成分が多い。有料記事購入後に要更新。
+
+  rule_1:
+    name: "イン軸デフォルト原則"
+    description: "カタルの予想を模倣する際は1号艇軸を基本とする"
+    confidence: "HIGH（観察事例から）"
+    implementation: "3連単 1-X-X、または1-XY-XYZ パターン"
+
+  rule_2:
+    name: "厳選＋抑えセット原則"
+    description: "主戦術（2点）に抑えを加えたセット購入がROI最大化"
+    confidence: "MEDIUM"
+    evidence: "主戦術のみ ROI 78.5% vs 複合 ROI 104%"
+    implementation: "本命2点 ＋ 抑え1-2点の計3-4点セット"
+
+  rule_3:
+    name: "中穴レンジ維持原則"
+    description: "10〜70倍の中穴帯で予想選択"
+    confidence: "HIGH（事実）"
+    implementation: "配当オッズ10〜70倍のレースを優先。1倍台・100倍超は非推奨"
+
+  rule_4:
+    name: "G1以上レース積極参加"
+    description: "重賞でも予想あり。ただしイン有利の堅い予想に収束リスク"
+    confidence: "MEDIUM（G1事例から）"
+    caution: "G1での低配当リスク（唐津G1: 560円的中の事例）"
+
+  rule_5:
+    name: "選手能力評価記述スタイル"
+    description: "「[選手名]の[能力評価]」形式で根拠を提示"
+    confidence: "HIGH（コメント例から）"
+    template: "{艇番}{選手名}の{能力評価}。{他艇番}{選手名}が{評価}。"
+
+  rule_6:
+    name: "夜間・時間帯限定強調スタイル"
+    description: "記事タイトルで時間帯を明示（「16時以降」等）"
+    confidence: "HIGH（記事タイトルパターンから）"
+    implementation: "タイトルで対象時間帯を明示して読者の期待値を調整"
+
+# ─────────────────────────────────────
+# 11. 予想パイプラインへの推奨事項
+# ─────────────────────────────────────
+recommendations_for_pipeline:
+  data_collection_priority:
+    immediate:
+      - "X（@kataru4649）の投稿テキストを手動収集（無料・ToS準拠）"
+      - "第三者検証サイトの引用コメントをアーカイブ（上記ソース参照）"
+    medium_term:
+      - "note記事を数件購入（¥555/件）し、実際のテキストパターンを確認"
+      - "record: 購入記事のコメント・買い目・結果を構造化JSON化"
+
+  bet_strategy:
+    recommended: "主戦術（2点） ＋ 抑え（1-2点）のセット購入"
+    avoid: "主戦術のみの単独購入（ROI 78.5%で赤字）"
+    bet_type: "3連単（カタルの主力）"
+
+  filter_conditions:
+    positive:
+      - "タイトルに「狙える」「2点勝負」「資金配分あり」を含む記事"
+      - "夜間（16時以降）対象のレース"
+      - "中穴（10〜70倍）レンジのレース"
+    negative:
+      - "主戦術のみ（抑えなし）の記事"  # ROI 78.5%
+      - "G1で1号艇圧倒的人気のレース"  # 低配当リスク
+
+  confidence_filter:
+    note: |
+      Mr.Tと異なり、カタルの高確信表現（「厳選」「狙える」）は
+      ROI 104%（複合）vs 78.5%（主戦術のみ）の差を示すが、
+      「高確信=逆指標」の関係は未確認。
+      → データ蓄積後に再評価必要。
+
+  data_schema_for_future_collection:
+    # 将来の有料記事購入時の収集スキーマ
+    schema:
+      forecaster: "カタル"
+      platform: "note"
+      article_url: "https://note.com/kataru4649/n/n[記事ID]"
+      date: "YYYY-MM-DD"
+      time_slot: "HH:MM以降"
+      venue: "場名"
+      race_number: "XR"
+      grade: "一般/G3/G2/G1/SG"
+      prediction_main: "3連単 X-Y-Z"
+      prediction_sub: "3連単 A-B-C"
+      reasoning: "予想根拠テキスト全文"
+      result: "的中/不的中"
+      payout: 0  # 円
+      confidence_keywords: []
+
+# ─────────────────────────────────────
+# 12. データ品質・限界の整理
+# ─────────────────────────────────────
+data_limitations:
+  primary_constraint: "全記事有料（¥444-555）のため生テキストデータへのアクセス不可"
+  secondary_constraint: "note ToS（第17版）がスクレイピング・AI学習利用を明示禁止"
+
+  available_data:
+    - source: "note.comプロフィールページ（公開）"
+      quality: "HIGH"
+      content: "フォロワー数、記事数、価格、自己紹介文、記事タイトル（一部）"
+    - source: "第三者検証レポート（複数サイト）"
+      quality: "MEDIUM"
+      content: "30戦検証成績、短期的中率、買い目パターン、コメント例（限定）"
+    - source: "自己申告（note/X）"
+      quality: "LOW（バイアスあり）"
+      content: "予想スタイル、厳選方針、穴狙い条件"
+
+  missing_data:
+    - "実際の予想テキスト全文（有料）"
+    - "競技場別・グレード別の定量成績"
+    - "的中/不的中の紐付きデータ"
+    - "モーター・水面評価の重み"
+    - "具体的な「ずらし」条件"
+
+  reliability_judgment: |
+    本プロファイルはMr.Tの842件実データ分析と比較して信頼性が低い。
+    定量値を記載した箇所も「推測」タグを付けており、
+    有料記事購入後の再分析を強く推奨する。
+    ただし、入手可能な情報から抽出した認知パターン（イン信頼、中穴志向、
+    厳選2点スタイル）は、複数の独立ソースで一致しており、一定の信頼性がある。
+
+# ─────────────────────────────────────
+# 13. 情報ソース一覧
+# ─────────────────────────────────────
+sources:
+  - url: "https://note.com/kataru4649"
+    type: "primary"
+    accessed: "2026-02-22"
+    content: "プロフィール、フォロワー数、記事数、自己紹介文、記事タイトル"
+
+  - url: "https://fukuoka-kyotei.com/column/kyoutei-kataru/"
+    type: "third_party_verification"
+    accessed: "2026-02-22"
+    content: "30戦検証（2025/4/13-5/12）。的中率40%、ROI 104%。最信頼データ"
+
+  - url: "https://www.cosboa.org/column/kyoteiyosoya-kataru/"
+    type: "third_party_verification"
+    accessed: "2026-02-22"
+    content: "7戦・20日検証。的中率85%（7戦）・75%（20日）。短期バイアスあり"
+
+  - url: "https://emmerdale.org/kataru/"
+    type: "third_party_analysis"
+    accessed: "2026-02-22"
+    content: "買い目パターン、コメント例（峰選手評価）、唐津G1事例"
+
+  - url: "https://www.eurorvvv.org/famous/yosouya-kataru/"
+    type: "third_party_verification"
+    accessed: "2026-02-22"
+    content: "2025/3月検証。55.6%（3週）、48%（48戦）。ROI 102-108%"
+
+  - url: "https://mansyu-club.net/kataru/"
+    type: "third_party_review"
+    accessed: "2026-02-22"
+    content: "10戦7勝3敗、ROI 342%（サンプル少）。コメントスタイル記述"
+
+  - url: "https://apaie.org/column/contents/?content=221226"
+    type: "third_party_critical"
+    accessed: "2026-02-22"
+    content: "批判的評価。唐津G1詳細事例（的中560円）"
+
+  - url: "https://x.com/kataru4649"
+    type: "primary_social"
+    accessed: "2026-02-22"
+    content: "公開ツイート（JavaScript制限でコンテンツ取得不可）"
+
+  - url: "https://terms.help-note.com/hc/ja/articles/44943817565465"
+    type: "tos"
+    accessed: "2026-02-22"
+    content: "note利用規約（スクレイピング禁止等。第17版）"

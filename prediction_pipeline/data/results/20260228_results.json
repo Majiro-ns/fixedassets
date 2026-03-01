@@ -1,0 +1,549 @@
+{
+  "date": "20260228",
+  "fetched_at": "2026-02-28T20:28:07",
+  "races": [
+    {
+      "venue": "大垣",
+      "race_no": 1,
+      "trifecta_result": [
+        7,
+        2,
+        9
+      ],
+      "trifecta_payout": 25530,
+      "trio_result": [
+        2,
+        7,
+        9
+      ],
+      "trio_payout": 3210
+    },
+    {
+      "venue": "大垣",
+      "race_no": 2,
+      "trifecta_result": [
+        1,
+        3,
+        4
+      ],
+      "trifecta_payout": 8710,
+      "trio_result": [
+        1,
+        3,
+        4
+      ],
+      "trio_payout": 1390
+    },
+    {
+      "venue": "大垣",
+      "race_no": 3,
+      "trifecta_result": [
+        2,
+        9,
+        1
+      ],
+      "trifecta_payout": 5060,
+      "trio_result": [
+        1,
+        2,
+        9
+      ],
+      "trio_payout": 2470
+    },
+    {
+      "venue": "大垣",
+      "race_no": 4,
+      "trifecta_result": [
+        9,
+        1,
+        5
+      ],
+      "trifecta_payout": 3630,
+      "trio_result": [
+        1,
+        5,
+        9
+      ],
+      "trio_payout": 1240
+    },
+    {
+      "venue": "大垣",
+      "race_no": 5,
+      "trifecta_result": [
+        5,
+        3,
+        7
+      ],
+      "trifecta_payout": 18230,
+      "trio_result": [
+        3,
+        5,
+        7
+      ],
+      "trio_payout": 3580
+    },
+    {
+      "venue": "大垣",
+      "race_no": 6,
+      "trifecta_result": [
+        1,
+        7,
+        5
+      ],
+      "trifecta_payout": 2870,
+      "trio_result": [
+        1,
+        5,
+        7
+      ],
+      "trio_payout": 640
+    },
+    {
+      "venue": "大垣",
+      "race_no": 7,
+      "trifecta_result": [
+        7,
+        2,
+        1
+      ],
+      "trifecta_payout": 17100,
+      "trio_result": [
+        1,
+        2,
+        7
+      ],
+      "trio_payout": 1700
+    },
+    {
+      "venue": "大垣",
+      "race_no": 8,
+      "trifecta_result": [
+        7,
+        3,
+        1
+      ],
+      "trifecta_payout": 4060,
+      "trio_result": [
+        1,
+        3,
+        7
+      ],
+      "trio_payout": 550
+    },
+    {
+      "venue": "大垣",
+      "race_no": 9,
+      "trifecta_result": [
+        5,
+        1,
+        8
+      ],
+      "trifecta_payout": 1500,
+      "trio_result": [
+        1,
+        5,
+        8
+      ],
+      "trio_payout": 810
+    },
+    {
+      "venue": "大垣",
+      "race_no": 10,
+      "trifecta_result": [
+        1,
+        7,
+        9
+      ],
+      "trifecta_payout": 1310,
+      "trio_result": [
+        1,
+        7,
+        9
+      ],
+      "trio_payout": 730
+    },
+    {
+      "venue": "大垣",
+      "race_no": 11,
+      "trifecta_result": [
+        7,
+        1,
+        5
+      ],
+      "trifecta_payout": 1240,
+      "trio_result": [
+        1,
+        5,
+        7
+      ],
+      "trio_payout": 630
+    },
+    {
+      "venue": "大垣",
+      "race_no": 12,
+      "trifecta_result": [
+        9,
+        2,
+        3
+      ],
+      "trifecta_payout": 20210,
+      "trio_result": [
+        2,
+        3,
+        9
+      ],
+      "trio_payout": 2870,
+      "our_prediction": {
+        "axis": 5,
+        "partners": [
+          1,
+          1
+        ],
+        "bet_type": "3連複ながし",
+        "combinations": [
+          [
+            1,
+            1,
+            5
+          ]
+        ],
+        "investment": 1200
+      },
+      "hit": false,
+      "payout": 0
+    },
+    {
+      "venue": "和歌山",
+      "race_no": 1,
+      "trifecta_result": [
+        6,
+        3,
+        7
+      ],
+      "trifecta_payout": 1340,
+      "trio_result": [
+        3,
+        6,
+        7
+      ],
+      "trio_payout": 460
+    },
+    {
+      "venue": "和歌山",
+      "race_no": 2,
+      "trifecta_result": [
+        7,
+        1,
+        4
+      ],
+      "trifecta_payout": 3240,
+      "trio_result": [
+        1,
+        4,
+        7
+      ],
+      "trio_payout": 1040
+    },
+    {
+      "venue": "和歌山",
+      "race_no": 3,
+      "trifecta_result": [
+        3,
+        4,
+        5
+      ],
+      "trifecta_payout": 1650,
+      "trio_result": [
+        3,
+        4,
+        5
+      ],
+      "trio_payout": 490
+    },
+    {
+      "venue": "和歌山",
+      "race_no": 4,
+      "trifecta_result": [
+        1,
+        5,
+        4
+      ],
+      "trifecta_payout": 3420,
+      "trio_result": [
+        1,
+        4,
+        5
+      ],
+      "trio_payout": 1810
+    },
+    {
+      "venue": "和歌山",
+      "race_no": 5,
+      "trifecta_result": [
+        6,
+        1,
+        7
+      ],
+      "trifecta_payout": 10970,
+      "trio_result": [
+        1,
+        6,
+        7
+      ],
+      "trio_payout": 3120
+    },
+    {
+      "venue": "和歌山",
+      "race_no": 6,
+      "trifecta_result": [
+        2,
+        4,
+        6
+      ],
+      "trifecta_payout": 2030,
+      "trio_result": [
+        2,
+        4,
+        6
+      ],
+      "trio_payout": 190
+    },
+    {
+      "venue": "和歌山",
+      "race_no": 7,
+      "trifecta_result": [
+        5,
+        2,
+        7
+      ],
+      "trifecta_payout": 2010,
+      "trio_result": [
+        2,
+        5,
+        7
+      ],
+      "trio_payout": 670
+    },
+    {
+      "venue": "和歌山",
+      "race_no": 8,
+      "trifecta_result": [
+        7,
+        1,
+        2
+      ],
+      "trifecta_payout": 9460,
+      "trio_result": [
+        1,
+        2,
+        7
+      ],
+      "trio_payout": 1060
+    },
+    {
+      "venue": "和歌山",
+      "race_no": 9,
+      "trifecta_result": [
+        3,
+        5,
+        6
+      ],
+      "trifecta_payout": 1320,
+      "trio_result": [
+        3,
+        5,
+        6
+      ],
+      "trio_payout": 700
+    },
+    {
+      "venue": "和歌山",
+      "race_no": 10,
+      "trifecta_result": [
+        3,
+        2,
+        4
+      ],
+      "trifecta_payout": 8000,
+      "trio_result": [
+        2,
+        3,
+        4
+      ],
+      "trio_payout": 1110
+    },
+    {
+      "venue": "和歌山",
+      "race_no": 11,
+      "trifecta_result": [
+        4,
+        1,
+        6
+      ],
+      "trifecta_payout": 1870,
+      "trio_result": [
+        1,
+        4,
+        6
+      ],
+      "trio_payout": 570
+    },
+    {
+      "venue": "和歌山",
+      "race_no": 12,
+      "trifecta_result": [
+        4,
+        5,
+        7
+      ],
+      "trifecta_payout": 13750,
+      "trio_result": [
+        4,
+        5,
+        7
+      ],
+      "trio_payout": 2830,
+      "our_prediction": {
+        "axis": 4,
+        "partners": [
+          2,
+          6,
+          6
+        ],
+        "bet_type": "3連複ながし",
+        "combinations": [
+          [
+            2,
+            4,
+            6
+          ],
+          [
+            2,
+            4,
+            6
+          ],
+          [
+            4,
+            6,
+            6
+          ]
+        ],
+        "investment": 3600
+      },
+      "hit": false,
+      "payout": 0
+    },
+    {
+      "venue": "広島",
+      "race_no": 1,
+      "trifecta_result": [
+        1,
+        5,
+        3
+      ],
+      "trifecta_payout": 1490,
+      "trio_result": [
+        1,
+        3,
+        5
+      ],
+      "trio_payout": 420
+    },
+    {
+      "venue": "広島",
+      "race_no": 2,
+      "trifecta_result": [
+        5,
+        6,
+        3
+      ],
+      "trifecta_payout": 106240,
+      "trio_result": [
+        3,
+        5,
+        6
+      ],
+      "trio_payout": 12770
+    },
+    {
+      "venue": "広島",
+      "race_no": 3,
+      "trifecta_result": [
+        7,
+        2,
+        3
+      ],
+      "trifecta_payout": 1990,
+      "trio_result": [
+        2,
+        3,
+        7
+      ],
+      "trio_payout": 390
+    },
+    {
+      "venue": "広島",
+      "race_no": 4,
+      "trifecta_result": [
+        5,
+        1,
+        6
+      ],
+      "trifecta_payout": 970,
+      "trio_result": [
+        1,
+        5,
+        6
+      ],
+      "trio_payout": 400
+    },
+    {
+      "venue": "広島",
+      "race_no": 5,
+      "trifecta_result": [
+        1,
+        7,
+        4
+      ],
+      "trifecta_payout": 1070,
+      "trio_result": [
+        1,
+        4,
+        7
+      ],
+      "trio_payout": 540
+    },
+    {
+      "venue": "広島",
+      "race_no": 6,
+      "trifecta_result": [
+        3,
+        5,
+        1
+      ],
+      "trifecta_payout": 15830,
+      "trio_result": [
+        1,
+        3,
+        5
+      ],
+      "trio_payout": 560
+    },
+    {
+      "venue": "広島",
+      "race_no": 7,
+      "trifecta_result": [
+        3,
+        6,
+        5
+      ],
+      "trifecta_payout": 7560,
+      "trio_result": [
+        3,
+        5,
+        6
+      ],
+      "trio_payout": 2300
+    }
+  ]
+}

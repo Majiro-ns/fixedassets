@@ -1,0 +1,65 @@
+[
+  {
+    "venue_code": "12",
+    "venue_name": "住之江",
+    "race_count": 12,
+    "race_num": 11,
+    "race_no": "11",
+    "grade": "SG",
+    "stage": "準決勝",
+    "title": "全国選手権競走",
+    "start_time": "20260225",
+    "date": "20260225",
+    "sport": "kyotei",
+    "entries": [
+      {"boat_number": 1, "racer_name": "サンプル選手A", "racer_class": "A1", "motor_win_rate": 0.55, "avg_start_timing": 0.14},
+      {"boat_number": 2, "racer_name": "サンプル選手B", "racer_class": "A1", "motor_win_rate": 0.48, "avg_start_timing": 0.16},
+      {"boat_number": 3, "racer_name": "サンプル選手C", "racer_class": "A1", "motor_win_rate": 0.52, "avg_start_timing": 0.15},
+      {"boat_number": 4, "racer_name": "サンプル選手D", "racer_class": "A2", "motor_win_rate": 0.42, "avg_start_timing": 0.18},
+      {"boat_number": 5, "racer_name": "サンプル選手E", "racer_class": "A2", "motor_win_rate": 0.39, "avg_start_timing": 0.19},
+      {"boat_number": 6, "racer_name": "サンプル選手F", "racer_class": "B1", "motor_win_rate": 0.35, "avg_start_timing": 0.21}
+    ]
+  },
+  {
+    "venue_code": "22",
+    "venue_name": "福岡",
+    "race_count": 12,
+    "race_num": 9,
+    "race_no": "9",
+    "grade": "G1",
+    "stage": "準決勝",
+    "title": "G1オールスター",
+    "start_time": "20260225",
+    "date": "20260225",
+    "sport": "kyotei",
+    "entries": [
+      {"boat_number": 1, "racer_name": "サンプル選手G", "racer_class": "A1", "motor_win_rate": 0.58, "avg_start_timing": 0.13},
+      {"boat_number": 2, "racer_name": "サンプル選手H", "racer_class": "A1", "motor_win_rate": 0.51, "avg_start_timing": 0.15},
+      {"boat_number": 3, "racer_name": "サンプル選手I", "racer_class": "A1", "motor_win_rate": 0.47, "avg_start_timing": 0.17},
+      {"boat_number": 4, "racer_name": "サンプル選手J", "racer_class": "A2", "motor_win_rate": 0.44, "avg_start_timing": 0.18},
+      {"boat_number": 5, "racer_name": "サンプル選手K", "racer_class": "A2", "motor_win_rate": 0.40, "avg_start_timing": 0.20},
+      {"boat_number": 6, "racer_name": "サンプル選手L", "racer_class": "B1", "motor_win_rate": 0.33, "avg_start_timing": 0.22}
+    ]
+  },
+  {
+    "venue_code": "01",
+    "venue_name": "桐生",
+    "race_count": 12,
+    "race_num": 3,
+    "race_no": "3",
+    "grade": "G3",
+    "stage": "一般",
+    "title": "",
+    "start_time": "20260225",
+    "date": "20260225",
+    "sport": "kyotei",
+    "entries": [
+      {"boat_number": 1, "racer_name": "サンプル選手M", "racer_class": "A2", "motor_win_rate": 0.45, "avg_start_timing": 0.16},
+      {"boat_number": 2, "racer_name": "サンプル選手N", "racer_class": "B1", "motor_win_rate": 0.38, "avg_start_timing": 0.19},
+      {"boat_number": 3, "racer_name": "サンプル選手O", "racer_class": "B1", "motor_win_rate": 0.36, "avg_start_timing": 0.20},
+      {"boat_number": 4, "racer_name": "サンプル選手P", "racer_class": "B1", "motor_win_rate": 0.32, "avg_start_timing": 0.22},
+      {"boat_number": 5, "racer_name": "サンプル選手Q", "racer_class": "B2", "motor_win_rate": 0.28, "avg_start_timing": 0.24},
+      {"boat_number": 6, "racer_name": "サンプル選手R", "racer_class": "B2", "motor_win_rate": 0.25, "avg_start_timing": 0.26}
+    ]
+  }
+]

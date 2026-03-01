@@ -1,0 +1,37 @@
+{
+  "batch_id": "20260222_182815",
+  "generated_at": "2026-02-22T18:28:15.877503",
+  "total_races": 1,
+  "meta": {
+    "sport": "keirin",
+    "date": "20260222",
+    "profile": "mr_t"
+  },
+  "predictions": [
+    {
+      "timestamp": "2026-02-22T18:28:15.877189",
+      "date": "20260222",
+      "sport": "keirin",
+      "race_info": {
+        "venue_name": "（解析結果）",
+        "race_no": 1,
+        "grade": "S1",
+        "stage": "",
+        "start_time": "20260222T10:30:00"
+      },
+      "predictor": {
+        "name": "Mr.T（競輪眼）",
+        "profile_id": "mr_t_634",
+        "model": "unknown"
+      },
+      "prediction": {
+        "text": "",
+        "entries": []
+      },
+      "bet": {
+        "bet_type": "skip",
+        "reason": "フィルター除外: S1 "
+      }
+    }
+  ]
+}

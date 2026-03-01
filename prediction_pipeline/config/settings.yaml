@@ -4,7 +4,15 @@ llm:
   fallback_model: claude-sonnet-4-6
   api_key_env: ANTHROPIC_API_KEY
   max_tokens: 512
-  temperature: 0.7
+  temperature: 0.4  # cmd_148k_sub3: 0.7→0.4に変更（デフォルト fallback）
+  # filter_type 別最適温度（cmd_148k_sub3）
+  # C型（堅実）: 0.3（再現性重視・的中率優先）
+  # A型（標準）: 0.4（バランス）
+  # B型（穴狙い）: 0.5（多様性許容・高配当狙い）
+  temperature_by_filter:
+    C: 0.3
+    A: 0.4
+    B: 0.5
 
 scraping:
   min_interval_sec: 3

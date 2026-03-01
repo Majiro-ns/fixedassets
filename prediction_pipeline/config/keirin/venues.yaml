@@ -1,0 +1,190 @@
+# 競輪場マスター（全43場）
+# code: KEIRIN.JP で使用する会場コード
+# region: 地方区分
+
+venues:
+  - code: "11"
+    name: 函館
+    region: 北海道
+    track_length: 400m
+  - code: "12"
+    name: 青森
+    region: 東北
+    track_length: 400m
+  - code: "13"
+    name: いわき平
+    region: 東北
+    track_length: 400m
+  - code: "14"
+    name: 弥彦
+    region: 関東
+    track_length: 400m
+  - code: "15"
+    name: 前橋
+    region: 関東
+    track_length: 500m
+  - code: "16"
+    name: 取手
+    region: 関東
+    track_length: 400m
+  - code: "17"
+    name: 宇都宮
+    region: 関東
+    track_length: 400m
+  - code: "18"
+    name: 大宮
+    region: 関東
+    track_length: 400m
+  - code: "19"
+    name: 西武園
+    region: 関東
+    track_length: 400m
+  - code: "20"
+    name: 京王閣
+    region: 関東
+    track_length: 400m
+  - code: "21"
+    name: 立川
+    region: 関東
+    track_length: 400m
+    mr_t_note: "S1密度高い優良会場"
+  - code: "22"
+    name: 松戸
+    region: 関東
+    track_length: 400m
+  - code: "23"
+    name: 千葉
+    region: 関東
+    track_length: 500m
+  - code: "24"
+    name: 川崎
+    region: 関東
+    track_length: 400m
+    mr_t_note: "安定開催・S1準決勝多い"
+  - code: "25"
+    name: 平塚
+    region: 関東
+    track_length: 400m
+  - code: "26"
+    name: 小田原
+    region: 関東
+    track_length: 400m
+  - code: "27"
+    name: 伊東
+    region: 関東
+    track_length: 333m
+  - code: "28"
+    name: 静岡
+    region: 中部
+    track_length: 400m
+  - code: "29"
+    name: 名古屋
+    region: 中部
+    track_length: 400m
+  - code: "30"
+    name: 岐阜
+    region: 中部
+    track_length: 400m
+  - code: "31"
+    name: 大垣
+    region: 中部
+    track_length: 400m
+  - code: "32"
+    name: 富山
+    region: 中部
+    track_length: 400m
+  - code: "33"
+    name: 松阪
+    region: 中部
+    track_length: 400m
+  - code: "34"
+    name: 四日市
+    region: 中部
+    track_length: 400m
+  - code: "35"
+    name: 福井
+    region: 近畿
+    track_length: 400m
+  - code: "36"
+    name: 奈良
+    region: 近畿
+    track_length: 400m
+  - code: "37"
+    name: 向日町
+    region: 近畿
+    track_length: 400m
+  - code: "38"
+    name: 和歌山
+    region: 近畿
+    track_length: 400m
+  - code: "39"
+    name: 岸和田
+    region: 近畿
+    track_length: 400m
+  - code: "40"
+    name: 玉野
+    region: 中四国
+    track_length: 400m
+  - code: "41"
+    name: 広島
+    region: 中四国
+    track_length: 400m
+  - code: "42"
+    name: 防府
+    region: 中四国
+    track_length: 400m
+    mr_t_note: "回収率155%優良会場"
+  - code: "43"
+    name: 高松
+    region: 中四国
+    track_length: 400m
+  - code: "44"
+    name: 小松島
+    region: 中四国
+    track_length: 333m
+  - code: "45"
+    name: 高知
+    region: 四国
+    track_length: 400m
+  - code: "46"
+    name: 松山
+    region: 四国
+    track_length: 400m
+  - code: "51"
+    name: 小倉
+    region: 九州
+    track_length: 400m
+  - code: "52"
+    name: 久留米
+    region: 九州
+    track_length: 400m
+  - code: "53"
+    name: 佐世保
+    region: 九州
+    track_length: 400m
+  - code: "54"
+    name: 別府
+    region: 九州
+    track_length: 400m
+    mr_t_note: "回収率169%最優良会場"
+  - code: "55"
+    name: 熊本
+    region: 九州
+    track_length: 400m
+    mr_t_note: "回収率169%最優良会場・G1開催多い"
+  - code: "56"
+    name: 鹿児島
+    region: 九州
+    track_length: 400m
+  - code: "57"
+    name: 宇部
+    region: 中四国
+    track_length: 400m
+
+# Mr.T推奨会場リスト（回収率順）
+mr_t_recommended:
+  - 熊本      # 169%
+  - 別府      # 169%
+  - 防府      # 155%
+  - 立川      # 高S1密度
+  - 川崎      # 安定

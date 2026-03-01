@@ -1,0 +1,37 @@
+{
+  "race_id": "keirin_iwaki_5R_20260223",
+  "filter_type": "A",
+  "velodrome": "いわき平",
+  "stage": "二次予選",
+  "expected_payout": 45000,
+  "prediction": {
+    "axis": "1番 高橋一郎（S1捲り 100.56）",
+    "partners": ["2番 石川二郎", "3番 中島三男", "4番 小野四郎", "5番 山口五郎"],
+    "comment": "高橋一郎は競走得点100.56で全出走者中最高。1-3ラインが主軸。いわき平は逃げよりも捲り有利な傾向。中穴配当を獲りにいく構成。展開を踏まえると1番絡みの3連複が妙味あり。"
+  },
+  "axis": 1,
+  "partners": [2, 3, 4, 5],
+  "reasoning": {
+    "axis_selection": "高橋一郎（1番）: competitive_score=100.56（出走7名中最高）、脚質=捲り、line=1-3。いわき平はMr.T回収率134%。high_confidence_signal:「展開を踏まえると」「資金稼ぎ」適用。",
+    "partner_selection": "2番石川(97.89/逃げ/2-5ライン)・3番中島(95.23/差し/1-3ライン)・4番小野(92.67/逃げ/4-7ライン)・5番山口(87.45/差し/S2)の4名。filter_A標準：軸1名・相手4名。S1選手主体で中穴圏を狙う。",
+    "reverse_indicator_exclusion": "6番森本(85.12/S2追い込み)・7番池田(83.78/S2追い込み)は低競走得点のS2選手。3連複に組み込む合理性なし。逆指標「自信」「鉄板」「間違いない」「見えた」の使用なし。",
+    "velodrome_factor": "いわき平はMr.T回収率134%。捲り・差し有利の展開が多い400mバンク。高橋の捲りが決まれば2・3番とのライン崩れも期待。",
+    "high_confidence_signals_applied": ["展開を踏まえると", "資金稼ぎ"],
+    "filter_strategy": "filter_A（標準）: 中穴ゾーン狙い。軸1名・相手4名の構成。3連複ながし6点。"
+  },
+  "bet_type": "3連複ながし",
+  "bet_lines": [
+    "1-2-3",
+    "1-2-4",
+    "1-2-5",
+    "1-3-4",
+    "1-3-5",
+    "1-4-5"
+  ],
+  "num_bets": 6,
+  "unit_amount": 1200,
+  "estimated_investment": 7200,
+  "generated_by": "ashigaru3 (subtask_027b2_predict_AB)",
+  "profile": "mr_t_cognitive_profile",
+  "timestamp": "2026-02-23T07:30:00"
+}

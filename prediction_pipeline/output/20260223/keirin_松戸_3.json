@@ -1,0 +1,68 @@
+{
+  "timestamp": "2026-02-23T06:40:21.225435",
+  "date": "20260223",
+  "sport": "keirin",
+  "race_info": {
+    "venue_name": "松戸",
+    "race_no": "3",
+    "grade": "A1",
+    "stage": "一般",
+    "start_time": "20260225"
+  },
+  "predictor": {
+    "name": "Mr.T（競輪眼）",
+    "profile_id": "mr_t_634",
+    "model": "unknown"
+  },
+  "prediction": {
+    "text": "",
+    "entries": [
+      {
+        "car_no": 1,
+        "name": "サンプル選手O",
+        "grade": "A1",
+        "leg_type": "逃げ"
+      },
+      {
+        "car_no": 2,
+        "name": "サンプル選手P",
+        "grade": "A1",
+        "leg_type": "捲り"
+      },
+      {
+        "car_no": 3,
+        "name": "サンプル選手Q",
+        "grade": "A1",
+        "leg_type": "差し"
+      },
+      {
+        "car_no": 4,
+        "name": "サンプル選手R",
+        "grade": "A2",
+        "leg_type": "追い込み"
+      },
+      {
+        "car_no": 5,
+        "name": "サンプル選手S",
+        "grade": "A2",
+        "leg_type": "追い込み"
+      },
+      {
+        "car_no": 6,
+        "name": "サンプル選手T",
+        "grade": "A2",
+        "leg_type": "追い込み"
+      },
+      {
+        "car_no": 7,
+        "name": "サンプル選手U",
+        "grade": "A2",
+        "leg_type": "追い込み"
+      }
+    ]
+  },
+  "bet": {
+    "bet_type": "skip",
+    "reason": "フィルター除外: F1[クラス]: A1 は除外クラス（許可: ['S']）; F2[種別]: '一般' は除外種別（許可: ['特選', '二次予選']）"
+  }
+}

@@ -110,10 +110,6 @@ def process_request(task_id: str, req: dict, config: dict, dry_run: bool = False
     print(f"\n  処理中: {task_id}")
     print(f"  開催: {req.get('venue')} {req.get('race_no')}R  [{filter_type}型]")
 
-    if dry_run:
-        print(f"  [DRY RUN] API呼び出しをスキップします。")
-        return True
-
     try:
         prediction_text = generate_prediction(
             race_data=req,
@@ -130,6 +126,11 @@ def process_request(task_id: str, req: dict, config: dict, dry_run: bool = False
     print(f"  予測: {preview}...")
 
     axis, partners = _parse_axis_partners(prediction_text)
+    print(f"  解析: 軸={axis}, 相手={partners}")
+
+    if dry_run:
+        print(f"  [DRY RUN] 結果保存をスキップします。")
+        return True
 
     RES_DIR.mkdir(parents=True, exist_ok=True)
     res_file = RES_DIR / f"{task_id}.yaml"

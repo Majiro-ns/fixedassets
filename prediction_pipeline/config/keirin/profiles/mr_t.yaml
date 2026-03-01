@@ -1,0 +1,144 @@
+# Mr.T 認知プロファイル（パイプライン用簡易版）
+# フルプロファイル: mr_t_cognitive_profile.yaml (netkeirin ID 634)
+
+profile_id: mr_t_634
+predictor_name: "Mr.T（競輪眼）"
+sport: keirin
+
+# ─── 予想スタイル ─────────────────────────────────────
+style:
+  description: "ライン分析重視・S1準決勝専門予想師"
+  bet_type: "3連複ながし + ワイド保険"
+  axis_selection: "ライン先頭S1選手"
+
+# ─── 信頼シグナル（高精度キーワード） ──────────────────
+trust_signals:
+  high_confidence:
+    - keyword: "絞"
+      hit_rate: 0.500
+      recovery_rate: 1.658
+      note: "「絞れる」は真の自信シグナル。的中率50%"
+    - keyword: "獲りやすさ"
+      hit_rate: 0.545
+      recovery_rate: 1.507
+      note: "易しい展開認識。的中率最高55%"
+    - keyword: "高配当"
+      hit_rate: 0.300
+      recovery_rate: 2.639
+      note: "穴狙い宣言。回収率264%最高"
+    - keyword: "大穴"
+      hit_rate: 0.316
+      recovery_rate: 2.065
+  low_confidence:
+    - keyword: "自信"
+      hit_rate: 0.109
+      recovery_rate: 0.270
+      note: "逆指標！「自信」単独は危険"
+    - keyword: "鉄板"
+      recovery_rate: 0.609
+      note: "過信バイアス"
+
+# ─── 得意条件 ─────────────────────────────────────────
+strengths:
+  venues:
+    - name: 熊本
+      recovery_rate: 1.69
+    - name: 別府
+      recovery_rate: 1.69
+    - name: 防府
+      recovery_rate: 1.55
+  race_types:
+    - name: 特選
+      recovery_rate: 1.30
+    - name: 二次予選
+      recovery_rate: 1.44
+    - name: 準決勝
+      recovery_rate: 1.25
+      note: "S1×準決勝組み合わせが最高"
+  grades:
+    - name: S1
+      recovery_rate: 1.05
+
+# ─── 苦手条件 ─────────────────────────────────────────
+weaknesses:
+  race_types:
+    - name: 決勝
+      recovery_rate: 0.67
+      note: "決勝は避けるべき"
+    - name: 選抜
+      recovery_rate: 0.49
+  race_numbers: [4, 6]
+  banks: ["500m"]
+  weekdays: ["日曜", "月曜"]
+
+# ─── CRE統合用フィールド（build_cre_system_prompt() 参照） ──────────
+# trust_signals から変換。high_recovery_patterns / reverse_indicator_patterns が
+# build_cre_system_prompt() の正規フォーマット。
+
+basic_stats:
+  total_predictions: 200   # 概算（netkeirin ID 634 の蓄積予想数）
+  hit_rate: 0.35            # 全予想の的中率（高精度シグナル使用時: ~41%）
+  recovery_rate: 1.15       # フィルター適用後の推定回収率
+
+high_recovery_patterns:
+  - keyword: "絞"
+    hit_rate: 0.500
+    recovery_rate: 1.658
+    interpretation: |
+      「絞れる」は真の自信シグナル。点数を絞って少点数勝負に徹すると的中率50%。
+    examples:
+      - "絞れる"
+      - "絞って勝負"
+  - keyword: "獲りやすさ"
+    hit_rate: 0.545
+    recovery_rate: 1.507
+    interpretation: |
+      「獲りやすい展開」認識。展開が読めている証拠で的中率が最高55%に達する。
+    examples:
+      - "獲りやすい展開"
+      - "獲りやすさを感じる"
+  - keyword: "高配当"
+    hit_rate: 0.300
+    recovery_rate: 2.639
+    interpretation: |
+      穴狙い宣言。回収率264%と最高値。相手を広げて高配当を狙うレース。
+    examples:
+      - "高配当期待"
+      - "高配当狙い"
+  - keyword: "大穴"
+    hit_rate: 0.316
+    recovery_rate: 2.065
+    interpretation: |
+      伏兵を含む読み。回収率207%。相手を広く取ることで高回収につながる。
+    examples:
+      - "大穴ある"
+      - "大穴狙い"
+
+reverse_indicator_patterns:
+  - keyword: "自信"
+    hit_rate: 0.109
+    recovery_rate: 0.270
+    interpretation: |
+      逆指標。「自信あり」と明言するレースは的中率11%・回収率27%と壊滅的。
+      Mr.T が「自信」と書く時は過信バイアスが発生している証拠。
+  - keyword: "鉄板"
+    recovery_rate: 0.609
+    interpretation: |
+      過信バイアス。「鉄板」は回収率61%と大幅マイナス。見送り必須。
+
+# ─── LLM予想指示 ──────────────────────────────────────
+llm_instructions: |
+  あなたはMr.T（競輪眼）の予想AIアシスタントです。
+  Mr.Tのスタイル: ライン分析重視、S1×準決勝特化、3連複ながし戦略。
+
+  予想時のルール:
+  1. ライン先頭のS1選手を軸候補として優先する
+  2. 「絞れる」と感じたら点数を絞って自信を持て（的中率50%）
+  3. 「自信」という言葉は使わない（逆指標のため）
+  4. 熊本・別府・防府は得意会場として積極的に狙う
+  5. 出力形式: 軸番号、相手番号リスト、コメント（日本語）
+
+  出力例:
+  軸: 1番（山田）
+  相手: 3番、5番、7番
+  コメント: ライン先頭の山田が絞れる。3連複3点で勝負。

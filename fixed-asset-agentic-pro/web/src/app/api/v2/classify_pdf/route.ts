@@ -18,6 +18,7 @@ import type {
 import { runTaxAgent } from '@/lib/agents/taxAgent';
 import { runPracticeAgent } from '@/lib/agents/practiceAgent';
 import { aggregate } from '@/lib/agents/aggregator';
+import { runSplitJudge } from '@/lib/agents/splitJudge';
 import {
   getFeatureFlags,
   transformToV2,
@@ -26,6 +27,7 @@ import {
 } from './route.helpers';
 import { trainingDataStore } from '@/lib/agents/trainingDataStore';
 import { auditStore } from '@/lib/agents/auditStore';
+import { policyStore } from '@/lib/policyStore';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
 const TIMEOUT_MS = 5000;
@@ -83,10 +85,21 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
   }
 
-  const { pdf_base64, options } = body;
+  const { pdf_base64, options, policy_id } = body;
 
   if (!pdf_base64) {
     return NextResponse.json({ error: 'pdf_base64 is required' }, { status: 400 });
+  }
+
+  // 1.5 ポリシー閾値の解決（F-10: クライアント別ポリシー管理）
+  // policy_id が指定された場合、PolicyStore から閾値を取得する。
+  // 指定なし or 存在しない ID の場合は undefined（taxAgent のデフォルト 10万円）。
+  let policyThreshold: number | undefined;
+  if (policy_id !== undefined && policy_id !== null) {
+    const policy = policyStore.getById(policy_id);
+    if (policy) {
+      policyThreshold = policy.threshold_amount;
+    }
   }
 
   // 2. Feature Flag & ID 生成
@@ -164,8 +177,18 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   // 5. マルチエージェント判定パス（USE_MULTI_AGENT=true）
   //    根拠: 設計書 Section 5.3 エージェント実行順序
+  //    Phase 3 F-N09: [PDF抽出] → [分割判定] → [Tax/Practice] → [Aggregator]
   if (flags.useMultiAgent) {
     const extractedItems = extractLineItemsFromClassify(classifyRes);
+
+    // Phase 3 F-N09: 分割判定（splitJudge）
+    // LLM不要のルールベース実装（APIキー不要）
+    const extractedWithMeta = {
+      document_date: undefined as string | undefined,
+      vendor: undefined as string | undefined,
+      items: extractedItems,
+    };
+    const splitJudgeResult = runSplitJudge(extractedWithMeta);
 
     // 両エージェント無効 → Phase 1 フォールバック（キルスイッチ: cmd_138k_sub3）
     if (!flags.taxAgentEnabled && !flags.practiceAgentEnabled) {
@@ -185,7 +208,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       // Promise.allSettled: 片方失敗でも残りで判定継続（根拠: Section 6 エラーハンドリング）
       // キルスイッチが有効な場合は無効エージェントを null で解決する
       const taxPromise = flags.taxAgentEnabled
-        ? runTaxAgent(extractedItems)
+        ? runTaxAgent(extractedItems, undefined, policyThreshold)
         : Promise.resolve(null as Awaited<ReturnType<typeof runTaxAgent>> | null);
       const practicePromise = flags.practiceAgentEnabled
         ? runPracticeAgent(extractedItems, trainingDataStore.getAll())
@@ -200,7 +223,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     } else {
       // Sequential（PARALLEL_AGENTS=false の場合）
       if (flags.taxAgentEnabled) {
-        try { taxResults = await runTaxAgent(extractedItems); } catch { agentStatus = 'partial'; }
+        try { taxResults = await runTaxAgent(extractedItems, undefined, policyThreshold); } catch { agentStatus = 'partial'; }
       }
       if (flags.practiceAgentEnabled) {
         try { practiceResults = await runPracticeAgent(extractedItems, trainingDataStore.getAll()); } catch { agentStatus = 'partial'; }
@@ -217,6 +240,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       elapsed,
       agentStatus,
     );
+    // Phase 3 F-N09: 分割判定結果をレスポンスに追加
+    v2Response.split_groups = splitJudgeResult.groups;
     appendAudit(v2Response, modelUsed);
     return NextResponse.json(v2Response);
   }

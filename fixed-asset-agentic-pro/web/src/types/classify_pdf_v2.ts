@@ -14,6 +14,9 @@ export interface ClassifyPDFV2Request {
   pdf_base64: string;                // PDF バイナリの base64 エンコード
   company_id: string | null;         // 会社識別子（教師データ参照用）
   options: ClassifyPDFV2Options;
+  /** クライアント別ポリシー ID（cmd_170k_sub2 F-10: ポリシー管理）
+   *  指定された場合、PolicyStore からポリシーを読み込んで判定閾値に使用する。 */
+  policy_id?: number;
 }
 
 // ─── 抽出結果 ──────────────────────────────────────────────────────────────
@@ -78,4 +81,10 @@ export interface ClassifyPDFV2Response {
   summary: V2Summary;
   audit_trail_id: string | null;
   elapsed_ms: number;
+  /**
+   * Phase 3 F-N09: 分割判定結果（Split Judge）
+   * 一体資産(bundled) vs 個別計上(split) の判定グループ一覧。
+   * extraction_failed 時は undefined（後方互換のため optional）。
+   */
+  split_groups?: import('@/types/split_judge').SplitGroup[];
 }

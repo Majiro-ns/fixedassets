@@ -6,8 +6,9 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: 'jsdom',
+    // @ts-expect-error: environmentMatchGlobs は vitest 4.x の型定義から削除されたが、
+    // ランタイムでは動作する。lib/agents の better-sqlite3 テストは node 環境が必要。
     environmentMatchGlobs: [
-      // better-sqlite3 はネイティブ Node.js モジュール → lib/agents テストは node 環境で実行
       ['src/lib/**', 'node'],
     ],
     setupFiles: ['./src/test/setup.ts'],

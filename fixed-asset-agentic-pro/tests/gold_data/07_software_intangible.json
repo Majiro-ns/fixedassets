@@ -1,0 +1,50 @@
+[
+  {
+    "test_id": "gold_016",
+    "category": "ソフトウェア（無形固定資産）",
+    "input": {
+      "description": "業務管理ソフトウェアパッケージ（永続ライセンス）",
+      "amount": 500000,
+      "quantity": 1
+    },
+    "expected": {
+      "verdict": "CAPITAL",
+      "account_category": "ソフトウエア",
+      "useful_life": 5,
+      "rationale_keywords": ["ソフトウエア", "無形固定資産", "5年"]
+    },
+    "basis": "耐用年数省令別表第三 無形固定資産「ソフトウェア」5年。永続ライセンス→取得価額として計上"
+  },
+  {
+    "test_id": "gold_017",
+    "category": "SaaS費用（無形固定資産対象外）",
+    "input": {
+      "description": "クラウド会計ソフト年間利用料（SaaS型）",
+      "amount": 240000,
+      "quantity": 1
+    },
+    "expected": {
+      "verdict": "EXPENSE",
+      "account_category": "通信費",
+      "useful_life": null,
+      "rationale_keywords": ["利用料", "費用", "SaaS"]
+    },
+    "basis": "SaaS形態はソフトウェアの取得に該当しない。使用料として期間費用計上（通信費/支払手数料）"
+  },
+  {
+    "test_id": "gold_018",
+    "category": "大型ソフトウェア開発費",
+    "input": {
+      "description": "社内基幹システム開発費（自社開発・受注制作）",
+      "amount": 3000000,
+      "quantity": 1
+    },
+    "expected": {
+      "verdict": "CAPITAL",
+      "account_category": "ソフトウエア",
+      "useful_life": 5,
+      "rationale_keywords": ["ソフトウエア", "無形固定資産", "自社開発"]
+    },
+    "basis": "耐用年数省令別表第三 無形固定資産「ソフトウェア」5年。自社開発ソフトも取得価額として資産計上"
+  }
+]

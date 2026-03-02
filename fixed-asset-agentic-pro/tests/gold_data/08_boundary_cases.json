@@ -1,0 +1,66 @@
+[
+  {
+    "test_id": "gold_019",
+    "category": "境界値: ちょうど10万円（rule_a非適用）",
+    "input": {
+      "description": "OAチェア（エルゴノミクス設計）",
+      "amount": 100000,
+      "quantity": 1
+    },
+    "expected": {
+      "verdict": "UNCERTAIN",
+      "account_category": null,
+      "useful_life": null,
+      "rationale_keywords": ["境界値", "10万円", "needsLlm"]
+    },
+    "basis": "令133条: amount < 100,000（厳密な小なり）→ 100,000円は対象外。needsLlmに分類してLLMが判定"
+  },
+  {
+    "test_id": "gold_020",
+    "category": "境界値: 修繕×ちょうど20万円（rule_d適用）",
+    "input": {
+      "description": "外壁修繕工事（ひび割れ補修・既存躯体修復）",
+      "amount": 200000,
+      "quantity": 1
+    },
+    "expected": {
+      "verdict": "EXPENSE",
+      "account_category": "修繕費",
+      "useful_life": null,
+      "rationale_keywords": ["修繕費", "7-8-4", "rule_d"]
+    },
+    "basis": "基通7-8-4(1): 修繕キーワード×200,000 < 600,000 → rule_d → EXPENSE/修繕費。rule_b(< 200k)は非適用(境界)"
+  },
+  {
+    "test_id": "gold_021",
+    "category": "一括償却資産候補（10万〜20万）",
+    "input": {
+      "description": "ノートパソコン（法人向け・Windows 11）",
+      "amount": 150000,
+      "quantity": 1
+    },
+    "expected": {
+      "verdict": "CAPITAL",
+      "account_category": "一括償却資産",
+      "useful_life": 3,
+      "rationale_keywords": ["一括償却資産", "3年均等", "令133条の2"]
+    },
+    "basis": "法令133条の2: 10万以上20万未満 → 一括償却資産3年均等償却。preScreenでneedsLlm→LLMがCAPITAL判定"
+  },
+  {
+    "test_id": "gold_022",
+    "category": "境界値: 9万9千円（rule_a適用）",
+    "input": {
+      "description": "USBメモリー 64GB（業務用・10本セット）",
+      "amount": 99000,
+      "quantity": 10
+    },
+    "expected": {
+      "verdict": "EXPENSE",
+      "account_category": "消耗品費",
+      "useful_life": null,
+      "rationale_keywords": ["令133条", "10万円未満", "消耗品費"]
+    },
+    "basis": "令133条: 99,000 < 100,000 → preScreen rule_a → 即時費用化（消耗品費）"
+  }
+]

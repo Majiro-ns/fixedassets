@@ -61,7 +61,7 @@ streamlit run ui/app_minimal.py
 
 Streamlit UIではドロップダウンからデモデータを選択可能。
 
-## 実装済み機能（Phase 6完了・254テスト[backend] + 309テスト[frontend] PASS）
+## 実装済み機能（Phase 3完了・267テスト[backend] + 578テスト[frontend] PASS）
 
 | 機能 | エンドポイント/場所 | Feature Flag |
 |------|---|---|
@@ -147,9 +147,9 @@ npm run dev
 ## テスト実行
 
 ```bash
-# フロントエンドテスト（309件）
+# フロントエンドテスト（578件）
 cd /mnt/c/Users/owner/Desktop/llama3_wallthinker/fixed-asset-agentic-pro/web/
-npm run test          # 309テスト PASS
+npm run test          # 578テスト PASS
 
 # その他
 npm run lint          # ESLint
@@ -157,10 +157,10 @@ npm run build         # ビルド確認
 ```
 
 ```bash
-# バックエンドテスト（254件）
+# バックエンドテスト（267件）
 cd /mnt/c/Users/owner/Desktop/llama3_wallthinker/fixed-asset-ashigaru/
-pytest                # 254テスト
+pytest                # 267テスト
 ```
 
 ---
-最終更新: 2026-03-02（E2E動作検証・デモシナリオ追記）
+最終更新: 2026-03-03（テスト件数更新: frontend 578件 / backend 267件）

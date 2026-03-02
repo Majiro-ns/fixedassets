@@ -25,9 +25,36 @@ import {
   transformAggregatedToV2,
 } from './route.helpers';
 import { trainingDataStore } from '@/lib/agents/trainingDataStore';
+import { auditStore } from '@/lib/agents/auditStore';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
 const TIMEOUT_MS = 5000;
+
+// ─── Audit Trail ヘルパー ───────────────────────────────────────────────────
+
+/**
+ * 判定完了後に監査証跡を記録する。
+ * audit_trail_id が null（AUDIT_TRAIL_ENABLED=false）の場合は何もしない。
+ */
+function appendAudit(v2Response: ClassifyPDFV2Response, modelUsed: string): void {
+  if (!v2Response.audit_trail_id) return;
+  const first = v2Response.line_results[0];
+  auditStore.append({
+    audit_trail_id: v2Response.audit_trail_id,
+    request_id: v2Response.request_id,
+    timestamp: new Date().toISOString(),
+    pdf_filename: 'document.pdf',
+    line_items_count: v2Response.line_results.length,
+    tax_verdict: first?.tax_verdict ?? 'UNKNOWN',
+    practice_verdict: first?.practice_verdict ?? 'UNKNOWN',
+    final_verdict: first?.verdict ?? 'UNKNOWN',
+    confidence: first?.confidence ?? 0,
+    account_category: first?.account_category ?? null,
+    useful_life: first?.useful_life ?? null,
+    elapsed_ms: v2Response.elapsed_ms,
+    model_used: modelUsed,
+  });
+}
 
 // ─── fetch with timeout / retry ────────────────────────────────────────────
 
@@ -64,6 +91,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   // 2. Feature Flag & ID 生成
   const flags = getFeatureFlags();
+  const modelUsed = flags.useMultiAgent
+    ? (process.env.MULTI_AGENT_MODEL ?? 'claude-haiku-4-5')
+    : 'gemini-vision';
   const includeAuditTrail = options?.include_audit_trail ?? flags.auditTrailEnabled;
   const requestId = randomUUID();
   const auditTrailId = includeAuditTrail
@@ -140,7 +170,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     // 両エージェント無効 → Phase 1 フォールバック（キルスイッチ: cmd_138k_sub3）
     if (!flags.taxAgentEnabled && !flags.practiceAgentEnabled) {
       const elapsed = Date.now() - startTime;
-      return NextResponse.json(transformToV2(classifyRes, requestId, auditTrailId, elapsed));
+      const killSwitchResponse = transformToV2(classifyRes, requestId, auditTrailId, elapsed);
+      appendAudit(killSwitchResponse, modelUsed);
+      return NextResponse.json(killSwitchResponse);
     }
 
     const parallelEnabled = options?.parallel_agents ?? flags.parallelAgents;
@@ -185,11 +217,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       elapsed,
       agentStatus,
     );
+    appendAudit(v2Response, modelUsed);
     return NextResponse.json(v2Response);
   }
 
   // 6. Phase 1 フォールバック（USE_MULTI_AGENT=false）
   const elapsed = Date.now() - startTime;
   const v2Response = transformToV2(classifyRes, requestId, auditTrailId, elapsed);
+  appendAudit(v2Response, modelUsed);
   return NextResponse.json(v2Response);
 }

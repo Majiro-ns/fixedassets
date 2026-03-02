@@ -136,6 +136,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   //    根拠: 設計書 Section 5.3 エージェント実行順序
   if (flags.useMultiAgent) {
     const extractedItems = extractLineItemsFromClassify(classifyRes);
+
+    // 両エージェント無効 → Phase 1 フォールバック（キルスイッチ: cmd_138k_sub3）
+    if (!flags.taxAgentEnabled && !flags.practiceAgentEnabled) {
+      const elapsed = Date.now() - startTime;
+      return NextResponse.json(transformToV2(classifyRes, requestId, auditTrailId, elapsed));
+    }
+
     const parallelEnabled = options?.parallel_agents ?? flags.parallelAgents;
 
     let taxResults: Awaited<ReturnType<typeof runTaxAgent>> | null = null;
@@ -144,10 +151,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     if (parallelEnabled) {
       // Promise.allSettled: 片方失敗でも残りで判定継続（根拠: Section 6 エラーハンドリング）
-      const [taxSettled, practiceSettled] = await Promise.allSettled([
-        runTaxAgent(extractedItems),
-        runPracticeAgent(extractedItems, trainingDataStore.getAll()),
-      ]);
+      // キルスイッチが有効な場合は無効エージェントを null で解決する
+      const taxPromise = flags.taxAgentEnabled
+        ? runTaxAgent(extractedItems)
+        : Promise.resolve(null as Awaited<ReturnType<typeof runTaxAgent>> | null);
+      const practicePromise = flags.practiceAgentEnabled
+        ? runPracticeAgent(extractedItems, trainingDataStore.getAll())
+        : Promise.resolve(null as Awaited<ReturnType<typeof runPracticeAgent>> | null);
+
+      const [taxSettled, practiceSettled] = await Promise.allSettled([taxPromise, practicePromise]);
       taxResults = taxSettled.status === 'fulfilled' ? taxSettled.value : null;
       practiceResults = practiceSettled.status === 'fulfilled' ? practiceSettled.value : null;
       if (taxSettled.status === 'rejected' || practiceSettled.status === 'rejected') {
@@ -155,8 +167,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       }
     } else {
       // Sequential（PARALLEL_AGENTS=false の場合）
-      try { taxResults = await runTaxAgent(extractedItems); } catch { agentStatus = 'partial'; }
-      try { practiceResults = await runPracticeAgent(extractedItems, trainingDataStore.getAll()); } catch { agentStatus = 'partial'; }
+      if (flags.taxAgentEnabled) {
+        try { taxResults = await runTaxAgent(extractedItems); } catch { agentStatus = 'partial'; }
+      }
+      if (flags.practiceAgentEnabled) {
+        try { practiceResults = await runPracticeAgent(extractedItems, trainingDataStore.getAll()); } catch { agentStatus = 'partial'; }
+      }
     }
 
     const aggregated = aggregate(taxResults, practiceResults);

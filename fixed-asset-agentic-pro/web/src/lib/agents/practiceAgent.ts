@@ -27,6 +27,7 @@ export interface PracticeAgentConfig {
 
 const DEFAULT_MODEL = 'claude-haiku-4-5-20251001';
 const DEFAULT_MAX_FEW_SHOT = 10;
+export const PRACTICE_AGENT_DEFAULT_TIMEOUT_MS = 30_000;
 
 // ─── 類似度計算（Jaccard 係数） ──────────────────────────────────────────────
 
@@ -137,6 +138,62 @@ ${fewShotSection}
 - suggested_account: 勘定科目名（教師データから推定。不明なら null）
 - confidence: 0〜1 の確信度
 - 全ての line_item_id に対して必ず判定を返すこと`;
+}
+
+// ─── リトライユーティリティ ────────────────────────────────────────────────
+
+/** 指数バックオフリトライ用スリープ */
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * Practice Agent API 呼び出し（指数バックオフ、最大2リトライ）
+ *
+ * - attempt 0: 即実行
+ * - attempt 1: 100ms 待機後
+ * - attempt 2: 200ms 待機後
+ * - 全て失敗 → throw（呼び出し元で UNCERTAIN フォールバック）
+ */
+async function callPracticeApiWithRetry(
+  client: Anthropic,
+  model: string,
+  systemPrompt: string,
+  userPrompt: string,
+  timeoutMs: number,
+): Promise<string> {
+  const MAX_RETRIES = 2;
+  let lastError: unknown;
+
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const message = await client.messages.create(
+        {
+          model,
+          max_tokens: 2048,
+          system: systemPrompt,
+          messages: [{ role: 'user', content: userPrompt }],
+        },
+        { signal: controller.signal },
+      );
+      clearTimeout(timer);
+      const block = message.content.length > 0 ? message.content[0] : null;
+      return block?.type === 'text' ? block.text : '';
+    } catch (err) {
+      clearTimeout(timer);
+      lastError = err;
+      console.warn(
+        `[PracticeAgent] API呼び出し失敗 (attempt ${attempt + 1}/${MAX_RETRIES + 1}):`,
+        err,
+      );
+      if (attempt < MAX_RETRIES) {
+        await sleep(100 * Math.pow(2, attempt)); // 100ms → 200ms
+      }
+    }
+  }
+  throw lastError;
 }
 
 // ─── dry-run モック ──────────────────────────────────────────────────────────
@@ -275,8 +332,10 @@ export async function runPracticeAgent(
   if (lineItems.length === 0) return [];
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
-  const model = config.model ?? DEFAULT_MODEL;
+  const model = config.model ?? process.env.PRACTICE_AGENT_MODEL ?? DEFAULT_MODEL;
   const maxFewShot = config.maxFewShot ?? DEFAULT_MAX_FEW_SHOT;
+  const timeoutMs =
+    parseInt(process.env.PRACTICE_AGENT_TIMEOUT_MS ?? '', 10) || PRACTICE_AGENT_DEFAULT_TIMEOUT_MS;
 
   // ─── dry-run モード（ANTHROPIC_API_KEY 未設定） ──────────────────────────
   if (!apiKey) {
@@ -293,20 +352,12 @@ export async function runPracticeAgent(
 
   const client = new Anthropic({ apiKey });
 
-  // ─── API 呼び出し ────────────────────────────────────────────────────────
+  // ─── API 呼び出し（リトライ付き） ────────────────────────────────────────
   let content: string;
   try {
-    const message = await client.messages.create({
-      model,
-      max_tokens: 2048,
-      system: systemPrompt,
-      messages: [{ role: 'user', content: userPrompt }],
-    });
-
-    const block = message.content.length > 0 ? message.content[0] : null;
-    content = block?.type === 'text' ? block.text : '';
+    content = await callPracticeApiWithRetry(client, model, systemPrompt, userPrompt, timeoutMs);
   } catch (err) {
-    console.error('[PracticeAgent] API呼び出し失敗:', err);
+    console.error('[PracticeAgent] 全リトライ失敗:', err);
     return buildFallbackResults(lineItems, `APIエラー: ${String(err)}`);
   }
 

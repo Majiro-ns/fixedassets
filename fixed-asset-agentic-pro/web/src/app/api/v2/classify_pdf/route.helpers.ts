@@ -25,8 +25,10 @@ import type { AggregatedResult } from '@/types/multi_agent';
 export function getFeatureFlags() {
   return {
     useMultiAgent: process.env.USE_MULTI_AGENT === 'true',
-    parallelAgents: process.env.PARALLEL_AGENTS !== 'false',    // default true
+    parallelAgents: process.env.PARALLEL_AGENTS !== 'false',       // default true
     auditTrailEnabled: process.env.AUDIT_TRAIL_ENABLED !== 'false', // default true
+    taxAgentEnabled: process.env.TAX_AGENT_ENABLED !== 'false',     // default true
+    practiceAgentEnabled: process.env.PRACTICE_AGENT_ENABLED !== 'false', // default true
   };
 }
 

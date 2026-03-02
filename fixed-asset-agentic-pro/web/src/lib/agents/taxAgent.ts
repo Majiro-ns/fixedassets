@@ -26,6 +26,7 @@ export interface TaxAgentConfig {
 
 export const TAX_AGENT_DEFAULT_MODEL = 'claude-haiku-4-5-20251001';
 export const TAX_AGENT_DEFAULT_MAX_TOKENS = 2048;
+export const TAX_AGENT_DEFAULT_TIMEOUT_MS = 30_000;
 
 // ─── システムプロンプト ────────────────────────────────────────────────────
 
@@ -317,6 +318,61 @@ function mergeResultsByOriginalOrder(
   return originalItems.map((item) => map.get(item.line_item_id)!);
 }
 
+// ─── リトライユーティリティ ────────────────────────────────────────────────
+
+/** 指数バックオフリトライ用スリープ */
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * Tax Agent API 呼び出し（指数バックオフ、最大2リトライ）
+ *
+ * - attempt 0: 即実行
+ * - attempt 1: 100ms 待機後
+ * - attempt 2: 200ms 待機後
+ * - 全て失敗 → throw（呼び出し元で UNCERTAIN フォールバック）
+ */
+async function callTaxApiWithRetry(
+  client: Anthropic,
+  model: string,
+  max_tokens: number,
+  userPrompt: string,
+  timeoutMs: number,
+): Promise<string> {
+  const MAX_RETRIES = 2;
+  let lastError: unknown;
+
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const response = await client.messages.create(
+        {
+          model,
+          max_tokens,
+          system: TAX_AGENT_SYSTEM_PROMPT,
+          messages: [{ role: 'user', content: userPrompt }],
+        },
+        { signal: controller.signal },
+      );
+      clearTimeout(timer);
+      return response.content
+        .filter((c) => c.type === 'text')
+        .map((c) => (c as { type: 'text'; text: string }).text)
+        .join('');
+    } catch (err) {
+      clearTimeout(timer);
+      lastError = err;
+      console.warn(`[TaxAgent] API呼び出し失敗 (attempt ${attempt + 1}/${MAX_RETRIES + 1}):`, err);
+      if (attempt < MAX_RETRIES) {
+        await sleep(100 * Math.pow(2, attempt)); // 100ms → 200ms
+      }
+    }
+  }
+  throw lastError;
+}
+
 // ─── ドライランモック ─────────────────────────────────────────────────────
 
 /**
@@ -430,34 +486,26 @@ export async function runTaxAgent(
     return prescreenResults;
   }
 
-  const model = config?.model ?? TAX_AGENT_DEFAULT_MODEL;
+  const model = config?.model ?? process.env.TAX_AGENT_MODEL ?? TAX_AGENT_DEFAULT_MODEL;
   const max_tokens = config?.max_tokens ?? TAX_AGENT_DEFAULT_MAX_TOKENS;
+  const timeoutMs =
+    parseInt(process.env.TAX_AGENT_TIMEOUT_MS ?? '', 10) || TAX_AGENT_DEFAULT_TIMEOUT_MS;
 
   // LLM には前処理で未解決の明細のみ送信
   const userPrompt = `以下の明細リストを税務判定してください:\n\n${JSON.stringify(needsLlm, null, 2)}`;
 
+  const client = new Anthropic({ apiKey });
+
   try {
-    const client = new Anthropic({ apiKey });
-    const response = await client.messages.create({
-      model,
-      max_tokens,
-      system: TAX_AGENT_SYSTEM_PROMPT,
-      messages: [{ role: 'user', content: userPrompt }],
-    });
-
-    const textContent = response.content
-      .filter((c) => c.type === 'text')
-      .map((c) => (c as { type: 'text'; text: string }).text)
-      .join('');
-
+    const textContent = await callTaxApiWithRetry(client, model, max_tokens, userPrompt, timeoutMs);
     const llmResults = parseResponse(textContent, needsLlm);
     return mergeResultsByOriginalOrder(lineItems, prescreenResults, llmResults);
   } catch {
-    // API 呼び出し失敗: LLM必要明細を UNCERTAIN で返す。前処理済みは確定結果を保持。
+    // 全リトライ失敗: LLM必要明細を UNCERTAIN で返す。前処理済みは確定結果を保持。
     const errorResults = needsLlm.map((item) => ({
       line_item_id: item.line_item_id,
       verdict: 'UNCERTAIN' as const,
-      rationale: '[APIエラー] Tax Agent の呼び出しに失敗しました',
+      rationale: '[APIエラー] Tax Agent の呼び出しに失敗しました（リトライ3回）',
       article_ref: null,
       account_category: null,
       useful_life: null,

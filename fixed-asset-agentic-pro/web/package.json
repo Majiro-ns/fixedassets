@@ -17,6 +17,8 @@
     "@anthropic-ai/sdk": "^0.78.0",
     "@eslint/eslintrc": "^3.3.4",
     "@hookform/resolvers": "^3.9.0",
+    "@types/better-sqlite3": "^7.6.13",
+    "better-sqlite3": "^12.6.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.574.0",

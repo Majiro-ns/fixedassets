@@ -6,6 +6,10 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: 'jsdom',
+    environmentMatchGlobs: [
+      // better-sqlite3 はネイティブ Node.js モジュール → lib/agents テストは node 環境で実行
+      ['src/lib/**', 'node'],
+    ],
     setupFiles: ['./src/test/setup.ts'],
     globals: true,
   },

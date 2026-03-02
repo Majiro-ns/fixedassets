@@ -15,3 +15,8 @@ node_modules/
 # OS
 .DS_Store
 Thumbs.db
+
+# SQLite DB files (cmd_160k_sub2)
+../db/*.db
+../db/*.db-shm
+../db/*.db-wal

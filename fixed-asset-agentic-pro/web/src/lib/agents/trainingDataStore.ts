@@ -1,18 +1,24 @@
 /**
- * TrainingDataStore: 教師データ インメモリ永続化ストア
- * 根拠: DESIGN_PDF_FIRST_MULTI_AGENT_VER2.md Section 3.4
+ * TrainingDataStore: 教師データ SQLite 永続化ストア
+ * 根拠: DESIGN_PDF_FIRST_MULTI_AGENT_VER2.md Section 3.4 / cmd_160k_sub2
  *
- * 役割: Practice Agent に渡す TrainingRecord[] を永続管理する。
- *       Phase 1 MVP はインメモリ（シングルトン）。
- *       Phase 2 以降で DB / Redis 等に差し替え可能な設計。
+ * 役割: Practice Agent に渡す TrainingRecord[] を SQLite で永続管理する。
+ *       サーバー再起動後もデータが保持される。
  *
  * 設計原則:
- *   - シングルトン export でアプリ全体共有
- *   - クラスも export してテストで新鮮なインスタンスを生成可能
+ *   - シングルトン export でアプリ全体共有（本番用）
+ *   - クラスも export してテストで ':memory:' インスタンスを生成可能
  *   - getAll はコピーを返す（外部変更がストア内部に影響しない）
+ *   - better-sqlite3 は同期 API: Next.js Server Components から安全に使える
+ *
+ * 後方互換性:
+ *   - インタフェース（add / addBatch / getAll / clear / size / findSimilar）は変更なし
+ *   - テストは new TrainingDataStore() で ':memory:' DB を使用（デフォルト）
  */
 
+import type Database from 'better-sqlite3';
 import type { TrainingRecord } from '@/types/training_data';
+import { openDatabase, resolveDbPath } from '@/lib/db';
 
 // ─── Jaccard 類似度計算 ──────────────────────────────────────────────────────
 
@@ -50,52 +56,93 @@ function calcJaccard(a: string, b: string): number {
   return union === 0 ? 0 : intersection / union;
 }
 
+// ─── 行型 ────────────────────────────────────────────────────────────────────
+
+interface TrainingRow {
+  id: number;
+  item: string;
+  amount: number;
+  label: string;
+  notes: string | null;
+  created_at: string;
+}
+
 // ─── TrainingDataStore クラス ─────────────────────────────────────────────────
 
 /**
- * 教師データを管理するインメモリストア。
- * クラスを export することでテストが fresh インスタンスを生成できる。
+ * 教師データを管理する SQLite 永続化ストア。
+ * クラスを export することでテストが ':memory:' インスタンスを生成できる。
  */
 export class TrainingDataStore {
-  private records: TrainingRecord[] = [];
+  private db: Database.Database;
+  private stmtInsert: Database.Statement;
+  private stmtSelectAll: Database.Statement;
+  private stmtCount: Database.Statement;
+
+  /**
+   * @param dbPath SQLite ファイルパス。':memory:' でインメモリDB（テスト用）。
+   *               省略時は ':memory:'（テスト互換のデフォルト）。
+   *               本番シングルトンは resolveDbPath() を明示的に渡す。
+   */
+  constructor(dbPath: string = ':memory:') {
+    this.db = openDatabase(dbPath);
+
+    // プリペアドステートメント（パフォーマンス最適化 + SQLインジェクション防止）
+    this.stmtInsert = this.db.prepare(
+      `INSERT INTO training_data (item, amount, label, notes) VALUES (?, ?, ?, ?)`,
+    );
+    this.stmtSelectAll = this.db.prepare(
+      `SELECT item, amount, label, notes FROM training_data ORDER BY id ASC`,
+    );
+    this.stmtCount = this.db.prepare(`SELECT COUNT(*) as cnt FROM training_data`);
+  }
 
   /**
    * 1件追加する。
-   * 内部配列にはコピーを格納（外部変更からの保護）。
    */
   add(record: TrainingRecord): void {
-    this.records.push({ ...record });
+    this.stmtInsert.run(record.item, record.amount, record.label, record.notes ?? null);
   }
 
   /**
-   * 複数件を一括追加する。
+   * 複数件を一括追加する（トランザクションで高速化）。
    * /api/import_pdf_training からの一括インポートに使用。
    */
   addBatch(records: TrainingRecord[]): void {
-    for (const r of records) {
-      this.records.push({ ...r });
-    }
+    const insertMany = this.db.transaction((recs: TrainingRecord[]) => {
+      for (const r of recs) {
+        this.stmtInsert.run(r.item, r.amount, r.label, r.notes ?? null);
+      }
+    });
+    insertMany(records);
   }
 
   /**
-   * 全件取得する（シャローコピーを返す）。
+   * 全件取得する（TrainingRecord[] を返す）。
    * 根拠: Section 3.4 "runPracticeAgent の第2引数に渡す"
    */
   getAll(): TrainingRecord[] {
-    return [...this.records];
+    const rows = this.stmtSelectAll.all() as TrainingRow[];
+    return rows.map((r) => ({
+      item: r.item,
+      amount: r.amount,
+      label: r.label as TrainingRecord['label'],
+      ...(r.notes != null ? { notes: r.notes } : {}),
+    }));
   }
 
   /**
-   * ストアをリセットする。
+   * ストアをリセットする（全件削除）。
    * テスト用途 / 再起動シミュレーション。
    */
   clear(): void {
-    this.records = [];
+    this.db.prepare(`DELETE FROM training_data`).run();
   }
 
   /** 登録済み件数を返す。 */
   size(): number {
-    return this.records.length;
+    const row = this.stmtCount.get() as { cnt: number };
+    return row.cnt;
   }
 
   /**
@@ -110,22 +157,28 @@ export class TrainingDataStore {
    *          空ストアの場合は即座に [] を返す。
    */
   findSimilar(keywords: string[], topN: number): TrainingRecord[] {
-    if (this.records.length === 0 || topN <= 0) return [];
+    if (this.size() === 0 || topN <= 0) return [];
     const query = keywords.join(' ');
-    return [...this.records]
+    const all = this.getAll();
+    return all
       .map((r) => ({ r, score: calcJaccard(query, r.item) }))
       .sort((a, b) => b.score - a.score)
       .slice(0, topN)
       .map(({ r }) => r);
+  }
+
+  /** DB接続を閉じる（テスト後のクリーンアップ用）。 */
+  close(): void {
+    this.db.close();
   }
 }
 
 // ─── シングルトン ────────────────────────────────────────────────────────────
 
 /**
- * アプリケーション全体で共有するシングルトンインスタンス。
+ * アプリケーション全体で共有するシングルトンインスタンス（本番用）。
  * route.ts / import_pdf_training route から参照する。
  *
- * Phase 2 拡張点: DB / Redis 永続化への置換はこの export を差し替えるだけで済む。
+ * DB パスは SQLITE_DB_PATH 環境変数 または resolveDbPath() で解決される。
  */
-export const trainingDataStore = new TrainingDataStore();
+export const trainingDataStore = new TrainingDataStore(resolveDbPath());

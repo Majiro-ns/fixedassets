@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import type { DepreciationRequest, DepreciationResponse } from '@/types/depreciation';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   let body: DepreciationRequest;

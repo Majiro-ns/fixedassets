@@ -49,6 +49,7 @@ import { TrainingDataImportCard } from '@/components/TrainingDataImportCard';
 import { TrainingDataManagerCard } from '@/components/TrainingDataManagerCard';
 import { PdfTrainingImportCard } from '@/components/PdfTrainingImportCard';
 import { SimilarCasesPanel } from '@/components/SimilarCasesPanel';
+import { PolicyManager } from '@/components/PolicyManager';
 import { useTrainingDataStore } from '@/store/trainingDataStore';
 
 // ─── バリデーションスキーマ ───────────────────────────────────────────
@@ -232,7 +233,7 @@ function toLineItemWithAction(result: ClassifyResponse): LineItemWithAction[] {
 }
 
 // ─── タブ型 ───────────────────────────────────────────────────────────
-type ActiveTab = 'pdf' | 'manual';
+type ActiveTab = 'pdf' | 'manual' | 'policy';
 
 // ─── メインページ ─────────────────────────────────────────────────────
 export default function HomePage() {
@@ -419,6 +420,20 @@ export default function HomePage() {
             <PenLine className="size-4" />
             ✏️ 手入力
           </button>
+          <button
+            role="tab"
+            aria-selected={activeTab === 'policy'}
+            onClick={() => setActiveTab('policy')}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors
+              ${activeTab === 'policy'
+                ? 'bg-primary text-primary-foreground'
+                : 'bg-muted/50 text-muted-foreground hover:bg-muted'
+              }`}
+            data-testid="tab-policy"
+          >
+            <Building2 className="size-4" />
+            🏢 ポリシー管理
+          </button>
         </div>
 
         {/* ── PDF タブ ─────────────────────────────────────────── */}
@@ -596,6 +611,13 @@ export default function HomePage() {
                 onResolved={(resolved) => setResult(resolved)}
               />
             )}
+          </div>
+        )}
+
+        {/* ── ポリシー管理タブ ──────────────────────────────────── */}
+        {activeTab === 'policy' && (
+          <div className="space-y-6" role="tabpanel" aria-label="ポリシー管理">
+            <PolicyManager />
           </div>
         )}
 

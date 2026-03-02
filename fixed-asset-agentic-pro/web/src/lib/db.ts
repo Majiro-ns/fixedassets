@@ -80,5 +80,18 @@ export function openDatabase(dbPath?: string): Database.Database {
     )
   `);
 
+  // ─── policies テーブル（cmd_170k_sub2: クライアント別ポリシー管理）────────
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS policies (
+      id               INTEGER PRIMARY KEY AUTOINCREMENT,
+      client_name      TEXT    NOT NULL UNIQUE,
+      threshold_amount INTEGER NOT NULL DEFAULT 200000,
+      keywords_json    TEXT    NOT NULL DEFAULT '[]',
+      rules_json       TEXT    NOT NULL DEFAULT '{}',
+      created_at       TEXT    NOT NULL DEFAULT (datetime('now')),
+      updated_at       TEXT    NOT NULL DEFAULT (datetime('now'))
+    )
+  `);
+
   return db;
 }

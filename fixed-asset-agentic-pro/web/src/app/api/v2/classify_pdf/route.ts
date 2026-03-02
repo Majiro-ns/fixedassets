@@ -24,6 +24,7 @@ import {
   extractLineItemsFromClassify,
   transformAggregatedToV2,
 } from './route.helpers';
+import { trainingDataStore } from '@/lib/agents/trainingDataStore';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
 const TIMEOUT_MS = 5000;
@@ -145,7 +146,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       // Promise.allSettled: 片方失敗でも残りで判定継続（根拠: Section 6 エラーハンドリング）
       const [taxSettled, practiceSettled] = await Promise.allSettled([
         runTaxAgent(extractedItems),
-        runPracticeAgent(extractedItems, []),
+        runPracticeAgent(extractedItems, trainingDataStore.getAll()),
       ]);
       taxResults = taxSettled.status === 'fulfilled' ? taxSettled.value : null;
       practiceResults = practiceSettled.status === 'fulfilled' ? practiceSettled.value : null;
@@ -155,7 +156,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     } else {
       // Sequential（PARALLEL_AGENTS=false の場合）
       try { taxResults = await runTaxAgent(extractedItems); } catch { agentStatus = 'partial'; }
-      try { practiceResults = await runPracticeAgent(extractedItems, []); } catch { agentStatus = 'partial'; }
+      try { practiceResults = await runPracticeAgent(extractedItems, trainingDataStore.getAll()); } catch { agentStatus = 'partial'; }
     }
 
     const aggregated = aggregate(taxResults, practiceResults);

@@ -1,0 +1,98 @@
+[
+  {
+    "test_id": "gold_023",
+    "category": "和暦表記の明細（令和6年）",
+    "input": {
+      "description": "令和6年3月 空調修繕工事（フィルター交換・老朽化対応）",
+      "amount": 150000,
+      "quantity": 1
+    },
+    "expected": {
+      "verdict": "EXPENSE",
+      "account_category": "修繕費",
+      "useful_life": null,
+      "rationale_keywords": ["修繕費", "rule_b", "7-8-3"]
+    },
+    "basis": "基通7-8-3(1): 150,000 < 200,000 × 「交換」→ rule_b → EXPENSE/修繕費。和暦テキストはpreScreen判定に影響しない"
+  },
+  {
+    "test_id": "gold_024",
+    "category": "全角文字・特殊文字を含む明細",
+    "input": {
+      "description": "コピー用紙Ａ４サイズ　５０枚×１０束（全角表記）",
+      "amount": 5000,
+      "quantity": 1
+    },
+    "expected": {
+      "verdict": "EXPENSE",
+      "account_category": "消耗品費",
+      "useful_life": null,
+      "rationale_keywords": ["令133条", "10万円未満", "消耗品費"]
+    },
+    "basis": "令133条: 5,000 < 100,000 → rule_a → EXPENSE。descriptionの全角/半角表記はpreScreen判定に影響しない"
+  },
+  {
+    "test_id": "gold_025",
+    "category": "金額0円の備考行",
+    "input": {
+      "description": "※上記以外の作業は別途お見積り（備考欄）",
+      "amount": 0,
+      "quantity": 1
+    },
+    "expected": {
+      "verdict": "EXPENSE",
+      "account_category": "消耗品費",
+      "useful_life": null,
+      "rationale_keywords": ["0円", "rule_a", "備考"]
+    },
+    "basis": "amount=0 < 100,000 → rule_a適用（設計上の制約: LLMシステムプロンプトでは0円=UNCERTAINだがpreScreenは純粋な金額比較）。実運用では備考行フィルタリングを推奨"
+  },
+  {
+    "test_id": "gold_026",
+    "category": "リース料（IFRS 16 オペレーティングリース）",
+    "input": {
+      "description": "複合機年間リース料（IFRS 16 オペレーティングリース相当）",
+      "amount": 180000,
+      "quantity": 1
+    },
+    "expected": {
+      "verdict": "EXPENSE",
+      "account_category": "賃借料",
+      "useful_life": null,
+      "rationale_keywords": ["リース", "費用", "賃借料"]
+    },
+    "basis": "オペレーティングリース料は期間費用（賃借料）。180,000 >= 100,000 かつ「リース」はREPAIR_KEYWORDS非マッチ → needsLlm。LLMがEXPENSE/賃借料判定"
+  },
+  {
+    "test_id": "gold_027",
+    "category": "税込/税抜混在（税込110,000円）",
+    "input": {
+      "description": "OAチェア エルゴノミクス（税込110,000円相当・税抜100,000円）",
+      "amount": 110000,
+      "quantity": 1
+    },
+    "expected": {
+      "verdict": "UNCERTAIN",
+      "account_category": null,
+      "useful_life": null,
+      "rationale_keywords": ["境界", "10万円", "needsLlm"]
+    },
+    "basis": "税込110,000円の場合: 110,000 >= 100,000 かつ非修繕 → needsLlm。税抜換算100,000円でも令133条は「< 100,000」(厳密小なり)のため非適用。LLMが文脈を踏まえ判定"
+  },
+  {
+    "test_id": "gold_028",
+    "category": "ページ跨ぎ分割明細（同一工事が2行に分割）",
+    "input": {
+      "description": "屋上防水工事（ページ跨ぎ：材料費分 / 作業費は次ページ参照）",
+      "amount": 80000,
+      "quantity": 1
+    },
+    "expected": {
+      "verdict": "EXPENSE",
+      "account_category": "消耗品費",
+      "useful_life": null,
+      "rationale_keywords": ["令133条", "10万円未満", "分割"]
+    },
+    "basis": "各明細は個別に評価する設計。80,000 < 100,000 → rule_a → EXPENSE。合算評価はシステム仕様上行わない（実務注記: 分割明細の合算判定は要人間確認）"
+  }
+]

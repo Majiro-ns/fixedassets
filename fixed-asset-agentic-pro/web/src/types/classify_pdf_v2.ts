@@ -26,6 +26,9 @@ export interface ExtractedLineItem {
   description: string;
   amount: number;
   quantity?: number;
+  // TODO(F-N06 Step4): previousTermBookValue?: number  前期末帳簿価額（円）
+  //   台帳連携実装後に追加。taxAgent の Step4（基通7-8-4(2) 支出額<前期末取得価額×10%）判定に使用。
+  //   追加時は taxAgent.ts の TAX_AGENT_SYSTEM_PROMPT Step4 注記も併せて削除し、有効化すること。
 }
 
 export interface ExtractedLineItems {

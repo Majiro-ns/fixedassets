@@ -578,3 +578,28 @@ describe('runTaxAgent: 複数明細バッチ処理', () => {
     expect(callArgs.messages[0].content).toContain('PC');
   });
 });
+
+// ─── F-N06 Step4 台帳未連携スキップ確認 ─────────────────────────────────────
+
+describe('TAX_AGENT_SYSTEM_PROMPT: F-N06 Step4 台帳未連携スキップ確認', () => {
+  /**
+   * TA-S4-1: プロンプトに「台帳未連携」の文言が含まれること
+   * CHECK-9: F-N06 Step4（基通7-8-4(2)）は台帳データ未連携のためスキップ方針を
+   *   プロンプトに明記。LLMが誤って Step4 を適用しないよう制御する。
+   */
+  it('TA-S4-1: プロンプトに「台帳未連携」の文言が含まれる（Step4スキップ明記）', () => {
+    expect(TAX_AGENT_SYSTEM_PROMPT).toContain('台帳未連携');
+  });
+
+  /**
+   * TA-S4-2: プロンプトに Step4 スキップ指示が含まれること
+   * CHECK-9: 「適用しない」または「スキップ」がプロンプトに含まれ、
+   *   LLMに Step4 を実行させない指示が明記されている。
+   */
+  it('TA-S4-2: プロンプトに「Step 4 はスキップ」または「適用しない」の指示が含まれる', () => {
+    const hasSkipInstruction =
+      TAX_AGENT_SYSTEM_PROMPT.includes('スキップ') ||
+      TAX_AGENT_SYSTEM_PROMPT.includes('適用しない');
+    expect(hasSkipInstruction).toBe(true);
+  });
+});

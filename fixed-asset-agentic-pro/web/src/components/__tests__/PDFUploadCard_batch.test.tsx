@@ -243,3 +243,96 @@ describe('PDFUploadCard — 全件CSVエクスポートボタン表示条件', (
     expect(screen.queryByTestId('btn-batch-csv-export')).not.toBeInTheDocument();
   });
 });
+
+// ─── PDFUploadCard — 並列化バッチ処理テスト (F-11 PARALLEL_BATCH_SIZE=3) ──
+// CHECK-9根拠: Promise.allSettled MDN仕様 — 全件 settled を待つ。一部 rejected でも他は継続。
+// PARALLEL_BATCH_SIZE=3: バックエンド負荷とUXのバランスから選定。
+
+describe('PDFUploadCard — 並列バッチ処理 (PARALLEL_BATCH_SIZE=3)', () => {
+  const mockClassifyFromPDF = classifyFromPDF as ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('3件投入 → classify が3回呼ばれ全件 done になる', async () => {
+    // CHECK-9: 3件全て成功 → doneCount=3, totalFiles=3 → 完了メッセージ表示
+    mockClassifyFromPDF.mockResolvedValue(mockV1Result);
+    render(<PDFUploadCard onResult={vi.fn()} />);
+    const input = screen.getByTestId('file-input');
+    fireEvent.change(input, {
+      target: {
+        files: [
+          new File(['pdf'], 'a.pdf', { type: 'application/pdf' }),
+          new File(['pdf'], 'b.pdf', { type: 'application/pdf' }),
+          new File(['pdf'], 'c.pdf', { type: 'application/pdf' }),
+        ],
+      },
+    });
+    const submitBtn = screen.getByRole('button', { name: /3件を判定する/ });
+    fireEvent.click(submitBtn);
+
+    await waitFor(() => {
+      expect(screen.getByText('✅ 3件の判定が完了しました')).toBeInTheDocument();
+    });
+    // 全3件が処理されたことを確認（並列・逐次問わず全件呼ばれること）
+    expect(mockClassifyFromPDF).toHaveBeenCalledTimes(3);
+    // 全件CSVエクスポートボタンも表示される
+    expect(screen.getByTestId('btn-batch-csv-export')).toBeInTheDocument();
+  });
+
+  it('1件失敗 → 他2件は継続処理される（Promise.allSettled の性質）', async () => {
+    // CHECK-9: allSettled は一部 rejected でも残り fulfilled を返す
+    mockClassifyFromPDF
+      .mockResolvedValueOnce(mockV1Result)           // file 1: 成功
+      .mockRejectedValueOnce(new Error('API error')) // file 2: 失敗
+      .mockResolvedValueOnce(mockV1ResultExpense);   // file 3: 成功
+    render(<PDFUploadCard onResult={vi.fn()} />);
+    const input = screen.getByTestId('file-input');
+    fireEvent.change(input, {
+      target: {
+        files: [
+          new File(['pdf'], 'ok1.pdf', { type: 'application/pdf' }),
+          new File(['pdf'], 'fail.pdf', { type: 'application/pdf' }),
+          new File(['pdf'], 'ok2.pdf', { type: 'application/pdf' }),
+        ],
+      },
+    });
+    const submitBtn = screen.getByRole('button', { name: /3件を判定する/ });
+    fireEvent.click(submitBtn);
+
+    await waitFor(() => {
+      // エラーバッジが1件表示される（失敗したファイルのみ）
+      expect(screen.getAllByText('エラー')).toHaveLength(1);
+    });
+    // 全3件が呼ばれた（失敗しても他は継続 = allSettled の動作確認）
+    expect(mockClassifyFromPDF).toHaveBeenCalledTimes(3);
+    // doneCount(2) !== totalFiles(3) → 完了メッセージは出ない
+    expect(screen.queryByText(/✅ 3件の判定が完了しました/)).not.toBeInTheDocument();
+  });
+
+  it('4件投入 → classify が4回呼ばれ全件 done になる（3+1の2バッチ想定）', async () => {
+    // CHECK-9: PARALLEL_BATCH_SIZE=3 の場合、4件は 3+1 の2バッチで処理される
+    mockClassifyFromPDF.mockResolvedValue(mockV1Result);
+    render(<PDFUploadCard onResult={vi.fn()} />);
+    const input = screen.getByTestId('file-input');
+    fireEvent.change(input, {
+      target: {
+        files: [
+          new File(['pdf'], 'a.pdf', { type: 'application/pdf' }),
+          new File(['pdf'], 'b.pdf', { type: 'application/pdf' }),
+          new File(['pdf'], 'c.pdf', { type: 'application/pdf' }),
+          new File(['pdf'], 'd.pdf', { type: 'application/pdf' }),
+        ],
+      },
+    });
+    const submitBtn = screen.getByRole('button', { name: /4件を判定する/ });
+    fireEvent.click(submitBtn);
+
+    await waitFor(() => {
+      expect(screen.getByText('✅ 4件の判定が完了しました')).toBeInTheDocument();
+    });
+    // 4件全てが処理された
+    expect(mockClassifyFromPDF).toHaveBeenCalledTimes(4);
+  });
+});

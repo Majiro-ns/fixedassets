@@ -13,6 +13,14 @@ import type { ClassifyPDFV2Response } from '@/types/classify_pdf_v2';
 
 const MAX_FILES = 10;
 
+/**
+ * 並列処理バッチサイズ（F-11 cmd_182k_A3b）
+ * CHECK-9根拠: バックエンド（Python FastAPI）の同時接続負荷とUXのバランス。
+ * 3並列: 大半のケースで体感速度が向上しつつ、サーバー過負荷を回避できる値。
+ * Promise.allSettled を使用: 一部失敗しても他のファイルは継続処理される。
+ */
+export const PARALLEL_BATCH_SIZE = 3;
+
 // ─── Props ────────────────────────────────────────────────────────────
 
 interface PDFUploadCardProps {
@@ -163,42 +171,58 @@ export function PDFUploadCard({ onResult, onManualInput }: PDFUploadCardProps) {
     const useV2 = getUseMultiAgent();
     let lastResult: ClassifyResponse | ClassifyPDFV2Response | null = null;
     let anyFailed = false;
+    let completedCount = 0;
 
-    for (let i = 0; i < files.length; i++) {
+    // PARALLEL_BATCH_SIZE 件ずつチャンクに分割して並列処理 (F-11 cmd_182k_A3b)
+    // Promise.allSettled: 一部失敗しても他のファイルは継続処理される
+    for (let batchStart = 0; batchStart < files.length; batchStart += PARALLEL_BATCH_SIZE) {
+      const batchEnd = Math.min(batchStart + PARALLEL_BATCH_SIZE, files.length);
+      const chunkIndices = Array.from({ length: batchEnd - batchStart }, (_, j) => batchStart + j);
+
+      // チャンク内の全ファイルを一括で processing 状態に
       setFiles((prev) =>
-        prev.map((f, idx) => (idx === i ? { ...f, status: 'processing' } : f))
+        prev.map((f, idx) => (chunkIndices.includes(idx) ? { ...f, status: 'processing' } : f))
       );
-      try {
-        if (useV2) {
-          const v2Result = await classifyFromPDFv2(files[i].file, {});
-          if (v2Result.status === 'extraction_failed') {
+
+      // 並列実行 — allSettled で全件 settled まで待機
+      const settled = await Promise.allSettled(
+        chunkIndices.map((idx) =>
+          useV2
+            ? classifyFromPDFv2(files[idx].file, {})
+            : classifyFromPDF(files[idx].file, true),
+        ),
+      );
+
+      // 各結果を集計してから一括で state 更新
+      const updates: Array<{ idx: number; patch: Partial<FileProcessResult> }> = [];
+      settled.forEach((result, j) => {
+        const idx = chunkIndices[j];
+        if (result.status === 'fulfilled') {
+          const value = result.value;
+          if (useV2 && (value as ClassifyPDFV2Response).status === 'extraction_failed') {
             anyFailed = true;
-            setFiles((prev) =>
-              prev.map((f, idx) =>
-                idx === i ? { ...f, status: 'error', error: 'PDFの抽出に失敗しました' } : f
-              )
-            );
+            updates.push({ idx, patch: { status: 'error', error: 'PDFの抽出に失敗しました' } });
           } else {
-            lastResult = v2Result;
-            setFiles((prev) =>
-              prev.map((f, idx) => (idx === i ? { ...f, status: 'done', result: v2Result } : f))
-            );
+            lastResult = value;
+            updates.push({ idx, patch: { status: 'done', result: value } });
           }
         } else {
-          const result = await classifyFromPDF(files[i].file, true);
-          lastResult = result;
-          setFiles((prev) =>
-            prev.map((f, idx) => (idx === i ? { ...f, status: 'done', result } : f))
-          );
+          anyFailed = true;
+          const msg = result.reason instanceof Error ? result.reason.message : 'PDF判定中にエラーが発生しました';
+          updates.push({ idx, patch: { status: 'error', error: msg } });
         }
-      } catch (err) {
-        anyFailed = true;
-        const msg = err instanceof Error ? err.message : 'PDF判定中にエラーが発生しました';
-        setFiles((prev) =>
-          prev.map((f, idx) => (idx === i ? { ...f, status: 'error', error: msg } : f))
-        );
-      }
-      setProcessedCount(i + 1);
+      });
+
+      setFiles((prev) => {
+        const next = [...prev];
+        for (const { idx, patch } of updates) {
+          next[idx] = { ...next[idx], ...patch };
+        }
+        return next;
+      });
+
+      completedCount += chunkIndices.length;
+      setProcessedCount(completedCount);
     }
 
     setIsProcessing(false);

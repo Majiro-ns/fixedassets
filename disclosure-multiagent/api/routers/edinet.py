@@ -1,9 +1,10 @@
 """EDINET related endpoints - company search, document listing, PDF download."""
 from __future__ import annotations
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import FileResponse
 
+from api.auth import verify_api_key
 from api.models.schemas import (
     CompanySearchResponse,
     EdinetDocumentsResponse,
@@ -27,6 +28,7 @@ async def search_company(
     edinet_code: str = Query(None, description="EDINETコード"),
     name: str = Query(None, description="企業名 (部分一致)"),
     limit: int = Query(20, ge=1, le=100),
+    _auth: None = Depends(verify_api_key),
 ):
     """証券コード・EDINETコード・企業名で企業を検索."""
     if sec_code:
@@ -46,6 +48,7 @@ async def search_company(
 async def get_documents(
     date: str = Query(..., description="検索日 (YYYY-MM-DD)"),
     doc_type: str = Query("120", description="書類種別コード (120=有報)"),
+    _auth: None = Depends(verify_api_key),
 ):
     """日付指定でEDINET書類一覧を取得."""
     docs = get_documents_by_date(date, doc_type)
@@ -53,7 +56,10 @@ async def get_documents(
 
 
 @router.get("/download/{doc_id}")
-async def download_pdf(doc_id: str):
+async def download_pdf(
+    doc_id: str,
+    _auth: None = Depends(verify_api_key),
+):
     """書類管理番号でPDFをダウンロード."""
     try:
         pdf_path = download_document_pdf(doc_id)

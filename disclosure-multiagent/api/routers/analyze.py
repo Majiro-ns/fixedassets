@@ -4,9 +4,10 @@ from __future__ import annotations
 import asyncio
 from pathlib import Path
 
-from fastapi import APIRouter, BackgroundTasks, HTTPException, UploadFile, File, Form
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, UploadFile, File, Form
 from typing import Optional
 
+from api.auth import verify_api_key
 from api.models.schemas import AnalyzeRequest, AnalyzeResponse
 from api.services.pipeline import create_task, run_pipeline_async
 from api.services.edinet_service import download_document_pdf
@@ -22,6 +23,7 @@ _MAX_FILE_SIZE = 20 * 1024 * 1024  # 20MB
 async def start_analysis(
     request: AnalyzeRequest,
     background_tasks: BackgroundTasks,
+    _auth: None = Depends(verify_api_key),
 ):
     """パイプライン起動 - task_idを即返却し、バックグラウンドで処理."""
     task_id = create_task()
@@ -75,6 +77,7 @@ async def start_analysis_with_upload(
     fiscal_month_end: int = Form(3),
     level: str = Form("竹"),
     use_mock: bool = Form(True),
+    _auth: None = Depends(verify_api_key),
 ):
     """PDF直接アップロードでパイプライン起動."""
 

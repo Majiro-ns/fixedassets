@@ -424,3 +424,74 @@ class PendingApprovalItem(BaseModel):
 class PendingApprovalsResponse(BaseModel):
     items: List[PendingApprovalItem]
     count: int
+
+
+# ─── Supplier Comparison（サプライヤー比較・最安値探索 T008）────────────────────
+
+class SupplierPriceInfo(BaseModel):
+    supplier_id: Optional[int] = None
+    supplier_name: str
+    supplier_code: Optional[str] = None
+    latest_price: float
+    price_date: str
+    source: Optional[str] = None
+    is_cheapest: bool = False
+    cost_score: float           # 現在は latest_price と同値（リードタイム考慮は拡張予定）
+
+
+class SupplierCompareResponse(BaseModel):
+    part_number: str
+    description: Optional[str] = None
+    suppliers: List[SupplierPriceInfo]
+    cheapest_supplier: Optional[str] = None
+    cheapest_price: Optional[float] = None
+
+
+class CheapestSupplierResponse(BaseModel):
+    part_number: str
+    description: Optional[str] = None
+    supplier_id: Optional[int] = None
+    supplier_name: str
+    supplier_code: Optional[str] = None
+    latest_price: float
+    price_date: str
+    source: Optional[str] = None
+
+
+class SupplierListResponse(BaseModel):
+    suppliers: List[Supplier]   # 既存 Supplier モデル（id, name, code）を再利用
+    count: int
+
+
+# ─── Reports（月次コスト分析 T009）────────────────────────────────────────────
+
+class MonthlyCostItem(BaseModel):
+    part_number: str
+    description: str
+    total_amount: float
+    avg_unit_price: float
+    order_count: int
+
+
+class MonthlyCostResponse(BaseModel):
+    year_month: str
+    items: List[MonthlyCostItem]
+    count: int
+    grand_total: float
+
+
+class CostTrendPoint(BaseModel):
+    year_month: str
+    total_amount: float
+    order_count: int
+
+
+class CostTrendResponse(BaseModel):
+    months: int
+    data: List[CostTrendPoint]
+
+
+class ExportCsvRequest(BaseModel):
+    report_type: str = "monthly_cost"    # "monthly_cost" | "cost_trend"
+    year_month: Optional[str] = None     # monthly_cost 対象月 (YYYY-MM)。None で最新月自動選択
+    months: int = 6                      # cost_trend の取得月数

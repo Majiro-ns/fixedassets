@@ -338,3 +338,35 @@ class ErpImportLogItem(BaseModel):
     erp_reference_id: Optional[str] = None
     error: Optional[str] = None
     imported_at: str
+
+
+# ─── Analytics（価格トレンド分析・発注タイミング推奨）─────────────────────────
+
+class PriceTrendItem(BaseModel):
+    price: float
+    fetched_at: str
+    source: Optional[str] = None
+
+
+class PriceTrendResponse(BaseModel):
+    part_number: str
+    trend_direction: str       # "rising" | "falling" | "stable" | "unknown"
+    trend_pct: float           # 最古→最新の変動率(%)
+    avg_price: float
+    min_price: float
+    max_price: float
+    latest_price: float
+    data_points: int
+    volatility_pct: float      # 変動係数(%) = stdev/avg*100
+    history: List[PriceTrendItem]
+
+
+class BuyRecommendationResponse(BaseModel):
+    part_number: str
+    action: str                # "BUY_NOW" | "WAIT" | "NEUTRAL"
+    reason: str
+    score: float               # 0〜100（高いほど今すぐ買いが推奨）
+    current_price: float
+    avg_price: float
+    trend_pct: float
+    trend_direction: str

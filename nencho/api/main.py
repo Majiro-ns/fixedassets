@@ -20,7 +20,7 @@ if str(_ROOT) not in sys.path:
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.routers import calculate, csv_import, employees, export, session, year_end_report
+from api.routers import calculate, csv_import, dependents, employees, export, session, year_end_report
 
 app = FastAPI(
     title="nencho API",
@@ -45,6 +45,7 @@ app.include_router(session.router)
 app.include_router(employees.router)
 app.include_router(csv_import.router)
 app.include_router(year_end_report.router)
+app.include_router(dependents.router)
 
 
 @app.get("/api/health")

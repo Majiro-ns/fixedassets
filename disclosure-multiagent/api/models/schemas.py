@@ -190,3 +190,42 @@ class ValidateResponse(BaseModel):
         default_factory=list,
         description="未検出の必須項目ID一覧（要確認リスト）"
     )
+
+
+# ── Checklist Evaluation History（評価履歴・バッチ評価 T010）────────────────────
+
+class EvaluateRequest(BaseModel):
+    """POST /api/checklist/evaluate リクエスト"""
+    disclosure_text: str = Field(..., description="照合対象の開示テキスト")
+    categories: Optional[list[str]] = Field(
+        None,
+        description="照合対象カテゴリ絞り込み（省略時は全カテゴリ）"
+    )
+    required_only: bool = Field(False, description="True の場合、required=true の項目のみ照合")
+
+
+class EvaluateSummary(BaseModel):
+    """評価サマリ（履歴一覧・POST レスポンスで使用）"""
+    eval_id: str = Field(..., description="評価ID（UUID4）")
+    evaluated_at: str = Field(..., description="評価日時（ISO 8601）")
+    text_snippet: str = Field(..., description="開示テキスト先頭200字")
+    total_checked: int = Field(..., description="照合項目数")
+    matched_count: int = Field(..., description="マッチ項目数")
+    unmatched_required_count: int = Field(..., description="未検出の必須項目数")
+    coverage_rate: float = Field(..., description="カバー率 (0.0〜1.0)")
+
+
+class EvaluateResponse(EvaluateSummary):
+    """POST /api/checklist/evaluate レスポンス（サマリと同一フィールド）"""
+
+
+class EvaluationsListResponse(BaseModel):
+    """GET /api/checklist/evaluations レスポンス"""
+    evaluations: list[EvaluateSummary]
+    count: int
+
+
+class EvaluationDetailResponse(EvaluateSummary):
+    """GET /api/checklist/evaluations/{eval_id} レスポンス"""
+    results: list[ChecklistMatchResult]
+    unmatched_required_ids: list[str] = Field(default_factory=list)

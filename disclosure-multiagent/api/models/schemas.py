@@ -129,3 +129,64 @@ class AnalysisResult(BaseModel):
 
 # Forward reference resolution
 PipelineStatus.model_rebuild()
+
+
+# ── Checklist (実務判断データ蓄積) ──────────────────────────
+
+class ChecklistItem(BaseModel):
+    """開示チェックリスト1項目"""
+    id: str = Field(..., description="チェックリストID (例: CL-001)")
+    category: str = Field(..., description="大分類 (例: 固定資産)")
+    subcategory: str = Field(..., description="小分類 (例: 減損)")
+    item: str = Field(..., description="開示項目名")
+    required: bool = Field(..., description="必須開示かどうか")
+    standard: str = Field(..., description="根拠基準 (例: 企業会計基準第9号 / IAS36)")
+    trigger: str = Field(..., description="開示が必要となるトリガー条件")
+    description: str = Field(..., description="開示内容の説明")
+    keywords: list[str] = Field(default_factory=list, description="検索キーワード")
+
+
+class ChecklistResponse(BaseModel):
+    """GET /api/checklist レスポンス"""
+    version: str
+    last_updated: str
+    source: str
+    total: int
+    items: list[ChecklistItem]
+
+
+class ValidateRequest(BaseModel):
+    """POST /api/checklist/validate リクエスト"""
+    disclosure_text: str = Field(..., description="照合対象の開示テキスト（報告書本文等）")
+    categories: Optional[list[str]] = Field(
+        None,
+        description="照合対象カテゴリ絞り込み（省略時は全カテゴリ）"
+    )
+    required_only: bool = Field(
+        False,
+        description="True の場合、required=true の項目のみ照合"
+    )
+
+
+class ChecklistMatchResult(BaseModel):
+    """1項目の照合結果"""
+    id: str
+    category: str
+    item: str
+    required: bool
+    matched: bool = Field(..., description="テキスト内にキーワードが含まれるかどうか")
+    matched_keywords: list[str] = Field(default_factory=list, description="マッチしたキーワード")
+    standard: str
+
+
+class ValidateResponse(BaseModel):
+    """POST /api/checklist/validate レスポンス"""
+    total_checked: int = Field(..., description="照合した項目数")
+    matched_count: int = Field(..., description="キーワードがマッチした項目数")
+    unmatched_required_count: int = Field(..., description="未検出の必須項目数")
+    coverage_rate: float = Field(..., description="カバー率 (0.0〜1.0)")
+    results: list[ChecklistMatchResult]
+    unmatched_required_ids: list[str] = Field(
+        default_factory=list,
+        description="未検出の必須項目ID一覧（要確認リスト）"
+    )

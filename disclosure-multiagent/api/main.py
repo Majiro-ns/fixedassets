@@ -19,7 +19,7 @@ if str(_PROJECT_ROOT) not in sys.path:
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.routers import edinet, analyze, status
+from api.routers import edinet, analyze, status, checklist
 
 app = FastAPI(
     title="disclosure-multiagent API",
@@ -44,6 +44,7 @@ app.add_middleware(
 app.include_router(edinet.router)
 app.include_router(analyze.router)
 app.include_router(status.router)
+app.include_router(checklist.router)
 
 
 @app.get("/api/health")

@@ -495,3 +495,40 @@ class ExportCsvRequest(BaseModel):
     report_type: str = "monthly_cost"    # "monthly_cost" | "cost_trend"
     year_month: Optional[str] = None     # monthly_cost 対象月 (YYYY-MM)。None で最新月自動選択
     months: int = 6                      # cost_trend の取得月数
+
+
+# ─── Procurement Approval（発注承認・却下ワークフロー T010）──────────────────
+
+class ApproveOrderResponse(BaseModel):
+    order_id: int
+    status: str           # "approved"
+    approved_at: str
+
+
+class RejectOrderRequest(BaseModel):
+    reason: str = ""
+
+
+class RejectOrderResponse(BaseModel):
+    order_id: int
+    status: str           # "rejected"
+    reason: str
+    rejected_at: str
+
+
+class OrderHistoryItem(BaseModel):
+    id: int
+    po_number: str
+    requester: str
+    reason: str
+    amount: float
+    status: str           # "pending" | "approved" | "rejected"
+    requested_at: str
+    resolved_at: Optional[str] = None
+    resolver: Optional[str] = None
+    comment: Optional[str] = None
+
+
+class OrderHistoryResponse(BaseModel):
+    items: List[OrderHistoryItem]
+    count: int

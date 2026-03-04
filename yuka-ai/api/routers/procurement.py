@@ -1,8 +1,8 @@
 """api/routers/procurement.py
 
-発注自動化ワークフロー API（T007）。
+発注自動化ワークフロー API（T007）+ 承認・却下ワークフロー（T010）。
 
-エンドポイント:
+エンドポイント（T007）:
   GET  /api/procurement/low-stock
       → 在庫低下アラート一覧（current_stock < reorder_point のもの）
 
@@ -11,10 +11,22 @@
 
   GET  /api/procurement/pending-approvals
       → 承認待ち発注リスト（approval_requests テーブルから status='pending' を取得）
+
+エンドポイント（T010）:
+  POST /api/procurement/approve/{order_id}
+      → 承認待ち発注を承認（status → approved）
+
+  POST /api/procurement/reject/{order_id}
+      → 承認待ち発注を却下（status → rejected、reason 記録）
+
+  GET  /api/procurement/orders/history
+      → 全発注承認履歴（全ステータス、id DESC）
 """
 from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException
+
+from fastapi import Body
 
 from api.models.schemas import (
     LowStockResponse,
@@ -23,6 +35,11 @@ from api.models.schemas import (
     AutoOrderCandidate,
     PendingApprovalsResponse,
     PendingApprovalItem,
+    ApproveOrderResponse,
+    RejectOrderRequest,
+    RejectOrderResponse,
+    OrderHistoryItem,
+    OrderHistoryResponse,
 )
 from api.services.db import get_connection
 from api.services.analytics_service import compute_price_trend, compute_buy_recommendation
@@ -190,3 +207,167 @@ async def get_pending_approvals():
 
     items = [PendingApprovalItem(**r) for r in rows]
     return PendingApprovalsResponse(items=items, count=len(items))
+
+
+# ---------------------------------------------------------------------------
+# T010: 承認・却下ワークフロー
+# ---------------------------------------------------------------------------
+
+_APPROVAL_TABLE_DDL = """
+    CREATE TABLE IF NOT EXISTS approval_requests (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        po_number TEXT NOT NULL,
+        requester TEXT NOT NULL DEFAULT 'system',
+        reason TEXT DEFAULT '',
+        amount REAL NOT NULL,
+        status TEXT DEFAULT 'pending',
+        requested_at TEXT DEFAULT (datetime('now','localtime')),
+        resolved_at TEXT,
+        resolver TEXT,
+        comment TEXT
+    )
+"""
+
+
+def _ensure_approval_table(conn) -> None:
+    """approval_requests テーブルが存在しない場合は作成する。"""
+    conn.execute(_APPROVAL_TABLE_DDL)
+    conn.commit()
+
+
+@router.post("/approve/{order_id}", response_model=ApproveOrderResponse)
+async def approve_order(order_id: int):
+    """承認待ち発注を承認する。
+
+    approval_requests.status を 'approved' に更新し、resolved_at を記録する。
+    対象レコードが存在しない、または status が 'pending' 以外の場合は 404 を返す。
+
+    Returns:
+        order_id: 承認した発注ID
+        status: "approved"
+        approved_at: 承認日時（ISO文字列）
+    """
+    try:
+        conn = get_connection()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"DB接続エラー: {e}")
+
+    try:
+        _ensure_approval_table(conn)
+        cur = conn.execute(
+            """
+            UPDATE approval_requests
+            SET status = 'approved',
+                resolved_at = datetime('now', 'localtime'),
+                resolver = 'system'
+            WHERE id = ? AND status = 'pending'
+            """,
+            (order_id,),
+        )
+        conn.commit()
+        if cur.rowcount == 0:
+            raise HTTPException(
+                status_code=404,
+                detail=f"order_id={order_id} の承認待ちレコードが見つかりません。",
+            )
+        row = conn.execute(
+            "SELECT id, resolved_at FROM approval_requests WHERE id = ?", (order_id,)
+        ).fetchone()
+    finally:
+        conn.close()
+
+    return ApproveOrderResponse(
+        order_id=row["id"],
+        status="approved",
+        approved_at=row["resolved_at"] or "",
+    )
+
+
+@router.post("/reject/{order_id}", response_model=RejectOrderResponse)
+async def reject_order(order_id: int, req: RejectOrderRequest = Body(default=RejectOrderRequest())):
+    """承認待ち発注を却下する。
+
+    approval_requests.status を 'rejected' に更新し、resolved_at と comment（却下理由）を記録する。
+    対象レコードが存在しない、または status が 'pending' 以外の場合は 404 を返す。
+
+    Request body:
+        reason: 却下理由（省略可）
+
+    Returns:
+        order_id: 却下した発注ID
+        status: "rejected"
+        reason: 却下理由
+        rejected_at: 却下日時（ISO文字列）
+    """
+    try:
+        conn = get_connection()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"DB接続エラー: {e}")
+
+    try:
+        _ensure_approval_table(conn)
+        cur = conn.execute(
+            """
+            UPDATE approval_requests
+            SET status = 'rejected',
+                resolved_at = datetime('now', 'localtime'),
+                resolver = 'system',
+                comment = ?
+            WHERE id = ? AND status = 'pending'
+            """,
+            (req.reason, order_id),
+        )
+        conn.commit()
+        if cur.rowcount == 0:
+            raise HTTPException(
+                status_code=404,
+                detail=f"order_id={order_id} の承認待ちレコードが見つかりません。",
+            )
+        row = conn.execute(
+            "SELECT id, resolved_at, comment FROM approval_requests WHERE id = ?", (order_id,)
+        ).fetchone()
+    finally:
+        conn.close()
+
+    return RejectOrderResponse(
+        order_id=row["id"],
+        status="rejected",
+        reason=row["comment"] or "",
+        rejected_at=row["resolved_at"] or "",
+    )
+
+
+@router.get("/orders/history", response_model=OrderHistoryResponse)
+async def get_orders_history():
+    """全発注承認履歴を返す（全ステータス・降順）。
+
+    approval_requests テーブルの全レコードを id 降順で返す。
+    テーブルが存在しない場合は空リストを返す（graceful degradation）。
+
+    Returns:
+        items: 全発注承認履歴リスト（id DESC）
+        count: 件数
+    """
+    try:
+        conn = get_connection()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"DB接続エラー: {e}")
+
+    try:
+        try:
+            cur = conn.execute(
+                """
+                SELECT id, po_number, requester, reason, amount, status,
+                       requested_at, resolved_at, resolver, comment
+                FROM approval_requests
+                ORDER BY id DESC
+                """
+            )
+            rows = [dict(r) for r in cur.fetchall()]
+        except Exception:
+            rows = []
+    finally:
+        conn.close()
+
+    items = [OrderHistoryItem(**r) for r in rows]
+    return OrderHistoryResponse(items=items, count=len(items))

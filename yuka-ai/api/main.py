@@ -9,7 +9,7 @@ from __future__ import annotations
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.routers import dashboard, prices, orders, delivery, emails, erp, imap, ocr, analytics
+from api.routers import dashboard, prices, orders, delivery, emails, erp, imap, ocr, analytics, procurement
 
 app = FastAPI(
     title="yuka-ai API",
@@ -37,6 +37,7 @@ app.include_router(erp.router)
 app.include_router(imap.router)
 app.include_router(ocr.router)
 app.include_router(analytics.router)
+app.include_router(procurement.router)
 
 
 @app.get("/api/health")

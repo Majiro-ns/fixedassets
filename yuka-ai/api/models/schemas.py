@@ -370,3 +370,57 @@ class BuyRecommendationResponse(BaseModel):
     avg_price: float
     trend_pct: float
     trend_direction: str
+
+
+# ─── Procurement（発注自動化 T007）────────────────────────────────────────────
+
+class LowStockItem(BaseModel):
+    part_number: str
+    description: str
+    category: Optional[str] = None
+    current_stock: int
+    reorder_point: int
+    shortage: int              # reorder_point - current_stock
+
+
+class LowStockResponse(BaseModel):
+    items: List[LowStockItem]
+    count: int
+
+
+class AutoOrderCandidate(BaseModel):
+    part_number: str
+    description: str
+    category: Optional[str] = None
+    current_stock: int
+    reorder_point: int
+    shortage: int
+    action: str                # "BUY_NOW"
+    reason: str
+    score: float               # 0〜100
+    current_price: float
+    avg_price: float
+    trend_pct: float
+
+
+class AutoOrderCandidatesResponse(BaseModel):
+    candidates: List[AutoOrderCandidate]
+    count: int
+
+
+class PendingApprovalItem(BaseModel):
+    id: int
+    po_number: str
+    requester: str
+    reason: str
+    amount: float
+    status: str
+    requested_at: str
+    resolved_at: Optional[str] = None
+    resolver: Optional[str] = None
+    comment: Optional[str] = None
+
+
+class PendingApprovalsResponse(BaseModel):
+    items: List[PendingApprovalItem]
+    count: int

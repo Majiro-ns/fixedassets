@@ -229,3 +229,28 @@ class EvaluationDetailResponse(EvaluateSummary):
     """GET /api/checklist/evaluations/{eval_id} レスポンス"""
     results: list[ChecklistMatchResult]
     unmatched_required_ids: list[str] = Field(default_factory=list)
+
+
+# ── Checklist Stats（評価統計ダッシュボード T011）────────────────────────────────
+
+class StatsSummaryResponse(BaseModel):
+    """GET /api/checklist/stats/summary レスポンス"""
+    total_evaluations: int = Field(..., description="総評価回数")
+    avg_coverage_rate: float = Field(..., description="平均一致率（小数点2桁）")
+    max_coverage_rate: float = Field(..., description="最高一致率")
+    min_coverage_rate: float = Field(..., description="最低一致率（0件時は0.0）")
+
+
+class TopItem(BaseModel):
+    """チェックリスト項目のマッチランキング1件"""
+    item_id: str = Field(..., description="チェックリストID（例: CL-001）")
+    item_name: str = Field(..., description="項目名")
+    match_count: int = Field(..., description="マッチ回数")
+    match_rate: float = Field(..., description="全評価中のマッチ率（%）")
+
+
+class TopItemsResponse(BaseModel):
+    """GET /api/checklist/stats/top-items レスポンス"""
+    total_evaluations: int = Field(..., description="集計に使用した総評価回数")
+    items: list[TopItem]
+    count: int

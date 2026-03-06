@@ -51,6 +51,17 @@ import { PdfTrainingImportCard } from '@/components/PdfTrainingImportCard';
 import { SimilarCasesPanel } from '@/components/SimilarCasesPanel';
 import { PolicyManager } from '@/components/PolicyManager';
 import { useTrainingDataStore } from '@/store/trainingDataStore';
+import { UpcomingEvents } from '@/components/calendar/UpcomingEvents';
+import { toISODate } from '@/lib/calendarUtils';
+import type { CalendarEvent } from '@/types/calendar';
+
+// ─── ダッシュボード用カレンダーモックデータ ──────────────────────
+const DASHBOARD_EVENTS: CalendarEvent[] = [
+  { id: 'ev-001', title: '月次減価償却計上', date: (() => { const d = new Date(); d.setDate(d.getDate() + 3); return toISODate(d); })(), type: 'depreciation', status: 'pending', recurrence: 'monthly' },
+  { id: 'ev-002', title: '償却資産税申告', date: (() => { const d = new Date(); d.setDate(d.getDate() + 7); return toISODate(d); })(), type: 'tax_filing', status: 'pending', recurrence: 'yearly' },
+  { id: 'ev-003', title: '期末棚卸し', date: (() => { const d = new Date(); d.setDate(d.getDate() + 14); return toISODate(d); })(), type: 'inventory', status: 'pending', recurrence: 'yearly' },
+  { id: 'ev-004', title: '第3四半期決算', date: (() => { const d = new Date(); d.setDate(d.getDate() + 21); return toISODate(d); })(), type: 'closing', status: 'pending', recurrence: 'yearly' },
+];
 
 // ─── バリデーションスキーマ ───────────────────────────────────────────
 const schema = z.object({
@@ -669,6 +680,11 @@ export default function HomePage() {
             <PdfTrainingImportCard />
             <TrainingDataManagerCard />
           </div>
+        </div>
+
+        {/* ── 直近イベント（経理カレンダー） ─────────────────────── */}
+        <div className="border-t pt-8 mt-4">
+          <UpcomingEvents events={DASHBOARD_EVENTS} daysAhead={30} maxItems={5} />
         </div>
 
       </div>

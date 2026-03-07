@@ -1,7 +1,7 @@
 # disclosure-multiagent
 
-有価証券報告書（有報）の開示情報ギャップ分析 AI エージェント。
-人的資本開示等の法令改正に対し、有報PDF を自動解析してギャップを検出し、松竹梅3水準の改善提案文を生成する。
+有価証券報告書（有報）・株主総会招集通知（招集通知）の開示情報ギャップ分析 AI エージェント。
+人的資本開示・SSBJ 等の法令改正に対し、PDF を自動解析してギャップを検出し、松竹梅3水準の改善提案文を生成する。
 **モックモードを搭載しており、APIキーなしで動作確認可能。**
 
 ---
@@ -50,18 +50,18 @@ docker compose down
 
 | モジュール | 役割 | テスト件数 | 状態 |
 |-----------|------|-----------|------|
-| m1_pdf_agent.py | PDF解析・セクション抽出（PyMuPDF/pdfplumber） | 29件 | ✅ Phase 1 |
-| m2_law_agent.py | 法令マスタYAML読み込み・参照期間算出 | 19件 | ✅ Phase 1 |
-| m3_gap_analysis_agent.py | ギャップ分析（追加必須/修正推奨/参考） | 16件 | ✅ Phase 1 |
-| m4_proposal_agent.py | 松竹梅3水準の提案文生成 | 41件 | ✅ Phase 1 |
-| m5_report_agent.py | Markdownレポート統合 | 37件 | ✅ Phase 1 |
+| m1_pdf_agent.py | PDF解析・セクション抽出（有報/招集通知 doc_type 対応） | 47件 | ✅ Phase 1 |
+| m2_law_agent.py | 法令マスタYAML一括読み込み・参照期間算出（laws/ 全 YAML 対象） | 26件 | ✅ Phase 1 |
+| m3_gap_analysis_agent.py | ギャップ分析（追加必須/修正推奨/参考） | 23件 | ✅ Phase 1 |
+| m4_proposal_agent.py | 松竹梅3水準の提案文生成 | 48件 | ✅ Phase 1 |
+| m5_report_agent.py | Markdownレポート統合 | 46件 | ✅ Phase 1 |
 | m6_law_url_collector.py | 法令URL自動収集（金融庁HP / e-Gov API） | 13件 | ✅ Phase 2 |
 | m7_edinet_client.py | EDINET連携・有報PDF自動取得 | 15件 | ✅ Phase 2 |
 | m8_multiyear_agent.py | 複数年度比較（YearDiff・トレンド検出） | 15件 | ✅ Phase 2 |
-| m9_document_exporter.py | Word/Excel出力（python-docx/openpyxl） | 8件 | ✅ Phase 2 |
+| m9_document_exporter.py | Word/Excel出力（python-docx/openpyxl） | 12件 | ✅ Phase 2 |
 
-**総テスト数: 256件（全PASS確認済み / 1件スキップ）**
-※ E2E統合テスト（test_e2e_pipeline.py・test_e2e_batch.py・test_e2e_smoke.py・test_e2e_phase2.py）を含む
+**総テスト数: 293件（全PASS確認済み） + subtests 25件**
+※ E2E統合テスト（test_e2e_pipeline.py・test_e2e_batch.py・test_e2e_smoke.py・test_e2e_phase2.py 計48件）を含む
 
 ---
 
@@ -72,7 +72,55 @@ pip install -r requirements_poc.txt
 
 # 実LLM使用時のみ（モックモードは不要）
 export ANTHROPIC_API_KEY=sk-ant-xxx
+
+# 法令YAMLディレクトリを変更する場合（デフォルト: laws/）
+export LAW_YAML_DIR=/path/to/custom/laws
 ```
+
+---
+
+## 対応文書種別（doc_type）
+
+`doc_type` 引数で解析対象の文書種別を指定する。
+
+| doc_type | 文書種別 | 備考 |
+|---------|---------|------|
+| `"yuho"` | 有価証券報告書（デフォルト） | 年次開示・人的資本・SSBJ 対応 |
+| `"shoshu"` | 株主総会招集通知 | 招集通知専用セクション検出 |
+
+```python
+from scripts.m1_pdf_agent import extract_report
+
+# 有報（デフォルト）
+report = extract_report("yuho.pdf", company_name="株式会社A", fiscal_year=2025)
+
+# 招集通知
+report = extract_report("shoshu.pdf", company_name="株式会社A", fiscal_year=2025, doc_type="shoshu")
+```
+
+FastAPI 経由の場合:
+
+```bash
+curl -X POST http://localhost:8010/api/analyze \
+  -H "Content-Type: application/json" \
+  -d '{"pdf_path": "shoshu.pdf", "company_name": "株式会社A", "fiscal_year": 2025, "doc_type_code": "shoshu"}'
+```
+
+---
+
+## 法令YAMLディレクトリ（laws/）
+
+`laws/` 配下の YAML ファイルが法令マスタとして自動読み込みされる。
+
+| ファイル | 件数 | 内容 |
+|---------|------|------|
+| `human_capital_2024.yaml` | 8件 | 人的資本開示（hc-2024-xxx × 4）、SSBJ 2024年（sb-2024-xxx × 4） |
+| `ssbj_2025.yaml` | 25件 | SSBJ 2025年基準（sb-2025-001 〜 sb-2025-025） |
+| `shareholder_notice_2025.yaml` | 16件 | 総会前開示（gm-2025-xxx × 12）、ガバナンス（gc-2025-xxx × 4） |
+| **合計** | **49件** | — |
+
+新しい YAML を追加する場合は `laws/` に配置するだけで自動読み込みされる（再起動不要）。
+スキーマ仕様は [`docs/law_yaml_schema.md`](docs/law_yaml_schema.md) を参照。
 
 ---
 

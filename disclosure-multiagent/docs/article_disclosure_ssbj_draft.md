@@ -1,8 +1,8 @@
 ---
-title: "AIで企業のSSBJ開示準備を支援する — Pythonマルチエージェントで気候変動開示を自動化"
-emoji: "🌿"
+title: "SSBJ時代の有報チェック自動化 — サステナビリティ開示をAIで検証する"
+emoji: "🌱"
 type: "tech"
-topics: ["python", "ai", "SSBJ", "サステナビリティ", "気候変動"]
+topics: ["python", "ssbj", "有価証券報告書", "llm", "サステナビリティ"]
 published: false
 ---
 

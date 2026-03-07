@@ -1,8 +1,16 @@
 """Pydantic schemas for disclosure-multiagent REST API."""
 from __future__ import annotations
 
+from enum import Enum
+
 from pydantic import BaseModel, Field
 from typing import Optional
+
+
+class DocTypeCode(str, Enum):
+    """書類種別コード（セマンティック）。EDINETの数値コードとは別物。"""
+    yuho = "yuho"     # 有価証券報告書
+    shoshu = "shoshu"  # 株主総会招集通知
 
 
 # ── Company / EDINET Search ──────────────────────────────
@@ -48,6 +56,7 @@ class AnalyzeRequest(BaseModel):
     level: str = Field("竹", pattern=r"^(松|竹|梅)$")
     pdf_doc_id: Optional[str] = None
     use_mock: bool = True
+    doc_type_code: DocTypeCode = DocTypeCode.yuho
 
 
 class AnalyzeResponse(BaseModel):
@@ -253,4 +262,48 @@ class TopItemsResponse(BaseModel):
     """GET /api/checklist/stats/top-items レスポンス"""
     total_evaluations: int = Field(..., description="集計に使用した総評価回数")
     items: list[TopItem]
+    count: int
+
+
+# ── Scoring（開示変更スコアリング T012）──────────────────────────────────────
+
+class MatchedItemBrief(BaseModel):
+    """スコアリング結果内のマッチ項目サマリ（top_matched_items 要素）"""
+    item_id: str = Field(..., description="チェックリストID（例: CL-001）")
+    item_name: str = Field(..., description="項目名")
+
+
+class ScoringRequest(BaseModel):
+    """POST /api/scoring/document リクエスト"""
+    disclosure_text: str = Field(..., description="スコアリング対象の開示文書テキスト")
+
+
+class ScoringResponse(BaseModel):
+    """POST /api/scoring/document レスポンス"""
+    score_id: str = Field(..., description="スコアリングID（UUID4）")
+    scored_at: str = Field(..., description="スコアリング日時（ISO 8601）")
+    overall_risk_score: float = Field(..., description="総合リスクスコア（0-100）")
+    checklist_coverage_score: float = Field(..., description="チェックリスト一致率スコア（0-100）")
+    change_intensity_score: float = Field(..., description="変更語彙の濃度スコア（0-100）")
+    risk_level: str = Field(..., description="リスクレベル: low / medium / high")
+    top_matched_items: list[MatchedItemBrief] = Field(
+        default_factory=list, description="マッチした上位5件のチェックリスト項目"
+    )
+
+
+class ScoringHistoryItem(BaseModel):
+    """GET /api/scoring/history レスポンス内の1件"""
+    score_id: str
+    scored_at: str
+    text_snippet: str = Field(..., description="開示テキスト先頭200文字")
+    overall_risk_score: float
+    checklist_coverage_score: float
+    change_intensity_score: float
+    risk_level: str
+    top_matched_items: list[MatchedItemBrief] = Field(default_factory=list)
+
+
+class ScoringHistoryResponse(BaseModel):
+    """GET /api/scoring/history レスポンス"""
+    history: list[ScoringHistoryItem]
     count: int

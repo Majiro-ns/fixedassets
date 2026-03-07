@@ -80,6 +80,7 @@ async def run_pipeline_async(
     fiscal_month_end: int,
     level: str,
     use_mock: bool = True,
+    doc_type: str = "yuho",
 ) -> None:
     """Execute the M1-M5 pipeline in a background thread."""
     task = _tasks.get(task_id)
@@ -102,6 +103,7 @@ async def run_pipeline_async(
                 company_name=company_name,
                 fiscal_year=fiscal_year,
                 fiscal_month_end=fiscal_month_end,
+                doc_type=doc_type,
             ),
         )
         company_display = structured_report.company_name or company_name or "分析対象企業"

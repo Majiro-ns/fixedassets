@@ -63,6 +63,7 @@ async def start_analysis(
         fiscal_month_end=request.fiscal_month_end,
         level=request.level,
         use_mock=request.use_mock,
+        doc_type=request.doc_type_code.value,
     )
 
     return AnalyzeResponse(task_id=task_id)

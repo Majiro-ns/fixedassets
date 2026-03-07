@@ -369,7 +369,7 @@ import httpx
 
 # 招集通知の解析リクエスト
 response = httpx.post(
-    "http://localhost:8000/analyze",
+    "http://localhost:8000/api/analyze",
     json={
         "edinet_code": "E02144",        # 例: トヨタ自動車
         "fiscal_year": 2025,
@@ -381,6 +381,7 @@ result = response.json()
 ```
 
 `doc_type_code: "shoshu"` を指定するだけで、M1〜M5が全て招集通知向けの処理に切り替わる。
+APIルーターが `doc_type_code` をパイプラインに引き渡し、M1の `extract_report()` が招集通知モードで実行される。
 
 ### 5-2. M3ギャップ分析の出力例
 

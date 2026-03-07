@@ -68,6 +68,34 @@ HEADING_PATTERNS: list[re.Pattern] = [
     re.compile(r'^[①②③④⑤⑥⑦⑧⑨⑩]'),                   # 丸数字
 ]
 
+# 招集通知の関連セクション検出キーワード
+SHOSHU_SECTION_KEYWORDS: list[str] = [
+    "議案",
+    "取締役選任",
+    "役員報酬",
+    "定款変更",
+    "監査役選任",
+    "株主提案",
+    "報告事項",
+    "決議事項",
+    "議決権",
+    "社外取締役",
+    "スキルマトリックス",
+    "コーポレートガバナンス",
+]
+
+# 招集通知の標準的な大見出しパターン
+SHOSHU_HEADING_PATTERNS: list[re.Pattern] = [
+    re.compile(r'^第\d+号議案'),                        # 「第1号議案 取締役選任の件」
+    re.compile(r'^【[^】]*議案[^】]*】'),                # 「【取締役選任の件】」
+    re.compile(r'^報告事項'),                            # 「報告事項」
+    re.compile(r'^決議事項'),                            # 「決議事項」
+    re.compile(r'^株主提案'),                            # 「株主提案」
+    re.compile(r'^[（(]\d+[）)]\s*[\u4e00-\u9fff]'),   # 「（1）取締役選任の件」
+    re.compile(r'^\d+\.\s*[\u4e00-\u9fff]{2,}'),        # 「1. 取締役の選任について」
+    re.compile(r'^【[^】]+】$'),                         # 「【表紙】」等の汎用パターン
+]
+
 # セクションテキストの最大文字数（チャンク処理で使用）
 MAX_SECTION_CHARS = 8000
 
@@ -91,24 +119,44 @@ def _check_fitz() -> bool:
 # ─────────────────────────────────────────────────────────
 
 def _is_heading_line(line: str) -> bool:
-    """行が見出しパターンにマッチするか判定する"""
+    """行が見出しパターンにマッチするか判定する（有報用・後方互換）"""
     stripped = line.strip()
     if not stripped:
         return False
     return any(p.search(stripped) for p in HEADING_PATTERNS)
 
 
+def _is_heading_line_for_doc_type(line: str, doc_type: str = "yuho") -> bool:
+    """
+    行が見出しパターンにマッチするか判定する（doc_type対応）。
+
+    Args:
+        line: 判定対象の行
+        doc_type: 書類種別（"yuho" | "shoshu"）
+
+    Returns:
+        True if the line matches a heading pattern for the given doc_type
+    """
+    stripped = line.strip()
+    if not stripped:
+        return False
+    patterns = SHOSHU_HEADING_PATTERNS if doc_type == "shoshu" else HEADING_PATTERNS
+    return any(p.search(stripped) for p in patterns)
+
+
 def split_sections_from_text(
     full_text: str,
     max_section_chars: int = MAX_SECTION_CHARS,
+    doc_type: str = "yuho",
 ) -> list[SectionData]:
     """
-    有報テキストをHEADING_PATTERNSに基づいてセクション分割する。
+    テキストをHEADING_PATTERNSに基づいてセクション分割する。
     PDF非依存のため、モックテキストでも動作する（テスト可能）。
 
     Args:
         full_text: PDFから抽出した全文テキスト
         max_section_chars: セクションテキストの最大文字数
+        doc_type: 書類種別（"yuho" | "shoshu"）。デフォルトは "yuho"（有報）
 
     Returns:
         list[SectionData]（各セクションのsection_id, heading, textを設定）
@@ -138,7 +186,7 @@ def split_sections_from_text(
         current_lines = []
 
     for line in lines:
-        if _is_heading_line(line):
+        if _is_heading_line_for_doc_type(line, doc_type):
             _flush_section()
             current_heading = line.strip()
         else:
@@ -213,6 +261,7 @@ def extract_report(
     fiscal_month_end: int = 3,
     company_name: str = "",
     extract_tables: bool = True,
+    doc_type: str = "yuho",
 ) -> StructuredReport:
     """
     PDFファイルを解析してStructuredReportを返すメインAPI（M1-3）。
@@ -234,6 +283,8 @@ def extract_report(
         extract_tables: テーブル抽出を行うか（デフォルト: True）。
             False にすると find_tables() をスキップし処理時間を大幅短縮できる。
             FINDING-001 対応: 処理時間 11.5秒 → ~0.5秒/社（実測）。
+        doc_type: 書類種別（"yuho" | "shoshu"）。デフォルトは "yuho"（有価証券報告書）。
+            "shoshu" を指定すると招集通知用のセクション分割パターンが使用される。
 
     Returns:
         StructuredReport
@@ -291,7 +342,7 @@ def extract_report(
     logger.info("テキスト抽出完了: %d文字 %dページ", len(full_text), len(page_texts))
 
     # ── STEP 4: セクション分割 ──
-    sections = split_sections_from_text(full_text)
+    sections = split_sections_from_text(full_text, doc_type=doc_type)
     logger.info("セクション分割完了: %d件", len(sections))
 
     # テーブルをセクションに付与（ページ→セクションのマッピングは近似）
@@ -388,6 +439,33 @@ def get_human_capital_sections(report: StructuredReport) -> list[SectionData]:
         body_head = section.text[:200]
         combined = heading_lower + body_head
         if any(kw in combined for kw in JINJI_SECTION_KEYWORDS):
+            relevant.append(section)
+    return relevant
+
+
+# ─────────────────────────────────────────────────────────
+# 招集通知セクション フィルタ
+# ─────────────────────────────────────────────────────────
+
+def get_shoshu_sections(report: StructuredReport) -> list[SectionData]:
+    """
+    StructuredReportから招集通知関連セクションのみを抽出する。
+
+    SHOSHU_SECTION_KEYWORDS が見出しまたは本文（先頭200文字）に
+    含まれるセクションを返す。
+
+    Args:
+        report: M1が生成したStructuredReport
+
+    Returns:
+        招集通知関連のSectionDataリスト（空の場合もある）
+    """
+    relevant = []
+    for section in report.sections:
+        heading = section.heading
+        body_head = section.text[:200]
+        combined = heading + body_head
+        if any(kw in combined for kw in SHOSHU_SECTION_KEYWORDS):
             relevant.append(section)
     return relevant
 

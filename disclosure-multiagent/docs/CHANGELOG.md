@@ -30,7 +30,7 @@
 **SSBJ（サステナビリティ開示基準）対応**
 
 - `laws/ssbj_2025.yaml` 新規作成: SSBJ 基準チェック項目 25件（sb-2025-001〜025）
-- `laws/human_capital_2024.yaml` 追加: 人的資本（hc-2024-xxx × 4）+ SSBJ 2024 年（sb-2024-xxx × 4）= 8件
+- `laws/human_capital_2024.yaml`: 既存ファイル（commit bfc4a9f より存在）。60608de には含まれない
 - `m2_law_agent.py` / `m3_gap_analysis_agent.py` 等の SSBJ 対応修正
 - `docs/article_disclosure_ssbj_draft.md` 作成（16,340字）
 

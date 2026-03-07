@@ -281,7 +281,7 @@ law_ctx: LawContext = load_law_context(
 )
 
 print(f"適用法令数: {len(law_ctx.applicable_entries)}")
-# → 適用法令数: 37  （人的資本25件 + SSBJ 12件等）
+# → 適用法令数: 50  （人的資本25件 + SSBJ 25件）
 ```
 
 `laws/` 配下に現在 2 つの YAML が存在します。
@@ -307,7 +307,8 @@ gap_result: GapAnalysisResult = analyze_gaps(
 )
 
 print(f"ギャップ件数: {gap_result.summary.total_gaps}")
-print(f"必須対応: {gap_result.summary.mandatory_gaps} 件")
+print(f"変更種別内訳: {gap_result.summary.by_change_type}")
+# 例: {'追加必須': 3, '修正推奨': 5, '廃止': 0}
 ```
 
 **SSBJ 対応の重要な設計**: M3 の `is_relevant_section()` 関数は、2つのキーワードセットを使って SSBJ 関連セクションを自動検出します。
@@ -423,12 +424,21 @@ def run_pipeline(
     gap_result = analyze_gaps(report, law_ctx, use_mock=use_mock)
     print(f"  → ギャップ {gap_result.summary.total_gaps} 件検出")
 
+    print("[4b/5] 改善提案生成中（Claude Haiku）")
+    proposals = [generate_proposals(gap) for gap in gap_result.gaps]
+    print(f"  → {len(proposals)} 件の提案生成")
+
     print("[5/5] レポート生成中")
-    report_path = generate_report(
+    report_md = generate_report(
+        structured_report=report,
+        law_context=law_ctx,
         gap_result=gap_result,
-        company_name=company_name,
-        output_path=f"{output_dir}/reports/{doc_id}_report.md",
+        proposal_set=proposals,
+        level="竹",
     )
+    report_path = f"{output_dir}/reports/{doc_id}_report.md"
+    with open(report_path, "w", encoding="utf-8") as f:
+        f.write(report_md)
     print(f"  → レポート出力: {report_path}")
     return report_path
 

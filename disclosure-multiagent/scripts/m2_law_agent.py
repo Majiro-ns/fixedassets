@@ -39,11 +39,12 @@ from m3_gap_analysis_agent import (
 # ─────────────────────────────────────────────────────────
 
 # デフォルトのYAMLディレクトリ（環境変数 LAW_YAML_DIR で上書き可能）
-_DEFAULT_YAML_DIR = Path(__file__).parent.parent / "10_Research"
+# laws/ 配下の全YAML（human_capital_2024.yaml / ssbj_2025.yaml / shareholder_notice_2025.yaml 等）を読み込む
+_DEFAULT_YAML_DIR = Path(__file__).parent.parent / "laws"
 LAW_YAML_DIR: Path = Path(os.environ.get("LAW_YAML_DIR", str(_DEFAULT_YAML_DIR)))
 
 # フォールバック: 直接ファイル指定（環境変数 LAW_YAML_FILE で上書き可能）
-_DEFAULT_YAML_FILE = LAW_YAML_DIR / "law_entries_human_capital.yaml"
+_DEFAULT_YAML_FILE = LAW_YAML_DIR / "human_capital_2024.yaml"
 LAW_YAML_FILE: Path = Path(os.environ.get("LAW_YAML_FILE", str(_DEFAULT_YAML_FILE)))
 
 # 重要カテゴリ（1件もエントリがない場合は警告）
@@ -102,13 +103,21 @@ def load_law_entries(yaml_path: Path) -> list[LawEntry]:
     except yaml.YAMLError as e:
         raise ValueError(f"YAMLパースエラー: {yaml_path}: {e}") from e
 
-    if not isinstance(data, dict) or "entries" not in data:
+    if not isinstance(data, dict):
+        raise ValueError(f"YAMLフォーマット不正: dictではありません: {yaml_path}")
+
+    # 旧スキーマ（entries）と新スキーマ（amendments）の両方に対応
+    if "entries" in data:
+        raw_list = data["entries"]
+    elif "amendments" in data:
+        raw_list = data["amendments"]
+    else:
         raise ValueError(
-            f"YAMLフォーマット不正: 'entries' キーが見つかりません: {yaml_path}"
+            f"YAMLフォーマット不正: 'entries' または 'amendments' キーが見つかりません: {yaml_path}"
         )
 
     entries: list[LawEntry] = []
-    for raw in data["entries"]:
+    for raw in raw_list:
         if not isinstance(raw, dict):
             logger.warning("スキップ: 不正なエントリ形式: %s", raw)
             continue
@@ -118,12 +127,18 @@ def load_law_entries(yaml_path: Path) -> list[LawEntry]:
         if not raw.get("disclosure_items"):
             logger.debug("スキップ: %s (disclosure_items なし)", entry_id)
 
+        # disclosure_items: 旧スキーマのキー名。新スキーマ（amendments）では required_items をフォールバック使用
+        disclosure_items = (
+            raw.get("disclosure_items")
+            or raw.get("required_items")
+            or []
+        )
         entry = LawEntry(
             id=entry_id,
             title=raw.get("title", ""),
             category=raw.get("category", ""),
             change_type=raw.get("change_type", "参考"),
-            disclosure_items=raw.get("disclosure_items") or [],
+            disclosure_items=disclosure_items,
             source=raw.get("source", ""),
             source_confirmed=bool(raw.get("source_confirmed", False)),
             summary=raw.get("summary", ""),
@@ -136,6 +151,31 @@ def load_law_entries(yaml_path: Path) -> list[LawEntry]:
 
     logger.info("法令エントリ読み込み完了: %d件 (%s)", len(entries), yaml_path.name)
     return entries
+
+
+def _load_all_from_dir(yaml_dir: Path) -> tuple[list[LawEntry], Path]:
+    """
+    yaml_dir 配下の全 *.yaml を読み込んで結合したエントリリストを返す。
+
+    Args:
+        yaml_dir: YAMLファイルが格納されたディレクトリ
+
+    Returns:
+        (全エントリリスト, 最後に読み込んだYAMLのパス（law_yaml_as_of用）)
+    """
+    logger = logging.getLogger(__name__)
+    all_entries: list[LawEntry] = []
+    last_yaml: Path = yaml_dir  # fallback
+    for yaml_path in sorted(yaml_dir.glob("*.yaml")):
+        try:
+            entries = load_law_entries(yaml_path)
+            all_entries.extend(entries)
+            last_yaml = yaml_path
+            logger.info("読み込み完了: %s (%d件)", yaml_path.name, len(entries))
+        except (ValueError, FileNotFoundError) as e:
+            logger.warning("スキップ: %s: %s", yaml_path.name, e)
+    logger.info("ディレクトリ読み込み合計: %d件 (%s)", len(all_entries), yaml_dir)
+    return all_entries, last_yaml
 
 
 # ─────────────────────────────────────────────────────────
@@ -223,10 +263,14 @@ def load_law_context(
     """
     logger = logging.getLogger(__name__)
 
-    target_yaml = yaml_path or LAW_YAML_FILE
-
     # STEP 1: YAMLファイル読み込み
-    all_entries = load_law_entries(target_yaml)
+    # yaml_path が明示指定された場合: 単一ファイル読み込み（後方互換）
+    # yaml_path=None の場合: LAW_YAML_DIR 配下の全YAMLを結合（laws/ 対応）
+    if yaml_path is not None:
+        target_yaml = yaml_path
+        all_entries = load_law_entries(target_yaml)
+    else:
+        all_entries, target_yaml = _load_all_from_dir(LAW_YAML_DIR)
 
     # STEP 2: 法令参照期間の算出（m3のcalc_law_ref_periodを使用）
     ref_start, ref_end = calc_law_ref_period(fiscal_year, fiscal_month_end)

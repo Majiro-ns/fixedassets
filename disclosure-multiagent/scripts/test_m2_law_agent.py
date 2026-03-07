@@ -28,8 +28,10 @@ from m2_law_agent import (
     load_law_context,
     load_law_entries,
     get_applicable_entries,
+    LAW_YAML_DIR,
     LAW_YAML_FILE,
     CRITICAL_CATEGORIES,
+    _load_all_from_dir,
 )
 from m3_gap_analysis_agent import (
     LawEntry,
@@ -476,6 +478,80 @@ class TestM3Integration(unittest.TestCase):
         print(f"  [PASS] law_yaml_as_of伝搬: '{law_ctx.law_yaml_as_of}' ✓")
 
 
+class TestLawsDirectoryLoading(unittest.TestCase):
+    """
+    TEST 6: laws/ ディレクトリ全体読み込みテスト（D-LAW-DIR-fix 追加）
+
+    laws/human_capital_2024.yaml / ssbj_2025.yaml / shareholder_notice_2025.yaml
+    が全件 m2 に読み込まれることを確認する。
+    """
+
+    def test_law_yaml_dir_points_to_laws(self):
+        """LAW_YAML_DIR が laws/ を指していること（10_Research/ ではない）"""
+        self.assertTrue(
+            LAW_YAML_DIR.name == "laws" or str(LAW_YAML_DIR).endswith("/laws"),
+            f"LAW_YAML_DIR が laws/ を指していません: {LAW_YAML_DIR}"
+        )
+
+    def test_laws_dir_has_three_yamls(self):
+        """laws/ 配下に3件のYAMLが存在すること"""
+        yaml_files = list(LAW_YAML_DIR.glob("*.yaml"))
+        self.assertEqual(
+            len(yaml_files), 3,
+            f"laws/*.yaml が3件ではありません: {[f.name for f in yaml_files]}"
+        )
+
+    def test_load_all_from_dir_returns_all_entries(self):
+        """_load_all_from_dir() が laws/ 配下の全YAMLを結合して返すこと"""
+        if not LAW_YAML_DIR.exists():
+            self.skipTest(f"laws/ ディレクトリが存在しません: {LAW_YAML_DIR}")
+        all_entries, _ = _load_all_from_dir(LAW_YAML_DIR)
+        # 3ファイル結合（human_capital + ssbj + shareholder_notice）で40件超を期待
+        self.assertGreater(len(all_entries), 40,
+                           f"laws/ 全YAML結合エントリ数が少なすぎます: {len(all_entries)}件")
+
+    def test_load_all_from_dir_includes_ssbj(self):
+        """ssbj_2025.yaml のエントリが読み込まれること"""
+        if not LAW_YAML_DIR.exists():
+            self.skipTest(f"laws/ ディレクトリが存在しません: {LAW_YAML_DIR}")
+        all_entries, _ = _load_all_from_dir(LAW_YAML_DIR)
+        # ssbj_2025.yaml のIDは "sb-" プレフィックス（例: sb-2025-001）
+        ssbj_entries = [e for e in all_entries if e.id.startswith("sb-")]
+        self.assertGreater(len(ssbj_entries), 0,
+                           "ssbj_2025.yaml のエントリが0件（sb- プレフィックスのIDが見つからない）")
+
+    def test_load_all_from_dir_includes_human_capital(self):
+        """human_capital_2024.yaml のエントリが読み込まれること"""
+        if not LAW_YAML_DIR.exists():
+            self.skipTest(f"laws/ ディレクトリが存在しません: {LAW_YAML_DIR}")
+        all_entries, _ = _load_all_from_dir(LAW_YAML_DIR)
+        hc_entries = [e for e in all_entries if e.id.startswith("hc-")]
+        self.assertGreater(len(hc_entries), 0,
+                           "human_capital_2024.yaml のエントリが0件（hc- プレフィックスのIDが見つからない）")
+
+    def test_load_all_from_dir_includes_shareholder_notice(self):
+        """shareholder_notice_2025.yaml のエントリが読み込まれること"""
+        if not LAW_YAML_DIR.exists():
+            self.skipTest(f"laws/ ディレクトリが存在しません: {LAW_YAML_DIR}")
+        all_entries, _ = _load_all_from_dir(LAW_YAML_DIR)
+        gm_entries = [e for e in all_entries if e.id.startswith("gm-") or e.id.startswith("gc-")]
+        self.assertGreater(len(gm_entries), 0,
+                           "shareholder_notice_2025.yaml のエントリが0件（gm-/gc- プレフィックスのIDが見つからない）")
+
+    def test_default_load_law_context_reads_all_yamls(self):
+        """yaml_path=None のデフォルト呼び出しが laws/ 全体を読み込むこと（エラーなし確認）"""
+        if not LAW_YAML_DIR.exists():
+            self.skipTest(f"laws/ ディレクトリが存在しません: {LAW_YAML_DIR}")
+        # デフォルト呼び出しでエラーが起きないこと（FileNotFoundError等）を確認
+        ctx = load_law_context(2025, 3)
+        self.assertIsNotNone(ctx)
+        # 注: applicable_entries は日付フィルタ（effective_from が参照期間内）で絞られる
+        # laws/ 配下の全エントリがフィルタ前に読まれていることを別テストで確認済み
+        all_entries, _ = _load_all_from_dir(LAW_YAML_DIR)
+        self.assertGreater(len(all_entries), 40,
+                           f"デフォルト呼び出しの全エントリ（フィルタ前）が少なすぎます: {len(all_entries)}件")
+
+
 if __name__ == "__main__":
     import os
     loader = unittest.TestLoader()
@@ -486,6 +562,7 @@ if __name__ == "__main__":
         TestCalcLawRefPeriod,
         TestWarnings,
         TestM3Integration,
+        TestLawsDirectoryLoading,
     ]:
         suite.addTests(loader.loadTestsFromTestCase(cls))
 

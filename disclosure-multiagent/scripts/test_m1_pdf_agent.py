@@ -30,12 +30,16 @@ sys.path.insert(0, str(SCRIPTS_DIR))
 from m1_pdf_agent import (
     JINJI_SECTION_KEYWORDS,
     HEADING_PATTERNS,
+    SHOSHU_SECTION_KEYWORDS,
+    SHOSHU_HEADING_PATTERNS,
     MAX_SECTION_CHARS,
     split_sections_from_text,
     get_human_capital_sections,
+    get_shoshu_sections,
     report_to_dict,
     _is_heading_line,
     _infer_heading_level,
+    _is_heading_line_for_doc_type,
 )
 from m3_gap_analysis_agent import (
     StructuredReport,
@@ -687,6 +691,236 @@ class TestExtractTablesFlag(unittest.TestCase):
         with self.assertRaises(FileNotFoundError,
                                msg="extract_tables=False でも FileNotFoundError が出るべき"):
             extract_report(dummy, extract_tables=False)
+
+
+# ═══════════════════════════════════════════════════════════════
+# TEST 7: 招集通知（shoshu）対応テスト
+# ═══════════════════════════════════════════════════════════════
+
+class TestShoshuDocType(unittest.TestCase):
+    """
+    TEST 7: 招集通知（shoshu）書類種別対応テスト
+
+    D-Shoshu-01 で追加した以下の機能を検証する:
+      - SHOSHU_SECTION_KEYWORDS（12件）
+      - SHOSHU_HEADING_PATTERNS（8件）
+      - _is_heading_line_for_doc_type(line, doc_type)
+      - split_sections_from_text(text, doc_type="shoshu")
+      - get_shoshu_sections(report)
+
+    手計算検証（CHECK-7b 相当）:
+      SHOSHU_SECTION_KEYWORDS:
+        1. "議案"               6. "株主提案"
+        2. "取締役選任"         7. "報告事項"
+        3. "役員報酬"           8. "決議事項"
+        4. "定款変更"           9. "議決権"
+        5. "監査役選任"        10. "社外取締役"
+                               11. "スキルマトリックス"
+                               12. "コーポレートガバナンス"
+      合計: 12件
+
+      SHOSHU_HEADING_PATTERNS:
+        1. ^第[0-9]+号議案           (第1号議案 取締役選任の件)
+        2. ^【[^】]*議案[^】]*】   (【取締役選任の件】)
+        3. ^報告事項
+        4. ^決議事項
+        5. ^株主提案
+        6. ^[（(][0-9]+[）)] <漢字>  (（1）取締役選任の件)
+        7. ^[0-9]+. <漢字>{2,}      (1. 取締役の選任について)
+        8. ^【[^】]+】$            (汎用パターン)
+      合計: 8件
+    """
+
+    def _make_report(self, sections: list) -> StructuredReport:
+        return StructuredReport(
+            document_id="TEST_SHOSHU",
+            company_name="テスト株式会社",
+            fiscal_year=2025,
+            fiscal_month_end=3,
+            sections=sections,
+        )
+
+    # ── 7-1: _is_heading_line_for_doc_type ──────────────────
+
+    def test_shoshu_heading_gian_detected(self):
+        """「第N号議案」が shoshu 見出しとして認識される"""
+        self.assertTrue(_is_heading_line_for_doc_type("第1号議案 取締役選任の件", "shoshu"))
+        self.assertTrue(_is_heading_line_for_doc_type("第2号議案 役員報酬改定の件", "shoshu"))
+        self.assertTrue(_is_heading_line_for_doc_type("第10号議案 定款変更の件", "shoshu"))
+
+    def test_shoshu_heading_hokokujiko_detected(self):
+        """「報告事項」「決議事項」「株主提案」が shoshu 見出しとして認識される"""
+        self.assertTrue(_is_heading_line_for_doc_type("報告事項", "shoshu"))
+        self.assertTrue(_is_heading_line_for_doc_type("決議事項", "shoshu"))
+        self.assertTrue(_is_heading_line_for_doc_type("株主提案", "shoshu"))
+
+    def test_yuho_heading_not_detected_as_shoshu(self):
+        """有報専用パターン「第一部」「N【...】」は shoshu 見出しとして認識されない"""
+        self.assertFalse(_is_heading_line_for_doc_type("第一部 企業情報", "shoshu"))
+        self.assertFalse(_is_heading_line_for_doc_type("1【事業の概要】", "shoshu"))
+        self.assertFalse(_is_heading_line_for_doc_type("第２【企業の概況】", "shoshu"))
+
+    def test_default_doc_type_is_yuho(self):
+        """_is_heading_line_for_doc_type のデフォルトは yuho（有報パターン）を使う"""
+        self.assertTrue(_is_heading_line_for_doc_type("第一部 企業情報"))
+        self.assertTrue(_is_heading_line_for_doc_type("1【事業の概要】"))
+        # shoshu専用パターンはデフォルト(yuho)では検出されない
+        self.assertFalse(_is_heading_line_for_doc_type("第1号議案 取締役選任の件"))
+
+    # ── 7-2: split_sections_from_text with doc_type="shoshu" ──
+
+    def test_split_shoshu_text_detects_gian(self):
+        """招集通知テキストを doc_type='shoshu' で分割すると「第N号議案」が見出しになる"""
+        mock_shoshu = """報告事項
+第190期事業報告の内容。
+
+決議事項
+第1号議案 取締役選任の件
+候補者情報がここに入る。
+
+第2号議案 役員報酬改定の件
+報酬体系の変更内容。
+"""
+        sections = split_sections_from_text(mock_shoshu, doc_type="shoshu")
+        headings = [s.heading for s in sections]
+
+        self.assertTrue(
+            any("報告事項" in h for h in headings),
+            f"「報告事項」が見出し未検出: {headings}"
+        )
+        self.assertTrue(
+            any("第1号議案" in h for h in headings),
+            f"「第1号議案」が見出し未検出: {headings}"
+        )
+        self.assertTrue(
+            any("第2号議案" in h for h in headings),
+            f"「第2号議案」が見出し未検出: {headings}"
+        )
+
+    def test_split_shoshu_default_yuho_backward_compat(self):
+        """doc_type 引数なし（デフォルト）は有報分割と同一結果（後方互換）"""
+        mock_yuho = "第一部 企業情報\n企業情報\n\n第二部 保証会社情報\n情報\n"
+        sections_default = split_sections_from_text(mock_yuho)
+        sections_yuho = split_sections_from_text(mock_yuho, doc_type="yuho")
+        self.assertEqual(
+            [s.heading for s in sections_default],
+            [s.heading for s in sections_yuho],
+            "デフォルト引数と doc_type='yuho' の結果が異なる（後方互換違反）"
+        )
+
+    def test_shoshu_text_not_split_with_yuho_pattern(self):
+        """招集通知テキストは doc_type='yuho' では「第N号議案」が見出し未検出（パターン非一致）"""
+        mock_shoshu = "第1号議案 取締役選任の件\n候補者情報\n"
+        sections_yuho = split_sections_from_text(mock_shoshu, doc_type="yuho")
+        headings = [s.heading for s in sections_yuho]
+        # 有報パターンでは「第1号議案」にマッチしない → 見出し未検出 → 1セクション
+        self.assertTrue(
+            not any("第1号議案" in h for h in headings),
+            f"有報パターンが招集通知見出しを誤検出: {headings}"
+        )
+
+    # ── 7-3: get_shoshu_sections ────────────────────────────
+
+    def test_get_shoshu_sections_keyword_in_heading(self):
+        """SHOSHU_SECTION_KEYWORDS が見出しにあるセクションが抽出される"""
+        sections = [
+            SectionData(section_id="SEC-001", heading="第1号議案 取締役選任の件", text="候補者情報"),
+            SectionData(section_id="SEC-002", heading="財務諸表", text="財務データ"),
+            SectionData(section_id="SEC-003", heading="役員報酬改定議案", text="報酬詳細"),
+        ]
+        report = self._make_report(sections)
+        result = get_shoshu_sections(report)
+        sec_ids = [s.section_id for s in result]
+
+        self.assertIn("SEC-001", sec_ids)
+        self.assertIn("SEC-003", sec_ids)
+        self.assertNotIn("SEC-002", sec_ids)
+
+    def test_get_shoshu_sections_keyword_in_body(self):
+        """SHOSHU_SECTION_KEYWORDS が本文先頭200字にあるセクションが抽出される"""
+        sections = [
+            SectionData(
+                section_id="SEC-001",
+                heading="ご通知",
+                text="議案として取締役選任を上程いたします。",
+            ),
+        ]
+        report = self._make_report(sections)
+        result = get_shoshu_sections(report)
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0].section_id, "SEC-001")
+
+    def test_get_shoshu_sections_empty_report(self):
+        """セクションなしの report では空リスト"""
+        report = self._make_report([])
+        result = get_shoshu_sections(report)
+        self.assertEqual(result, [])
+
+    def test_get_shoshu_sections_no_keyword_excluded(self):
+        """SHOSHU_SECTION_KEYWORDS に無関係なセクションは除外される"""
+        sections = [
+            SectionData(section_id="SEC-001", heading="サステナビリティ報告", text="環境データ"),
+            SectionData(section_id="SEC-002", heading="人的資本", text="人材育成方針"),
+        ]
+        report = self._make_report(sections)
+        result = get_shoshu_sections(report)
+        # 「サステナビリティ」「人的資本」は SHOSHU_SECTION_KEYWORDS にない
+        self.assertEqual(len(result), 0)
+
+    def test_all_shoshu_keywords_detectable(self):
+        """SHOSHU_SECTION_KEYWORDS の全キーワードが get_shoshu_sections で検出される（手計算確認）"""
+        for kw in SHOSHU_SECTION_KEYWORDS:
+            section = SectionData(
+                section_id="SEC-001",
+                heading=f"{kw}に関する事項",
+                text="詳細情報",
+            )
+            report = self._make_report([section])
+            result = get_shoshu_sections(report)
+            self.assertEqual(
+                len(result), 1,
+                f"キーワード「{kw}」を含む見出しが get_shoshu_sections で未検出"
+            )
+
+    # ── 7-4: 定数の手計算確認 ──────────────────────────────
+
+    def test_shoshu_keywords_count_is_12(self):
+        """
+        SHOSHU_SECTION_KEYWORDS のキーワード数が 12 件（手計算確認）
+
+        手計算:
+          1.議案 2.取締役選任 3.役員報酬 4.定款変更 5.監査役選任
+          6.株主提案 7.報告事項 8.決議事項 9.議決権 10.社外取締役
+          11.スキルマトリックス 12.コーポレートガバナンス
+          合計: 12件
+        """
+        self.assertEqual(
+            len(SHOSHU_SECTION_KEYWORDS),
+            12,
+            f"SHOSHU_SECTION_KEYWORDS の件数が想定と異なる: 実測={len(SHOSHU_SECTION_KEYWORDS)}件"
+        )
+
+    def test_shoshu_heading_patterns_count_is_8(self):
+        """SHOSHU_HEADING_PATTERNS のパターン数が 8 件（手計算確認）"""
+        self.assertEqual(
+            len(SHOSHU_HEADING_PATTERNS),
+            8,
+            f"SHOSHU_HEADING_PATTERNS の件数が想定と異なる: {len(SHOSHU_HEADING_PATTERNS)}件"
+        )
+
+    def test_shoshu_keywords_all_expected_present(self):
+        """手計算で確認した全12キーワードが存在する"""
+        expected = [
+            "議案", "取締役選任", "役員報酬", "定款変更", "監査役選任",
+            "株主提案", "報告事項", "決議事項", "議決権", "社外取締役",
+            "スキルマトリックス", "コーポレートガバナンス",
+        ]
+        for kw in expected:
+            self.assertIn(
+                kw,
+                SHOSHU_SECTION_KEYWORDS,
+                f"キーワード「{kw}」が SHOSHU_SECTION_KEYWORDS に見つからない"
+            )
 
 
 # ═══════════════════════════════════════════════════════════════

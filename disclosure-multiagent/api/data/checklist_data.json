@@ -278,6 +278,116 @@
       "trigger": "気候変動が事業に重要な影響を与えるか、TCFD開示を任意で行う場合",
       "description": "ガバナンス・戦略・リスク管理・指標と目標の4項目に沿って気候変動関連情報を開示",
       "keywords": ["TCFD", "気候変動", "炭素排出", "移行リスク", "物理的リスク", "カーボンニュートラル"]
+    },
+    {
+      "id": "CL-026",
+      "category": "SSBJ",
+      "subcategory": "指標と目標",
+      "item": "GHG排出量（Scope1・Scope2）の開示",
+      "required": true,
+      "standard": "SSBJ S2（気候関連開示基準）/ IFRS S2",
+      "trigger": "2027年3月期以降（大規模プライム企業）。それ以前は任意",
+      "description": "Scope1（直接排出）およびScope2（間接排出：市場基準・立地基準）のGHG排出量を開示。算定範囲（組織境界）、算定方法論、使用した排出係数を明示する",
+      "keywords": ["Scope1", "Scope2", "GHG", "温室効果ガス", "直接排出", "間接排出", "排出量"]
+    },
+    {
+      "id": "CL-027",
+      "category": "SSBJ",
+      "subcategory": "指標と目標",
+      "item": "GHG排出量（Scope3）の開示",
+      "required": false,
+      "standard": "SSBJ S2（気候関連開示基準）/ IFRS S2",
+      "trigger": "事業に重要なScope3排出がある場合（大規模プライム企業は開示必須）",
+      "description": "Scope3（バリューチェーン上下流の排出量）を15カテゴリ別に開示。重要カテゴリの選定根拠、算定方法論、データ品質管理体制を明示する",
+      "keywords": ["Scope3", "GHG", "バリューチェーン", "上流", "下流", "サプライチェーン排出"]
+    },
+    {
+      "id": "CL-028",
+      "category": "SSBJ",
+      "subcategory": "ガバナンス",
+      "item": "気候変動に関するガバナンス体制の開示",
+      "required": true,
+      "standard": "SSBJ S2（気候関連開示基準）/ IFRS S2",
+      "trigger": "2027年3月期以降（大規模プライム企業）",
+      "description": "取締役会・経営陣の気候変動に関する監督・管理の役割・責任を開示。取締役会への報告頻度、気候関連スキル・知識の確保状況も含む",
+      "keywords": ["ガバナンス", "取締役会", "気候変動", "監督", "経営陣", "SSBJ"]
+    },
+    {
+      "id": "CL-029",
+      "category": "SSBJ",
+      "subcategory": "戦略",
+      "item": "気候変動リスク・機会の特定と財務影響の開示",
+      "required": true,
+      "standard": "SSBJ S2（気候関連開示基準）/ IFRS S2",
+      "trigger": "2027年3月期以降（大規模プライム企業）",
+      "description": "短期・中期・長期の気候変動リスク（移行リスク・物理的リスク）と機会を特定し、財務諸表への定量的または定性的影響を開示する",
+      "keywords": ["気候変動リスク", "移行リスク", "物理的リスク", "気候変動機会", "財務影響", "SSBJ"]
+    },
+    {
+      "id": "CL-030",
+      "category": "SSBJ",
+      "subcategory": "戦略",
+      "item": "気候変動移行計画の開示",
+      "required": true,
+      "standard": "SSBJ S2（気候関連開示基準）/ IFRS S2",
+      "trigger": "移行計画がある場合は開示必須（ない場合はその旨を開示）",
+      "description": "低炭素経済への移行に向けた計画（脱炭素ロードマップ、設備投資計画、事業転換戦略）を開示。前年からの変更点も含む",
+      "keywords": ["移行計画", "脱炭素", "ロードマップ", "低炭素", "カーボンニュートラル", "SSBJ"]
+    },
+    {
+      "id": "CL-031",
+      "category": "SSBJ",
+      "subcategory": "戦略",
+      "item": "気候変動シナリオ分析の開示",
+      "required": false,
+      "standard": "SSBJ S2（気候関連開示基準）/ IFRS S2",
+      "trigger": "大規模プライム企業は開示必須。その他は推奨",
+      "description": "複数の気候変動シナリオ（1.5℃/2℃/4℃等）を用いた事業影響分析の結果を開示。使用したシナリオの出典（IPCC・IEA等）と仮定条件も明示",
+      "keywords": ["シナリオ分析", "気候シナリオ", "1.5℃", "2℃", "IPCC", "IEA", "SSBJ"]
+    },
+    {
+      "id": "CL-032",
+      "category": "SSBJ",
+      "subcategory": "指標と目標",
+      "item": "GHG削減目標・進捗状況の開示",
+      "required": true,
+      "standard": "SSBJ S2（気候関連開示基準）/ IFRS S2",
+      "trigger": "GHG削減目標を設定している場合（設定していない場合はその旨を開示）",
+      "description": "GHG排出量削減目標（絶対量・原単位）、基準年、目標年度、中間目標を開示。当期実績との対比および進捗状況も含む",
+      "keywords": ["GHG削減目標", "排出削減", "脱炭素目標", "ネットゼロ", "カーボンニュートラル目標", "進捗"]
+    },
+    {
+      "id": "CL-033",
+      "category": "SSBJ",
+      "subcategory": "指標と目標",
+      "item": "気候関連財務影響指標の開示",
+      "required": false,
+      "standard": "SSBJ S2（気候関連開示基準）/ IFRS S2",
+      "trigger": "気候変動が財務に重要な影響を与える場合",
+      "description": "炭素価格感応度、気候変動関連のCapEx・OpEx、気候変動によるリスク資産額等の財務指標を開示",
+      "keywords": ["炭素価格", "気候関連CapEx", "気候リスク資産", "財務影響指標", "SSBJ"]
+    },
+    {
+      "id": "CL-034",
+      "category": "SSBJ",
+      "subcategory": "全般",
+      "item": "サステナビリティ情報の第三者保証",
+      "required": false,
+      "standard": "SSBJ S1/S2 / 金融庁「サステナビリティ情報の開示と保証」",
+      "trigger": "第三者保証を取得している場合または任意で開示する場合",
+      "description": "開示するGHG排出量・目標指標等について、独立した第三者機関による限定的保証または合理的保証の取得状況と保証範囲を開示",
+      "keywords": ["第三者保証", "サステナビリティ保証", "限定的保証", "合理的保証", "保証範囲", "SSBJ"]
+    },
+    {
+      "id": "CL-035",
+      "category": "SSBJ",
+      "subcategory": "全般",
+      "item": "SSBJ準拠宣言と適用スケジュールの開示",
+      "required": false,
+      "standard": "SSBJ S1/S2 / 金融庁適用ロードマップ",
+      "trigger": "SSBJ基準に準拠して開示する場合、または適用準備中の場合",
+      "description": "SSBJ基準への準拠状況（完全準拠・部分準拠・準備中）と適用スケジュール、免除規定の利用状況を開示。比較可能性確保のための経過措置適用状況も含む",
+      "keywords": ["SSBJ", "準拠宣言", "適用スケジュール", "サステナビリティ開示基準", "経過措置"]
     }
   ]
 }

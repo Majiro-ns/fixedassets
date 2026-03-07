@@ -37,6 +37,7 @@ os.environ["USE_MOCK_LLM"] = "true"
 from m4_proposal_agent import (
     CHAR_LIMITS,
     FEW_SHOT_EXAMPLES,
+    SECTION_NORMALIZE,
     GapItem,
     Proposal,
     ProposalSet,
@@ -585,6 +586,100 @@ class TestGenerateProposals(unittest.TestCase):
                 self.assertEqual(result.level, level)
 
 
+class TestSSBJExamples(unittest.TestCase):
+    """TEST 9: SSBJ松竹梅サンプルとSECTION_NORMALIZEの動作検証"""
+
+    SSBJ_SECTIONS = [
+        "GHG排出量（Scope1・Scope2）の開示",
+        "GHG削減目標・進捗状況の開示",
+        "気候変動に関するガバナンス体制の開示",
+    ]
+
+    def test_ssbj_few_shot_examples_exist(self):
+        """FEW_SHOT_EXAMPLES にSSBJ3セクションが定義されている"""
+        for section in self.SSBJ_SECTIONS:
+            self.assertIn(section, FEW_SHOT_EXAMPLES,
+                          f"FEW_SHOT_EXAMPLES に '{section}' が定義されていない")
+        print(f"  [PASS] FEW_SHOT_EXAMPLES: SSBJ {len(self.SSBJ_SECTIONS)}セクション定義済み ✓")
+
+    def test_ssbj_few_shot_has_three_levels(self):
+        """SSBJサンプルが松・竹・梅の3水準を持つ"""
+        for section in self.SSBJ_SECTIONS:
+            for level in ("松", "竹", "梅"):
+                self.assertIn(level, FEW_SHOT_EXAMPLES[section],
+                              f"'{section}' に '{level}' レベルが定義されていない")
+                self.assertGreater(len(FEW_SHOT_EXAMPLES[section][level]), 0,
+                                   f"'{section}' の '{level}' テキストが空")
+        print("  [PASS] SSBJサンプル全3セクション×松竹梅3水準 定義済み ✓")
+
+    def test_ssbj_few_shot_char_ordering(self):
+        """SSBJサンプルの文字数: 松 > 竹 > 梅 の順序を確認"""
+        for section in self.SSBJ_SECTIONS:
+            matsu = len(FEW_SHOT_EXAMPLES[section]["松"].strip())
+            take = len(FEW_SHOT_EXAMPLES[section]["竹"].strip())
+            ume = len(FEW_SHOT_EXAMPLES[section]["梅"].strip())
+            with self.subTest(section=section):
+                self.assertGreater(matsu, take,
+                    f"{section}: 松({matsu}字) ≤ 竹({take}字)")
+                self.assertGreater(take, ume,
+                    f"{section}: 竹({take}字) ≤ 梅({ume}字)")
+            print(f"  [PASS] {section}: 松={matsu}字>竹={take}字>梅={ume}字 ✓")
+
+    def test_ssbj_section_normalize_mappings(self):
+        """SECTION_NORMALIZE にSSBJ関連マッピングが存在する"""
+        required_keys = [
+            "GHG排出量",
+            "温室効果ガス排出量",
+            "GHG削減目標",
+            "気候変動ガバナンス",
+        ]
+        for key in required_keys:
+            self.assertIn(key, SECTION_NORMALIZE,
+                          f"SECTION_NORMALIZE に '{key}' が定義されていない")
+        print(f"  [PASS] SECTION_NORMALIZE: SSBJ {len(required_keys)}エイリアス定義済み ✓")
+
+    def test_ssbj_normalize_maps_to_correct_section(self):
+        """SSBJエイリアスが正しい正規化セクション名にマッピングされる"""
+        cases = [
+            ("GHG排出量", "GHG排出量（Scope1・Scope2）の開示"),
+            ("温室効果ガス排出量", "GHG排出量（Scope1・Scope2）の開示"),
+            ("GHG削減目標", "GHG削減目標・進捗状況の開示"),
+            ("気候変動ガバナンス", "気候変動に関するガバナンス体制の開示"),
+        ]
+        for alias, expected in cases:
+            with self.subTest(alias=alias):
+                self.assertEqual(SECTION_NORMALIZE[alias], expected,
+                    f"'{alias}' → 期待={expected}, 実際={SECTION_NORMALIZE[alias]}")
+        print("  [PASS] SSBJエイリアス → 正規化セクション名マッピング正確 ✓")
+
+    def test_mock_proposal_returns_ssbj_example(self):
+        """モックモードでSSBJセクションのfew-shot例が返る"""
+        section_name = "GHG排出量（Scope1・Scope2）の開示"
+        result = generate_proposal(
+            section_name=section_name,
+            change_type="追加必須",
+            law_summary="SSBJ S2 Scope1/2排出量開示",
+            law_id="sb-2025-014",
+            level="竹",
+        )
+        expected = FEW_SHOT_EXAMPLES[section_name]["竹"]
+        self.assertEqual(result, expected,
+            f"モックモードでSSBJセクションのfew-shot例が返るべき")
+        print("  [PASS] モックモード: SSBJ竹サンプル返却確認 ✓")
+
+    def test_ssbj_ume_within_char_limit(self):
+        """SSBJサンプルの梅レベルが文字数制限（50〜130字）内にある"""
+        for section in self.SSBJ_SECTIONS:
+            text = FEW_SHOT_EXAMPLES[section]["梅"].strip()
+            count = len(text)
+            with self.subTest(section=section):
+                self.assertGreaterEqual(count, CHAR_LIMITS["梅"]["min"],
+                    f"{section} 梅: {count}字 < 最小{CHAR_LIMITS['梅']['min']}字")
+                self.assertLessEqual(count, CHAR_LIMITS["梅"]["max"],
+                    f"{section} 梅: {count}字 > 最大{CHAR_LIMITS['梅']['max']}字")
+            print(f"  [PASS] {section} 梅: {count}字 in [{CHAR_LIMITS['梅']['min']}, {CHAR_LIMITS['梅']['max']}] ✓")
+
+
 # ------------------------------------------------------------------
 # テスト実行
 # ------------------------------------------------------------------
@@ -608,6 +703,7 @@ def main() -> None:
         TestForbiddenPatterns,
         TestPlaceholders,
         TestGenerateProposals,
+        TestSSBJExamples,
     ]:
         suite.addTests(loader.loadTestsFromTestCase(cls))
 

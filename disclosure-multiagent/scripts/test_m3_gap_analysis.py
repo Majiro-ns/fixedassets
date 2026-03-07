@@ -42,6 +42,10 @@ from m3_gap_analysis_agent import (
     result_to_dict,
     _build_mock_report,
     _build_mock_law_context,
+    HUMAN_CAPITAL_KEYWORDS,
+    SSBJ_KEYWORDS,
+    ALL_RELEVANCE_KEYWORDS,
+    is_relevant_section,
 )
 
 
@@ -450,6 +454,89 @@ class TestCalcLawRefPeriod(unittest.TestCase):
         print(f"  [PASS] GAP_ERR_001: 空sections → ValueError発生 ✓")
 
 
+class TestSSBJKeywords(unittest.TestCase):
+    """TEST 6: SSBJ関連キーワードとis_relevant_section()の動作検証"""
+
+    def test_ssbj_keywords_defined(self):
+        """SSBJ_KEYWORDS定数が定義されており、必須キーワードを含む"""
+        required = ["SSBJ", "GHG", "温室効果ガス", "気候変動", "Scope1", "Scope2", "Scope3"]
+        for kw in required:
+            self.assertIn(kw, SSBJ_KEYWORDS, f"SSBJ_KEYWORDS に '{kw}' が含まれていない")
+        print(f"  [PASS] SSBJ_KEYWORDS: {len(SSBJ_KEYWORDS)}件定義済み（必須7件含む）✓")
+
+    def test_all_relevance_keywords_contains_both(self):
+        """ALL_RELEVANCE_KEYWORDS が人的資本キーワードとSSBJキーワードを両方含む"""
+        for kw in HUMAN_CAPITAL_KEYWORDS:
+            self.assertIn(kw, ALL_RELEVANCE_KEYWORDS, f"人的資本キーワード '{kw}' が欠落")
+        for kw in SSBJ_KEYWORDS:
+            self.assertIn(kw, ALL_RELEVANCE_KEYWORDS, f"SSBJキーワード '{kw}' が欠落")
+        print(f"  [PASS] ALL_RELEVANCE_KEYWORDS: {len(ALL_RELEVANCE_KEYWORDS)}件（HC+SSBJ両方含む）✓")
+
+    def test_is_relevant_section_detects_ssbj_heading(self):
+        """SSBJ関連キーワードを含むセクション見出しが関連ありと判定される"""
+        section = SectionData(
+            section_id="SSBJ-001",
+            heading="GHG排出量とScope1・Scope2の開示",
+            text="当社のGHG排出量に関する開示です。",
+        )
+        self.assertTrue(is_relevant_section(section),
+                        "GHG/Scope1/Scope2を含むセクションが関連ありと判定されるべき")
+        print("  [PASS] is_relevant_section: GHG/Scope1見出しセクション → True ✓")
+
+    def test_is_relevant_section_detects_climate_heading(self):
+        """気候変動関連見出しが関連ありと判定される"""
+        section = SectionData(
+            section_id="CLIM-001",
+            heading="気候変動リスク・機会の開示",
+            text="移行リスクと物理的リスクについて記載します。",
+        )
+        self.assertTrue(is_relevant_section(section),
+                        "気候変動を含む見出しが関連ありと判定されるべき")
+        print("  [PASS] is_relevant_section: 気候変動見出し → True ✓")
+
+    def test_is_relevant_section_detects_ssbj_in_text(self):
+        """本文先頭200文字にSSBJキーワードがある場合も関連ありと判定"""
+        section = SectionData(
+            section_id="ENV-001",
+            heading="環境情報",
+            text="SSBJ基準に従い、温室効果ガスの排出量を開示します。" + "a" * 200,
+        )
+        self.assertTrue(is_relevant_section(section),
+                        "本文にSSBJキーワードがある場合も関連ありと判定されるべき")
+        print("  [PASS] is_relevant_section: 本文SSBJキーワード → True ✓")
+
+    def test_is_relevant_section_still_detects_human_capital(self):
+        """既存の人的資本キーワードも引き続き関連ありと判定される（後退なし）"""
+        section = SectionData(
+            section_id="HC-001",
+            heading="e. 人的資本経営に関する指標",
+            text="当社は人材育成を推進しています。",
+        )
+        self.assertTrue(is_relevant_section(section),
+                        "人的資本セクションが引き続き関連ありと判定されるべき")
+        print("  [PASS] is_relevant_section: 人的資本キーワード後退なし → True ✓")
+
+    def test_ssbj_law_entry_in_period(self):
+        """
+        CHECK-7b: SSBJ基準（施行2025-04-01）が2025年度3月決算の期間内であることを確認
+
+        手計算:
+          法令参照期間: 2025/04/01〜2026/03/31
+          施行日: 2025-04-01
+          2025-04-01 <= 2025-04-01 <= 2026-03-31 → True ✓
+        """
+        from datetime import date as dt
+        start_str, end_str = calc_law_ref_period(2025, 3)
+        start = dt.fromisoformat(start_str.replace("/", "-"))
+        end = dt.fromisoformat(end_str.replace("/", "-"))
+        ssbj_effective = dt(2025, 4, 1)  # sb-2025-001 effective_from
+
+        in_period = start <= ssbj_effective <= end
+        self.assertTrue(in_period,
+            f"SSBJ基準(2025-04-01) は {start_str}〜{end_str} の範囲内のはず")
+        print(f"  [PASS] CHECK-7b SSBJ sb-2025-001(2025-04-01) in {start_str}〜{end_str}: True ✓")
+
+
 def run_all_tests():
     """全テストを実行し、結果を表示する"""
     print("=" * 60)
@@ -463,6 +550,7 @@ def run_all_tests():
         ("TEST 3: source_confirmed警告生成", TestSourceConfirmedWarning),
         ("TEST 4: JSONパース（モック）", TestJsonParseMock),
         ("TEST 5: CHECK-7b 法令参照期間", TestCalcLawRefPeriod),
+        ("TEST 6: SSBJキーワード・is_relevant_section", TestSSBJKeywords),
     ]
 
     total_pass = 0
@@ -512,6 +600,7 @@ if __name__ == "__main__":
         TestSourceConfirmedWarning,
         TestJsonParseMock,
         TestCalcLawRefPeriod,
+        TestSSBJKeywords,
     ]:
         suite.addTests(loader.loadTestsFromTestCase(cls))
 

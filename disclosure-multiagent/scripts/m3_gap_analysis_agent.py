@@ -47,6 +47,20 @@ HUMAN_CAPITAL_KEYWORDS = [
     "給与", "賃金", "報酬",
 ]
 
+# SSBJサステナビリティ開示基準関連セクション判定キーワード
+SSBJ_KEYWORDS = [
+    "SSBJ", "サステナビリティ開示", "気候変動", "気候関連",
+    "GHG", "温室効果ガス", "Scope1", "Scope2", "Scope3",
+    "スコープ1", "スコープ2", "スコープ3",
+    "脱炭素", "カーボンニュートラル", "ネットゼロ",
+    "移行計画", "移行リスク", "物理的リスク",
+    "TCFD", "シナリオ分析", "排出量", "排出削減",
+    "炭素", "カーボン", "再生可能エネルギー",
+]
+
+# 関連性判定に使用する全キーワード（人的資本 + SSBJ）
+ALL_RELEVANCE_KEYWORDS = HUMAN_CAPITAL_KEYWORDS + SSBJ_KEYWORDS
+
 # ─────────────────────────────────────────────────────────
 # Enum / 定数クラス
 # ─────────────────────────────────────────────────────────
@@ -432,11 +446,11 @@ def attach_reference_url(gap_result: dict, law_entry: LawEntry) -> dict:
 # ─────────────────────────────────────────────────────────
 
 def is_relevant_section(section: SectionData) -> bool:
-    """セクションが人的資本関連かどうかを判定する（設計書 Section 5-1）"""
+    """セクションが人的資本またはSSBJ関連かどうかを判定する（設計書 Section 5-1）"""
     heading_lower = section.heading
     text_lower = section.text[:200]  # 先頭200文字で判定
     combined = heading_lower + text_lower
-    return any(kw in combined for kw in HUMAN_CAPITAL_KEYWORDS)
+    return any(kw in combined for kw in ALL_RELEVANCE_KEYWORDS)
 
 
 # ─────────────────────────────────────────────────────────

@@ -1,0 +1,548 @@
+# disclosure-multiagent — 法令・ガイダンス情報 YAML
+# カテゴリ: SSBJ（サステナビリティ開示基準）
+# 対象期間: 2025年度（2025-04-01〜2026-03-31）
+# スキーマ定義: docs/law_yaml_schema.md
+#
+# CHECK-7b 手確認メモ:
+#   SSBJ確定基準: 2025年3月公表（大規模企業の強制適用は2027年3月期から）
+#   IFRS S1（全般的要求事項）・S2（気候関連開示）に準拠した日本版基準
+#   プライム上場大規模企業（資産2兆円超等）: 2027年3月期（2028年6月提出）から強制適用
+#   その他プライム・スタンダード: 段階的拡大予定（詳細は別途審議）
+
+version: "1.0"
+effective_period:
+  from: "2025-04-01"
+  to: "2026-03-31"
+
+amendments:
+
+  # ──────────────────────────────────────────
+  # 【第1柱】ガバナンス（3件）
+  # ──────────────────────────────────────────
+
+  - id: "sb-2025-001"
+    category: "SSBJ"
+    change_type: "追加必須"
+    effective_from: "2025-03-31"
+    title: "SSBJ確定基準 — ガバナンス：取締役会のサステナビリティ監督体制"
+    source: "https://www.ssb-j.jp/page_ssbj/pressrelease/2025/ne_20250331.html"
+    summary: >
+      SSBJ確定基準（2025年3月）第1柱「ガバナンス」の開示要件。
+      取締役会がサステナビリティ関連リスク・機会をどのように監督しているか
+      （監督頻度・情報提供方法・意思決定プロセス）を開示することが求められる。
+      大規模企業は2027年3月期から強制適用。
+    target_sections:
+      - "サステナビリティに関する考え方及び取組"
+      - "ガバナンス"
+    required_items:
+      - "取締役会によるサステナビリティ関連リスク・機会の監督体制の説明"
+      - "取締役会への情報提供方法・頻度"
+      - "取締役会の意思決定プロセスへのサステナビリティ情報の統合状況"
+    applicable_markets:
+      - "プライム"
+    notes: "2025年度は任意適用段階。大規模企業は早期適用が推奨される"
+
+  - id: "sb-2025-002"
+    category: "SSBJ"
+    change_type: "追加必須"
+    effective_from: "2025-03-31"
+    title: "SSBJ確定基準 — ガバナンス：経営陣の役割と責任（委員会・担当役員）"
+    source: "https://www.ssb-j.jp/page_ssbj/pressrelease/2025/ne_20250331.html"
+    summary: >
+      SSBJ確定基準第1柱「ガバナンス」のうち、経営陣レベルの役割開示。
+      サステナビリティ関連リスク・機会を監視・管理する責任を持つ経営陣の職位・役割・
+      権限委譲の内容を開示する。サステナビリティ委員会等の設置状況も含む。
+    target_sections:
+      - "サステナビリティに関する考え方及び取組"
+      - "ガバナンス"
+    required_items:
+      - "サステナビリティ担当役員の職位・役割の説明"
+      - "サステナビリティ委員会等の設置状況と構成員"
+      - "取締役会への報告経路・頻度"
+    applicable_markets:
+      - "プライム"
+    notes: "担当役員が不在の場合はその旨と代替体制を記載すること"
+
+  - id: "sb-2025-003"
+    category: "SSBJ"
+    change_type: "修正推奨"
+    effective_from: "2025-03-31"
+    title: "SSBJ確定基準 — ガバナンス：取締役会のサステナビリティ専門知識・スキル"
+    source: "https://www.ssb-j.jp/page_ssbj/pressrelease/2025/ne_20250331.html"
+    summary: >
+      取締役会構成員のサステナビリティ関連スキル（気候変動・ESG・リスク管理等）を
+      開示することが推奨される。スキルマトリクスへの気候・サステナビリティ項目の
+      追加、専門知識向上のための研修実施状況等を含む。
+    target_sections:
+      - "ガバナンス"
+      - "コーポレート・ガバナンスの概要"
+    required_items:
+      - "取締役会のサステナビリティ関連スキルの開示"
+      - "気候・ESG研修の実施状況"
+    applicable_markets:
+      - "プライム"
+    notes: "スキルマトリクスに「サステナビリティ・気候変動」列を追加することを推奨"
+
+  # ──────────────────────────────────────────
+  # 【第2柱】戦略（7件）
+  # ──────────────────────────────────────────
+
+  - id: "sb-2025-004"
+    category: "SSBJ"
+    change_type: "追加必須"
+    effective_from: "2025-03-31"
+    title: "SSBJ確定基準 — 戦略：気候変動リスク・機会の特定と評価"
+    source: "https://www.ssb-j.jp/page_ssbj/pressrelease/2025/ne_20250331.html"
+    summary: >
+      SSBJ確定基準第2柱「戦略」のうち、気候変動リスク・機会の特定・評価プロセスの開示。
+      移行リスク（政策・法規制・技術・市場・評判）と物理リスク（急性・慢性）を区別し、
+      事業・戦略・財務計画への実際の・潜在的な影響を開示する。
+    target_sections:
+      - "サステナビリティに関する考え方及び取組"
+      - "リスク管理"
+    required_items:
+      - "気候関連リスク・機会の特定プロセスの説明"
+      - "移行リスク（政策・法規制・技術・市場・評判リスク）の特定"
+      - "物理リスク（急性リスク・慢性リスク）の特定"
+      - "事業・戦略・財務計画への影響の評価"
+    applicable_markets:
+      - "プライム"
+      - "スタンダード"
+    notes: "TCFD提言と整合。既存TCFD開示を SSBJ様式に転換することで対応可能"
+
+  - id: "sb-2025-005"
+    category: "SSBJ"
+    change_type: "追加必須"
+    effective_from: "2025-03-31"
+    title: "SSBJ確定基準 — 戦略：気候変動リスク・機会の短中長期財務的影響"
+    source: "https://www.ssb-j.jp/page_ssbj/pressrelease/2025/ne_20250331.html"
+    summary: >
+      特定した気候変動リスク・機会が事業・戦略・財務計画に与える短期（1年以内）・
+      中期（1〜5年）・長期（5年超）の財務的影響を定量または定性的に開示する。
+      重要なリスク・機会については財務諸表への影響額（感応度等）の開示が推奨される。
+    target_sections:
+      - "サステナビリティに関する考え方及び取組"
+      - "リスク管理"
+    required_items:
+      - "短期・中期・長期の時間軸の定義"
+      - "各時間軸における気候リスク・機会の財務的影響の開示"
+      - "財務諸表への重要な影響額（可能な場合）"
+    applicable_markets:
+      - "プライム"
+    notes: "影響が定量化困難な場合は定性的な記述と理由の開示で対応可"
+
+  - id: "sb-2025-006"
+    category: "SSBJ"
+    change_type: "追加必須"
+    effective_from: "2025-03-31"
+    title: "SSBJ確定基準 — 戦略：移行計画（低炭素経済への移行）"
+    source: "https://www.ssb-j.jp/page_ssbj/pressrelease/2025/ne_20250331.html"
+    summary: >
+      SSBJ確定基準において、低炭素経済への移行に向けた事業モデルの変更計画（移行計画）を
+      開示することが求められる。GHG排出量削減目標・脱炭素技術投資計画・設備廃止・
+      再エネ転換計画等を含む具体的な行動計画を記載する。
+    target_sections:
+      - "サステナビリティに関する考え方及び取組"
+      - "経営方針、経営環境及び対処すべき課題等"
+    required_items:
+      - "低炭素経済への移行計画の概要"
+      - "脱炭素技術・再生可能エネルギーへの投資計画"
+      - "移行計画の実行状況のモニタリング方法"
+      - "移行計画に関連する資本的支出・運営費用"
+    applicable_markets:
+      - "プライム"
+    notes: "移行計画が未策定の場合はその旨と策定予定時期を記載"
+
+  - id: "sb-2025-007"
+    category: "SSBJ"
+    change_type: "追加必須"
+    effective_from: "2025-03-31"
+    title: "SSBJ確定基準 — 戦略：シナリオ分析（1.5℃・4℃シナリオ等）"
+    source: "https://www.ssb-j.jp/page_ssbj/pressrelease/2025/ne_20250331.html"
+    summary: >
+      SSBJ確定基準では、異なる気候シナリオ（IEA NZE・IPCC SSP等）を用いた
+      シナリオ分析の実施と開示が求められる。1.5℃（移行重視）・4℃（物理リスク重視）
+      等の複数シナリオ下での事業への影響分析とレジリエンス（強靭性）の評価を含む。
+    target_sections:
+      - "サステナビリティに関する考え方及び取組"
+    required_items:
+      - "使用したシナリオの名称・出典・想定期間"
+      - "シナリオ別の気候変動影響の定性・定量的評価"
+      - "事業のレジリエンス（強靭性）の評価"
+    applicable_markets:
+      - "プライム"
+    notes: "大企業では複数シナリオ（最低2シナリオ）の適用が推奨される"
+
+  - id: "sb-2025-008"
+    category: "SSBJ"
+    change_type: "修正推奨"
+    effective_from: "2025-03-31"
+    title: "SSBJ確定基準 — 戦略：気候関連機会の特定と対応策"
+    source: "https://www.ssb-j.jp/page_ssbj/pressrelease/2025/ne_20250331.html"
+    summary: >
+      リスクに加え、気候変動から生じるビジネス機会（再エネ需要・環境配慮製品・
+      省エネ技術・グリーンファイナンス等）の特定と対応策を開示する。
+      機会の時間軸・財務的影響規模・実現可能性を含めることが推奨される。
+    target_sections:
+      - "サステナビリティに関する考え方及び取組"
+      - "経営方針、経営環境及び対処すべき課題等"
+    required_items:
+      - "気候関連ビジネス機会の特定（製品・サービス・市場・資金調達等）"
+      - "機会の実現に向けた取り組み"
+    applicable_markets:
+      - "プライム"
+    notes: "TCFD「機会」開示項目と整合。既存のTCFD開示があれば転用可能"
+
+  - id: "sb-2025-009"
+    category: "SSBJ"
+    change_type: "修正推奨"
+    effective_from: "2025-03-31"
+    title: "SSBJ確定基準 — 戦略：気候変動が事業モデル・バリューチェーンに与える影響"
+    source: "https://www.ssb-j.jp/page_ssbj/pressrelease/2025/ne_20250331.html"
+    summary: >
+      気候変動リスク・機会が、自社の事業モデル（製品・サービス・生産プロセス・
+      サプライチェーン）にどのような影響を与えるか、現在の状況と将来見通しを記載する。
+      バリューチェーン上流・下流の重要なリスクも含めた開示が推奨される。
+    target_sections:
+      - "サステナビリティに関する考え方及び取組"
+      - "経営方針、経営環境及び対処すべき課題等"
+    required_items:
+      - "自社事業モデルへの気候変動影響の説明"
+      - "サプライチェーン（上流・下流）の気候関連リスクの特定"
+    applicable_markets:
+      - "プライム"
+    notes: "Scope3開示と連動して記載すると整合性が高まる"
+
+  - id: "sb-2025-010"
+    category: "SSBJ"
+    change_type: "参考"
+    effective_from: "2025-03-31"
+    title: "SSBJ確定基準 — 戦略：サステナビリティ関連財務の統合報告との整合"
+    source: "https://www.ssb-j.jp/page_ssbj/pressrelease/2025/ne_20250331.html"
+    summary: >
+      SSBJ基準に基づく開示情報と財務諸表（BS・PL）との連携を確保することが推奨される。
+      気候関連資産・負債・費用が財務諸表のどの科目に反映されているか、
+      またSSBJ開示と財務数値の整合性を説明する。
+    target_sections:
+      - "サステナビリティに関する考え方及び取組"
+    required_items:
+      - "SSBJ開示と財務諸表の連携・整合性の説明"
+    applicable_markets:
+      - "プライム"
+    notes: "ISSB IFRS S1の「財務情報との連携」要件に対応"
+
+  # ──────────────────────────────────────────
+  # 【第3柱】リスク管理（3件）
+  # ──────────────────────────────────────────
+
+  - id: "sb-2025-011"
+    category: "SSBJ"
+    change_type: "追加必須"
+    effective_from: "2025-03-31"
+    title: "SSBJ確定基準 — リスク管理：気候関連リスクの特定・評価プロセス"
+    source: "https://www.ssb-j.jp/page_ssbj/pressrelease/2025/ne_20250331.html"
+    summary: >
+      SSBJ確定基準第3柱「リスク管理」として、気候関連リスクを特定・評価するための
+      プロセスと手法（重要性評価基準・頻度・担当部署等）を開示する。
+      リスク評価の時間軸（短中長期）や重要性判断基準も含める。
+    target_sections:
+      - "リスク管理"
+      - "サステナビリティに関する考え方及び取組"
+    required_items:
+      - "気候関連リスクの特定プロセスの説明"
+      - "リスク評価の手法・基準（重要性判断基準を含む）"
+      - "リスク評価の実施頻度と担当部署"
+    applicable_markets:
+      - "プライム"
+      - "スタンダード"
+    notes: "既存の全社リスク管理プロセスとの連携方法も記載することを推奨"
+
+  - id: "sb-2025-012"
+    category: "SSBJ"
+    change_type: "追加必須"
+    effective_from: "2025-03-31"
+    title: "SSBJ確定基準 — リスク管理：気候関連リスクの全社リスク管理への統合"
+    source: "https://www.ssb-j.jp/page_ssbj/pressrelease/2025/ne_20250331.html"
+    summary: >
+      気候関連リスク管理プロセスが、全社的なリスク管理フレームワーク（ERM等）に
+      どのように統合されているかを開示する。サステナビリティリスクと
+      財務リスク・事業リスクの一体的管理状況を示す。
+    target_sections:
+      - "リスク管理"
+      - "サステナビリティに関する考え方及び取組"
+    required_items:
+      - "全社リスク管理（ERM等）への気候リスクの統合状況"
+      - "気候リスクの優先順位付け方法"
+    applicable_markets:
+      - "プライム"
+    notes: "リスクの優先順位付け（重要性マトリクス等）の手法を開示することが望ましい"
+
+  - id: "sb-2025-013"
+    category: "SSBJ"
+    change_type: "修正推奨"
+    effective_from: "2025-03-31"
+    title: "SSBJ確定基準 — リスク管理：気候関連リスクの監視・レビューのプロセス"
+    source: "https://www.ssb-j.jp/page_ssbj/pressrelease/2025/ne_20250331.html"
+    summary: >
+      気候関連リスクの特定・評価後の監視・見直しプロセスを開示する。
+      リスクが顕在化した場合の対応手順、モニタリング指標、年次レビューの仕組み等。
+      ガバナンス（取締役会報告）との連携も含める。
+    target_sections:
+      - "リスク管理"
+    required_items:
+      - "気候関連リスクのモニタリング方法・KRI（リスク指標）"
+      - "リスク対応策の実施状況のレビュー体制"
+    applicable_markets:
+      - "プライム"
+    notes: "リスクKRI（Key Risk Indicator）の設定・追跡方法を具体的に記載することを推奨"
+
+  # ──────────────────────────────────────────
+  # 【第4柱】指標と目標（9件）
+  # ──────────────────────────────────────────
+
+  - id: "sb-2025-014"
+    category: "SSBJ"
+    change_type: "追加必須"
+    effective_from: "2025-03-31"
+    title: "SSBJ確定基準 — 指標と目標：Scope1・Scope2 GHG排出量（必須開示）"
+    source: "https://www.ssb-j.jp/page_ssbj/pressrelease/2025/ne_20250331.html"
+    summary: >
+      SSBJ確定基準において Scope1（直接排出）・Scope2（間接排出）の GHG排出量は
+      必須開示項目。GHGプロトコル等の認められた測定方法に基づき算定し、
+      連結範囲・測定境界・算定手法・排出係数の出典を明示する。
+    target_sections:
+      - "サステナビリティに関する考え方及び取組"
+    required_items:
+      - "Scope1 GHG排出量（tCO2e）と前年比"
+      - "Scope2 GHG排出量（tCO2e）（市場基準・地域基準の区別）と前年比"
+      - "測定方法・算定境界・使用した排出係数の出典"
+      - "第三者による検証・保証の有無"
+    applicable_markets:
+      - "プライム"
+      - "スタンダード"
+    notes: "GHGプロトコルCorporate Standardまたは ISO 14064-1 が算定基準として認められる"
+
+  - id: "sb-2025-015"
+    category: "SSBJ"
+    change_type: "追加必須"
+    effective_from: "2025-03-31"
+    title: "SSBJ確定基準 — 指標と目標：Scope3 GHG排出量（カテゴリ別開示）"
+    source: "https://www.ssb-j.jp/page_ssbj/pressrelease/2025/ne_20250331.html"
+    summary: >
+      Scope3（その他間接排出）の GHG排出量を、GHGプロトコルの15カテゴリに基づき開示する。
+      全カテゴリが必須ではないが、事業にとって重要なカテゴリ（購入物品・輸送・
+      製品使用段階等）は開示が強く推奨される。大規模企業は段階的に全カテゴリへ拡大。
+    target_sections:
+      - "サステナビリティに関する考え方及び取組"
+    required_items:
+      - "重要なScope3カテゴリの特定と排出量（tCO2e）"
+      - "Scope3算定の対象カテゴリと除外カテゴリの理由"
+      - "Scope3算定方法・主要データソース"
+    applicable_markets:
+      - "プライム"
+    notes: "2025年度は開示努力義務。段階的拡大により2027年度以降は強制適用予定"
+
+  - id: "sb-2025-016"
+    category: "SSBJ"
+    change_type: "追加必須"
+    effective_from: "2025-03-31"
+    title: "SSBJ確定基準 — 指標と目標：GHG削減目標（絶対量・原単位目標）"
+    source: "https://www.ssb-j.jp/page_ssbj/pressrelease/2025/ne_20250331.html"
+    summary: >
+      GHG排出量の削減目標（絶対量またはGHG原単位）を、基準年・目標年・
+      中間マイルストーン・対象スコープを明示した上で開示する。
+      科学的根拠に基づく目標（SBT）認定を取得している場合はその旨を記載。
+    target_sections:
+      - "サステナビリティに関する考え方及び取組"
+    required_items:
+      - "GHG排出量削減目標（基準年・目標年・削減率を明示）"
+      - "目標対象のスコープ（Scope1・2・3の別）"
+      - "中間マイルストーン（2030年等）の設定"
+      - "SBT認定の有無（取得済みまたは申請中の場合）"
+    applicable_markets:
+      - "プライム"
+      - "スタンダード"
+    notes: "カーボンニュートラル宣言がある場合はその目標年と実現方法も記載"
+
+  - id: "sb-2025-017"
+    category: "SSBJ"
+    change_type: "追加必須"
+    effective_from: "2025-03-31"
+    title: "SSBJ確定基準 — 指標と目標：目標に対する進捗状況の開示"
+    source: "https://www.ssb-j.jp/page_ssbj/pressrelease/2025/ne_20250331.html"
+    summary: >
+      設定したGHG削減目標・その他サステナビリティ目標に対する実績値と
+      進捗状況を年次で開示する。目標未達の場合はその理由と改善策も含める。
+      複数年の時系列データを示すことで進捗の透明性を確保する。
+    target_sections:
+      - "サステナビリティに関する考え方及び取組"
+    required_items:
+      - "GHG削減目標に対する当期実績と進捗率"
+      - "目標未達の場合の理由と改善策"
+      - "複数年の実績推移（可能な場合）"
+    applicable_markets:
+      - "プライム"
+      - "スタンダード"
+    notes: "前年度の開示内容との比較可能性を確保するため、算定方法の変更は注記を要する"
+
+  - id: "sb-2025-018"
+    category: "SSBJ"
+    change_type: "修正推奨"
+    effective_from: "2025-03-31"
+    title: "SSBJ確定基準 — 指標と目標：気候関連財務リスク指標（資産・負債への影響）"
+    source: "https://www.ssb-j.jp/page_ssbj/pressrelease/2025/ne_20250331.html"
+    summary: >
+      気候変動リスクが財務諸表に与える影響を定量化した指標を開示する。
+      炭素価格リスク（資産価値への影響）・移行関連費用（設備廃棄・転換費用）・
+      物理リスク関連資産等の財務的影響額の試算を含む。
+    target_sections:
+      - "サステナビリティに関する考え方及び取組"
+      - "リスク管理"
+    required_items:
+      - "気候関連リスクが財務諸表に与える重要な影響の定量的・定性的記述"
+      - "炭素価格リスクの財務的感応度（可能な場合）"
+    applicable_markets:
+      - "プライム"
+    notes: "SSBJ基準では定量化が困難な場合は定性的記述と理由の開示で代替可能"
+
+  - id: "sb-2025-019"
+    category: "SSBJ"
+    change_type: "修正推奨"
+    effective_from: "2025-03-31"
+    title: "SSBJ確定基準 — 指標と目標：気候変動対応のための資本的支出・運営費用"
+    source: "https://www.ssb-j.jp/page_ssbj/pressrelease/2025/ne_20250331.html"
+    summary: >
+      気候変動対応（脱炭素投資・再エネ設備・省エネ改修等）のために投じた
+      または予定している資本的支出（CapEx）・研究開発費・運営費用（OpEx）を開示する。
+      グリーンファイナンス調達額も含める。
+    target_sections:
+      - "サステナビリティに関する考え方及び取組"
+    required_items:
+      - "気候変動対応CapEx（当期実績・将来計画）"
+      - "グリーンボンド・グリーンローン等の環境金融調達額（該当の場合）"
+    applicable_markets:
+      - "プライム"
+    notes: "EU タクソノミー・日本版グリーンタクソノミーへの対応状況も記載することを推奨"
+
+  - id: "sb-2025-020"
+    category: "SSBJ"
+    change_type: "参考"
+    effective_from: "2025-03-31"
+    title: "SSBJ確定基準 — 指標と目標：カーボンオフセット・排出量削減クレジットの利用"
+    source: "https://www.ssb-j.jp/page_ssbj/pressrelease/2025/ne_20250331.html"
+    summary: >
+      カーボンクレジット（Jクレジット・REDD+等）を利用している場合、
+      クレジットの種類・取得量・検証機関・除去量と回避量の区別を開示する。
+      クレジット利用後のネット排出量と削減の内訳（直接削減 vs クレジット）を明示する。
+    target_sections:
+      - "サステナビリティに関する考え方及び取組"
+    required_items:
+      - "利用したカーボンクレジットの種類・取得量・認証機関"
+      - "クレジット利用後のネット排出量と内訳（直接削減 vs クレジット相殺）"
+    applicable_markets:
+      - "プライム"
+    notes: "クレジット利用はGHG削減の「補完」であり、直接削減への取り組みが前提"
+
+  - id: "sb-2025-021"
+    category: "SSBJ"
+    change_type: "参考"
+    effective_from: "2025-03-31"
+    title: "SSBJ確定基準 — 指標と目標：気候変動以外のサステナビリティ指標（生物多様性・水等）"
+    source: "https://www.ssb-j.jp/page_ssbj/pressrelease/2025/ne_20250331.html"
+    summary: >
+      SSBJ基準はS2（気候関連）が先行義務化だが、生物多様性・水資源・
+      人権・サプライチェーン等の非気候サステナビリティ指標も
+      IFRS S1に基づく重要性判断により将来的な開示対象となる。早期整備が推奨される。
+    target_sections:
+      - "サステナビリティに関する考え方及び取組"
+    required_items:
+      - "気候以外の重要なサステナビリティリスク・機会の特定"
+      - "生物多様性・水資源・人権等の対応状況（重要と判断される場合）"
+    applicable_markets:
+      - "プライム"
+    notes: "TNFD（自然関連財務情報開示）・CSRD等の国際動向も参照のこと"
+
+  - id: "sb-2025-022"
+    category: "SSBJ"
+    change_type: "追加必須"
+    effective_from: "2025-03-31"
+    title: "SSBJ確定基準 — 指標と目標：GHG排出量算定境界・測定方法の開示"
+    source: "https://www.ssb-j.jp/page_ssbj/pressrelease/2025/ne_20250331.html"
+    summary: >
+      Scope1/2/3 GHG排出量の算定に用いた組織境界（財務コントロール・持分比率等）・
+      測定基準（GHGプロトコル等）・排出係数の出典（電気事業者別係数等）を開示する。
+      算定方法の変更がある場合は過去データの遡及修正または注記が必要。
+    target_sections:
+      - "サステナビリティに関する考え方及び取組"
+    required_items:
+      - "GHG排出量の組織境界の定義と設定方法"
+      - "使用した測定基準（GHGプロトコル / ISO 14064-1等）"
+      - "使用した排出係数と出典（電気・熱・燃料別）"
+    applicable_markets:
+      - "プライム"
+      - "スタンダード"
+    notes: "電力の排出係数は電気事業者別排出係数（環境省公表値）の利用を推奨"
+
+  # ──────────────────────────────────────────
+  # 全般的要求事項（3件）
+  # ──────────────────────────────────────────
+
+  - id: "sb-2025-023"
+    category: "SSBJ"
+    change_type: "参考"
+    effective_from: "2025-03-31"
+    title: "SSBJ確定基準 — 全般：SSBJ基準への準拠宣言と適用スケジュール"
+    source: "https://www.ssb-j.jp/page_ssbj/pressrelease/2025/ne_20250331.html"
+    summary: >
+      SSBJ基準（または任意適用中の場合はIFRS S1/S2等の同等基準）への準拠を
+      明示するとともに、強制適用対象か任意適用かを記載する。
+      強制適用前の企業は自社の適用予定時期と現状の準備状況を開示する。
+    target_sections:
+      - "サステナビリティに関する考え方及び取組"
+    required_items:
+      - "SSBJ基準（またはIFRS S1/S2）への準拠宣言または準拠に向けた取組状況"
+      - "自社の強制適用時期（大規模企業か否かの確認）"
+      - "SSBJ適用に向けた準備状況・課題"
+    applicable_markets:
+      - "プライム"
+      - "スタンダード"
+    notes: "2025年度は大規模企業以外も「準備状況の開示」が実質的に期待される"
+
+  - id: "sb-2025-024"
+    category: "SSBJ"
+    change_type: "修正推奨"
+    effective_from: "2025-03-31"
+    title: "SSBJ確定基準 — 全般：第三者保証（限定的保証・合理的保証）の取得"
+    source: "https://www.ssb-j.jp/page_ssbj/pressrelease/2025/ne_20250331.html"
+    summary: >
+      SSBJ基準への完全準拠には、Scope1/2排出量等の重要指標に対する第三者保証
+      （限定的保証：LimitedAssurance、または合理的保証：ReasonableAssurance）の
+      取得が推奨される。保証の対象範囲・保証水準・保証機関を明示する。
+    target_sections:
+      - "サステナビリティに関する考え方及び取組"
+    required_items:
+      - "第三者保証の有無（未取得の場合は取得予定時期）"
+      - "保証の対象範囲（Scope1/2等）・保証水準（限定的 or 合理的）"
+      - "保証機関名（監査法人・認証機関等）"
+    applicable_markets:
+      - "プライム"
+    notes: "2025年度は任意。SSBJ強制適用後は段階的に保証要件が強化される見込み"
+
+  - id: "sb-2025-025"
+    category: "SSBJ"
+    change_type: "参考"
+    effective_from: "2025-03-31"
+    title: "SSBJ確定基準 — 全般：比較可能性・重要性判断基準の開示"
+    source: "https://www.ssb-j.jp/page_ssbj/pressrelease/2025/ne_20250331.html"
+    summary: >
+      SSBJ基準（IFRS S1準拠）では、開示の重要性判断基準（どのリスク・機会を
+      開示するかの閾値）と、前年度との比較可能性の確保が求められる。
+      算定方法変更時の遡及修正・注記、比較期間の設定方法を開示する。
+    target_sections:
+      - "サステナビリティに関する考え方及び取組"
+    required_items:
+      - "重要性判断の基準・プロセスの説明"
+      - "前期比較データの提供（または提供できない理由）"
+    applicable_markets:
+      - "プライム"
+    notes: "初年度適用の場合は比較情報が不要の場合があるが、翌年度からは比較情報が必要"

@@ -58,8 +58,19 @@ SSBJ_KEYWORDS = [
     "炭素", "カーボン", "再生可能エネルギー",
 ]
 
-# 関連性判定に使用する全キーワード（人的資本 + SSBJ）
-ALL_RELEVANCE_KEYWORDS = HUMAN_CAPITAL_KEYWORDS + SSBJ_KEYWORDS
+# 銀行業特化関連セクション判定キーワード（バーゼルIII / 不良債権引当）
+BANKING_KEYWORDS = [
+    "バーゼル", "Basel", "自己資本比率", "CET1", "Tier1", "Tier2",
+    "リスク加重資産", "RWA", "LCR", "流動性カバレッジ", "NSFR", "安定調達",
+    "レバレッジ比率", "不良債権", "貸倒引当金", "信用リスク", "与信",
+    "要管理先", "破綻懸念先", "実質破綻先", "破綻先",
+    "金利リスク", "IRRBB", "EVE", "NII", "ストレステスト",
+    "流動性リスク", "市場リスク", "オペレーショナルリスク",
+    "個別貸倒引当金", "一般貸倒引当金", "集中リスク",
+]
+
+# 関連性判定に使用する全キーワード（人的資本 + SSBJ + 銀行業）
+ALL_RELEVANCE_KEYWORDS = HUMAN_CAPITAL_KEYWORDS + SSBJ_KEYWORDS + BANKING_KEYWORDS
 
 # ─────────────────────────────────────────────────────────
 # Enum / 定数クラス

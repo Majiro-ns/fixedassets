@@ -680,6 +680,73 @@ class TestSSBJExamples(unittest.TestCase):
             print(f"  [PASS] {section} 梅: {count}字 in [{CHAR_LIMITS['梅']['min']}, {CHAR_LIMITS['梅']['max']}] ✓")
 
 
+class TestBankingExamples(unittest.TestCase):
+    """TEST 10: 銀行業（バーゼルIII/不良債権）松竹梅サンプルとSECTION_NORMALIZEの動作検証"""
+
+    BANKING_SECTIONS = [
+        "自己資本比率（CET1 / Tier1 / 総自己資本）の開示",
+        "不良債権残高・分類（金融再生法）の開示",
+        "貸倒引当金計上方針の開示",
+    ]
+
+    def test_banking_few_shot_examples_exist(self):
+        """FEW_SHOT_EXAMPLES に銀行業3セクションが定義されている"""
+        for section in self.BANKING_SECTIONS:
+            self.assertIn(section, FEW_SHOT_EXAMPLES,
+                          f"FEW_SHOT_EXAMPLES に '{section}' が定義されていない")
+        print(f"  [PASS] FEW_SHOT_EXAMPLES: 銀行業 {len(self.BANKING_SECTIONS)}セクション定義済み ✓")
+
+    def test_banking_few_shot_has_three_levels(self):
+        """銀行業サンプルが松・竹・梅の3水準を持つ"""
+        for section in self.BANKING_SECTIONS:
+            for level in ("松", "竹", "梅"):
+                self.assertIn(level, FEW_SHOT_EXAMPLES[section],
+                              f"'{section}' に '{level}' レベルが定義されていない")
+                self.assertGreater(len(FEW_SHOT_EXAMPLES[section][level]), 0,
+                                   f"'{section}' の '{level}' テキストが空")
+        print("  [PASS] 銀行業サンプル全3セクション×松竹梅3水準 定義済み ✓")
+
+    def test_banking_few_shot_char_ordering(self):
+        """銀行業サンプルの文字数: 松 > 竹 > 梅 の順序を確認"""
+        for section in self.BANKING_SECTIONS:
+            matsu = len(FEW_SHOT_EXAMPLES[section]["松"].strip())
+            take = len(FEW_SHOT_EXAMPLES[section]["竹"].strip())
+            ume = len(FEW_SHOT_EXAMPLES[section]["梅"].strip())
+            self.assertGreater(matsu, take,
+                f"[{section}] 松({matsu}字) ≤ 竹({take}字): 松は竹より長いはず")
+            self.assertGreater(take, ume,
+                f"[{section}] 竹({take}字) ≤ 梅({ume}字): 竹は梅より長いはず")
+        print("  [PASS] 銀行業サンプル全3セクション: 松>竹>梅 文字数順序 ✓")
+
+    def test_banking_section_normalize_mapping(self):
+        """SECTION_NORMALIZE が銀行業のエイリアスを正しくマッピングする"""
+        aliases = {
+            "自己資本比率": "自己資本比率（CET1 / Tier1 / 総自己資本）の開示",
+            "CET1比率": "自己資本比率（CET1 / Tier1 / 総自己資本）の開示",
+            "不良債権": "不良債権残高・分類（金融再生法）の開示",
+            "不良債権残高": "不良債権残高・分類（金融再生法）の開示",
+            "貸倒引当金": "貸倒引当金計上方針の開示",
+            "引当金計上方針": "貸倒引当金計上方針の開示",
+        }
+        for alias, canonical in aliases.items():
+            self.assertIn(alias, SECTION_NORMALIZE,
+                          f"SECTION_NORMALIZE に '{alias}' が定義されていない")
+            self.assertEqual(SECTION_NORMALIZE[alias], canonical,
+                             f"'{alias}' → '{canonical}' のマッピングが不正")
+        print(f"  [PASS] SECTION_NORMALIZE: 銀行業 {len(aliases)}エイリアス正常マッピング ✓")
+
+    def test_banking_matsu_contains_placeholder(self):
+        """銀行業松レベルのサンプルにプレースホルダ（[...]形式）が含まれる"""
+        import re
+        placeholder_pattern = re.compile(r'\[[^\]]{1,30}\]')
+        for section in self.BANKING_SECTIONS:
+            matsu_text = FEW_SHOT_EXAMPLES[section]["松"]
+            placeholders = placeholder_pattern.findall(matsu_text)
+            self.assertGreater(len(placeholders), 0,
+                f"'{section}' 松レベルにプレースホルダ [xxx] がない（実務担当者向けの穴埋め形式であるべき）")
+        print("  [PASS] 銀行業松サンプル全3セクション: プレースホルダ [xxx] 含む ✓")
+
+
 # ------------------------------------------------------------------
 # テスト実行
 # ------------------------------------------------------------------
@@ -704,6 +771,7 @@ def main() -> None:
         TestPlaceholders,
         TestGenerateProposals,
         TestSSBJExamples,
+        TestBankingExamples,
     ]:
         suite.addTests(loader.loadTestsFromTestCase(cls))
 

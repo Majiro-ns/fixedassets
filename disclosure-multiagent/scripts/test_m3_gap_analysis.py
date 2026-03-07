@@ -44,6 +44,7 @@ from m3_gap_analysis_agent import (
     _build_mock_law_context,
     HUMAN_CAPITAL_KEYWORDS,
     SSBJ_KEYWORDS,
+    BANKING_KEYWORDS,
     ALL_RELEVANCE_KEYWORDS,
     is_relevant_section,
 )
@@ -537,6 +538,102 @@ class TestSSBJKeywords(unittest.TestCase):
         print(f"  [PASS] CHECK-7b SSBJ sb-2025-001(2025-04-01) in {start_str}〜{end_str}: True ✓")
 
 
+class TestBankingKeywords(unittest.TestCase):
+    """TEST 7: 銀行業特化キーワードとis_relevant_section()の動作検証"""
+
+    def test_banking_keywords_defined(self):
+        """BANKING_KEYWORDS定数が定義されており、バーゼルIII/不良債権の必須キーワードを含む"""
+        required = ["バーゼル", "自己資本比率", "CET1", "不良債権", "貸倒引当金", "LCR", "NSFR"]
+        for kw in required:
+            self.assertIn(kw, BANKING_KEYWORDS, f"BANKING_KEYWORDS に '{kw}' が含まれていない")
+        print(f"  [PASS] BANKING_KEYWORDS: {len(BANKING_KEYWORDS)}件定義済み（必須7件含む）✓")
+
+    def test_all_relevance_keywords_contains_banking(self):
+        """ALL_RELEVANCE_KEYWORDS が銀行業キーワードを含む"""
+        for kw in BANKING_KEYWORDS:
+            self.assertIn(kw, ALL_RELEVANCE_KEYWORDS, f"銀行業キーワード '{kw}' が欠落")
+        # 既存のHC・SSBJキーワードも維持されていること
+        for kw in HUMAN_CAPITAL_KEYWORDS:
+            self.assertIn(kw, ALL_RELEVANCE_KEYWORDS, f"人的資本キーワード '{kw}' が欠落")
+        for kw in SSBJ_KEYWORDS:
+            self.assertIn(kw, ALL_RELEVANCE_KEYWORDS, f"SSBJキーワード '{kw}' が欠落")
+        print(f"  [PASS] ALL_RELEVANCE_KEYWORDS: {len(ALL_RELEVANCE_KEYWORDS)}件（HC+SSBJ+銀行業全て含む）✓")
+
+    def test_is_relevant_section_detects_basel_heading(self):
+        """バーゼルIII関連キーワードを含む見出しが関連ありと判定される"""
+        section = SectionData(
+            section_id="BK-001",
+            heading="自己資本比率（バーゼルIII第3の柱）の開示",
+            text="CET1比率・Tier1比率・総自己資本比率の開示。",
+        )
+        self.assertTrue(is_relevant_section(section),
+                        "自己資本比率/バーゼルを含む見出しが関連ありと判定されるべき")
+        print("  [PASS] is_relevant_section: バーゼルIII自己資本比率見出し → True ✓")
+
+    def test_is_relevant_section_detects_npl_in_text(self):
+        """不良債権・貸倒引当金を含むテキストが関連ありと判定される"""
+        section = SectionData(
+            section_id="BK-002",
+            heading="リスク管理の状況",
+            text=(
+                "当行の不良債権残高は[X]億円（金融再生法ベース）です。"
+                "貸倒引当金計上額は個別引当[A]億円、一般引当[B]億円です。"
+                "破綻懸念先債権に対しては個別貸倒引当金を計上しています。"
+            ),
+        )
+        self.assertTrue(is_relevant_section(section),
+                        "不良債権/貸倒引当金を含むテキストが関連ありと判定されるべき")
+        print("  [PASS] is_relevant_section: 不良債権/貸倒引当金テキスト → True ✓")
+
+    def test_is_relevant_section_detects_lcr_nsfr(self):
+        """LCR・NSFRを含む流動性リスク関連セクションが関連ありと判定される"""
+        section = SectionData(
+            section_id="BK-003",
+            heading="流動性リスク管理",
+            text=(
+                "LCR（流動性カバレッジ比率）は[X]%（規制最低水準100%超過）。"
+                "NSFR（安定調達比率）は[Y]%です。"
+            ),
+        )
+        self.assertTrue(is_relevant_section(section),
+                        "LCR/NSFRを含むセクションが関連ありと判定されるべき")
+        print("  [PASS] is_relevant_section: LCR/NSFR流動性リスクセクション → True ✓")
+
+    def test_banking_yaml_loadable(self):
+        """laws/banking_2025.yaml が正常に読み込めること（スキーマ検証）"""
+        import yaml
+        from pathlib import Path
+        yaml_path = Path(__file__).parent.parent / "laws" / "banking_2025.yaml"
+        self.assertTrue(yaml_path.exists(), f"laws/banking_2025.yaml が存在しない: {yaml_path}")
+        with open(yaml_path, encoding="utf-8") as f:
+            data = yaml.safe_load(f)
+        # トップレベルキー検証
+        self.assertIn("amendments", data, "banking_2025.yaml に 'amendments' キーがない")
+        self.assertIn("version", data, "banking_2025.yaml に 'version' キーがない")
+        amendments = data["amendments"]
+        self.assertGreaterEqual(len(amendments), 10, f"amendments が10件未満: {len(amendments)}件")
+        # 各エントリの必須フィールド確認
+        for entry in amendments:
+            for field in ("id", "title", "category", "change_type", "required_items"):
+                self.assertIn(field, entry, f"エントリ {entry.get('id','?')} に '{field}' がない")
+        print(f"  [PASS] banking_2025.yaml: {len(amendments)}件読み込み・スキーマ検証 ✓")
+
+    def test_banking_yaml_id_prefix(self):
+        """banking_2025.yaml の全エントリIDが bk-2025- プレフィックスを持つ"""
+        import yaml
+        from pathlib import Path
+        yaml_path = Path(__file__).parent.parent / "laws" / "banking_2025.yaml"
+        with open(yaml_path, encoding="utf-8") as f:
+            data = yaml.safe_load(f)
+        for entry in data["amendments"]:
+            entry_id = entry.get("id", "")
+            self.assertTrue(
+                entry_id.startswith("bk-2025-"),
+                f"エントリID '{entry_id}' が 'bk-2025-' で始まっていない"
+            )
+        print(f"  [PASS] banking_2025.yaml: 全{len(data['amendments'])}件のIDが 'bk-2025-' プレフィックス ✓")
+
+
 def run_all_tests():
     """全テストを実行し、結果を表示する"""
     print("=" * 60)
@@ -601,6 +698,7 @@ if __name__ == "__main__":
         TestJsonParseMock,
         TestCalcLawRefPeriod,
         TestSSBJKeywords,
+        TestBankingKeywords,
     ]:
         suite.addTests(loader.loadTestsFromTestCase(cls))
 

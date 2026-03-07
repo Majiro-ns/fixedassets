@@ -7,7 +7,41 @@
 
 ---
 
-## 総合判定
+## 再CR結果（commit 0dde91a / 2026-03-09）
+
+**✅ 正式承認（M1・M2必須修正 全件解消確認）**
+
+| 修正 | 内容 | 解消確認 |
+|------|------|---------|
+| M1 | FastAPI URL: `/analyze` → `/api/analyze` | ✅ 記事 Section 5-1 修正済み |
+| M2 | `run_pipeline_async` に `doc_type` 引き渡し | ✅ analyze.py + pipeline.py 実装追加 + extract_report引き渡し確認 |
+
+#### M1修正詳細確認
+```diff
+- "http://localhost:8000/analyze",
++ "http://localhost:8000/api/analyze",
+```
+記事 Section 5-1のURLが正確に修正されている。 ✅
+説明文に「APIルーターが `doc_type_code` をパイプラインに引き渡し、M1の `extract_report()` が招集通知モードで実行される。」の注釈追加も適切。 ✅
+
+#### M2修正詳細確認
+```python
+# api/routers/analyze.py
+doc_type=request.doc_type_code.value,  # DocTypeCode(str,Enum)の.valueで文字列取得 ✅
+
+# api/services/pipeline.py
+async def run_pipeline_async(..., doc_type: str = "yuho") -> None:
+    ...
+    extract_report(..., doc_type=doc_type)  # extract_report(doc_type: str = "yuho")と一致 ✅
+```
+
+- `DocTypeCode(str, Enum)` の `.value` は "yuho"/"shoshu" 文字列を返す ✅
+- `extract_report` の `doc_type: str = "yuho"` シグネチャと一致 ✅
+- デフォルト値 `doc_type: str = "yuho"` により後方互換維持 ✅
+
+---
+
+## 総合判定（初回）
 
 **⚠️ 条件付き承認（必須修正2件・推奨修正1件）**
 
